@@ -7,19 +7,21 @@ import { Logger } from '../services/console'
 import dashify from 'dashify'
 
 const TEMPLATES = {
-    PACKAJE_JSON: 'src/templates/init/package.json.hbs',
+    PACKAGE_JSON: 'src/templates/init/package.json.hbs',
     MANIFEST: 'src/templates/init/manifest.yaml.hbs',
     QUERIES: 'src/templates/init/queries.yml.hbs',
     WASM_INDEX: 'src/templates/init/src/index.ts.hbs',
     WASM_TEST: 'src/templates/init/test/index.spec.ts.hbs',
+    README: 'src/templates/init/README.md.hbs',
 }
 
-const FILES = {
+const FILES: typeof TEMPLATES = {
     PACKAGE_JSON: 'package.json',
     MANIFEST: 'manifest.yaml',
     QUERIES: 'queries.yml',
     WASM_INDEX: 'src/index.ts',
     WASM_TEST: 'test/index.spec.ts',
+    README: 'README.md',
 }
 
 function init(program: Command, projectPath: string, options: InitOptions) {
@@ -33,36 +35,18 @@ function init(program: Command, projectPath: string, options: InitOptions) {
     checkFolderEmptyness(program, Object.values(files))
     logger.ok('Creating Queryable project files')
 
-    createFileFromTemplate(
-        logger,
-        augOps,
-        TEMPLATES.PACKAJE_JSON,
-        files.PACKAGE_JSON
-    )
-    createFileFromTemplate(logger, augOps, TEMPLATES.MANIFEST, files.MANIFEST)
+    createFile(logger, augOps, TEMPLATES.PACKAGE_JSON, files.PACKAGE_JSON)
+    createFile(logger, augOps, TEMPLATES.MANIFEST, files.MANIFEST)
+    createFile(logger, augOps, TEMPLATES.README, files.README)
 
     if (options.type === 'sql') {
-        createFileFromTemplate(logger, augOps, TEMPLATES.QUERIES, files.QUERIES)
+        createFile(logger, augOps, TEMPLATES.QUERIES, files.QUERIES)
     }
     if (options.type === 'wasm') {
-        if (!fs.existsSync(path.join(projectPath, 'src'))) {
-            fs.mkdirSync(path.join(projectPath, 'src'))
-        }
-        if (!fs.existsSync(path.join(projectPath, 'test'))) {
-            fs.mkdirSync(path.join(projectPath, 'test'))
-        }
-        createFileFromTemplate(
-            logger,
-            augOps,
-            TEMPLATES.WASM_INDEX,
-            files.WASM_INDEX
-        )
-        createFileFromTemplate(
-            logger,
-            augOps,
-            TEMPLATES.WASM_TEST,
-            files.WASM_TEST
-        )
+        createFolder(logger, projectPath, 'src')
+        createFolder(logger, projectPath, 'test')
+        createFile(logger, augOps, TEMPLATES.WASM_INDEX, files.WASM_INDEX)
+        createFile(logger, augOps, TEMPLATES.WASM_TEST, files.WASM_TEST)
     }
 
     logger.ok('Queryable project files created!')
@@ -119,7 +103,7 @@ function getFilesToCreate(
     return fileDirs
 }
 
-function createFileFromTemplate(
+function createFile(
     logger: Logger,
     ops: AugmentedInitOptions,
     templatePath: string,
@@ -132,6 +116,14 @@ function createFileFromTemplate(
     const template = Handlebars.compile(templateSrc)
     const result = template(ops)
     fs.writeFileSync(targetPath, result)
+}
+
+function createFolder(logger: Logger, projectPath: string, folderPath: string) {
+    const folderName = path.basename(folderPath)
+    logger.verbose(`Creating "${folderName}" folder`)
+    if (!fs.existsSync(path.join(projectPath, folderPath))) {
+            fs.mkdirSync(path.join(projectPath, folderName))
+        }
 }
 
 export interface InitOptions {
