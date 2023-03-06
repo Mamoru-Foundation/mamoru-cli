@@ -1,0 +1,6 @@
+export class {{ name }} extends {{#ifeq type 'time32'}}Time32Value{{/ifeq}}{{#ifeq type 'time64'}}Time64Value{{/ifeq}} {
+    constructor() {
+        super({{meta.unit}}, {{meta.nullable}});
+    }
+}
+

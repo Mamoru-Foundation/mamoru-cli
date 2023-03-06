@@ -1,0 +1,115 @@
+version: 0.1
+name: Aptos Explorer
+description: Job to process handle token creation, transfer, minting & burning
+
+dataSources:
+  - name: aptos
+    ipfsPath: /ipns/k2k4r8mfyz2yqj44njl1vb3m85jsnysm12bk4vbt5rti6mcv45psdn03
+    filter:
+      comparison:
+        fieldRef: blockIndex
+        operator: '>'
+        value: 0
+
+entities:
+  - name: Token
+    fields:
+      - name: name
+        type: string!
+      - name: symbol
+        type: string!
+      - name: decimals
+        type: uint8!
+      - name: supply
+        type: uint64!
+      - name: priceUsd
+        type: float32!
+      - name: priceAptos
+        type: float32!
+      - name: decimal128
+        type: decimal128
+        scale: 100
+        precision: 10
+      - name: decimal256
+        type: decimal256
+        scale: 100
+        precision: 10
+      - name: struct
+        type: struct
+        fields:
+          - name: abc
+            type: int8
+          - name: def
+            type: struct
+            fields:
+              - name: field1
+                type: uint8!
+              - name: field2
+                type: uint16!
+      - name: list
+        type: list!
+        subType:
+            type: struct
+            fields:
+              - name: abc
+                type: int8!
+    relations:
+      - entity: TokenHolder
+        type: one-to-many
+        localFieldName: holders
+      - entity: TokenTransfer
+        type: one-to-many
+        localFieldName: transfers
+        nullable: true
+      - entity: blocks
+        dataSource: aptos
+        type: many-to-one
+        localFieldName: block
+
+  - name: TokenHolder
+    fields:
+      - name: holder
+        type: binary!
+      - name: balance
+        type: uint64!
+    relations:
+      - entity: Token
+        type: many-to-one
+        localFieldName: token
+      - entity: blocks
+        dataSource: aptos
+        type: many-to-one
+        localFieldName: block
+
+  - name: TokenTransfer
+    fields:
+      - name: balance
+        type: uint64!
+    relations:
+      - entity: Token
+        type: many-to-one
+        localFieldName: token
+      - entity: TokenHolder
+        type: many-to-one
+        localFieldName: from
+      - entity: TokenHolder
+        type: many-to-one
+        localFieldName: to
+      - entity: events
+        dataSource: aptos
+        type: many-to-one
+        localFieldName: event
+
+jobs:
+  - name: abc
+    timeWindow: 10
+    module: ./script.ts
+    handlers:
+      - method: handleTransfer
+        dataSources:
+          - name: aptos
+            entity: events
+      - method: handleCreation
+        dataSources:
+          - name: aptos
+            entity: call_traces

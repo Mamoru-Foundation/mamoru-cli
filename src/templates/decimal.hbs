@@ -1,0 +1,6 @@
+export class {{ name }} extends {{#ifeq type 'decimal128'}}Decimal128Value{{/ifeq}}{{#ifeq type 'decimal256'}}Decimal256Value{{/ifeq}} {
+    constructor() {
+        super({{meta.scale}}, {{meta.precision}}, {{meta.nullable}});
+    }
+}
+

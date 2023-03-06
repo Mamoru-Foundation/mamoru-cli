@@ -1,0 +1,153 @@
+import * as fs from 'fs'
+import path from 'path'
+import { Command } from 'commander'
+import colors from 'colors'
+import Handlebars from 'handlebars'
+import { Logger } from '../services/console'
+import dashify from 'dashify'
+
+const TEMPLATES = {
+    PACKAJE_JSON: 'src/templates/init/package.json.hbs',
+    MANIFEST: 'src/templates/init/manifest.yaml.hbs',
+    QUERIES: 'src/templates/init/queries.yml.hbs',
+    WASM_INDEX: 'src/templates/init/src/index.ts.hbs',
+    WASM_TEST: 'src/templates/init/test/index.spec.ts.hbs',
+}
+
+const FILES = {
+    PACKAGE_JSON: 'package.json',
+    MANIFEST: 'manifest.yaml',
+    QUERIES: 'queries.yml',
+    WASM_INDEX: 'src/index.ts',
+    WASM_TEST: 'test/index.spec.ts',
+}
+
+function init(program: Command, projectPath: string, options: InitOptions) {
+    const verbosity = program.opts().verbose
+    const logger = new Logger(verbosity)
+    logger.verbose('Run init')
+    const augOps = getAugmentedInitOptions(options)
+
+    const files = getFilesToCreate(projectPath, augOps)
+
+    checkFolderEmptyness(program, Object.values(files))
+    logger.ok('Creating Queryable project files')
+
+    createFileFromTemplate(
+        logger,
+        augOps,
+        TEMPLATES.PACKAJE_JSON,
+        files.PACKAGE_JSON
+    )
+    createFileFromTemplate(logger, augOps, TEMPLATES.MANIFEST, files.MANIFEST)
+
+    if (options.type === 'sql') {
+        createFileFromTemplate(logger, augOps, TEMPLATES.QUERIES, files.QUERIES)
+    }
+    if (options.type === 'wasm') {
+        if (!fs.existsSync(path.join(projectPath, 'src'))) {
+            fs.mkdirSync(path.join(projectPath, 'src'))
+        }
+        if (!fs.existsSync(path.join(projectPath, 'test'))) {
+            fs.mkdirSync(path.join(projectPath, 'test'))
+        }
+        createFileFromTemplate(
+            logger,
+            augOps,
+            TEMPLATES.WASM_INDEX,
+            files.WASM_INDEX
+        )
+        createFileFromTemplate(
+            logger,
+            augOps,
+            TEMPLATES.WASM_TEST,
+            files.WASM_TEST
+        )
+    }
+
+    logger.ok('Queryable project files created!')
+    logger.log(`
+    ℹ️ To start working on your project, run:
+        cd ${projectPath}
+        npm install
+    ℹ️ To start the project locally, run:
+        npm run start
+    ℹ️ To know more about how to create your own daemons, visit:
+        https://mamoru.ai/docs/daemon-development
+    `)
+}
+
+function checkFolderEmptyness(program: Command, paths: string[]): void {
+    paths.forEach((p) => {
+        if (fs.existsSync(p)) {
+            const fileName = path.basename(p)
+            program.error(
+                `Directory  already contains  a file named "${fileName}", stopping...`
+            )
+        }
+    })
+}
+
+function getAugmentedInitOptions(options: InitOptions): AugmentedInitOptions {
+    return {
+        ...options,
+        jsonTags: JSON.stringify(options.tags.split(',')),
+        kebabName: dashify(options.name),
+    }
+}
+
+function getFilesToCreate(
+    projectPath: string,
+    ops: InitOptions
+): Partial<typeof FILES> {
+    const files: typeof FILES = { ...FILES }
+    if (ops.type === 'sql') {
+        delete files.WASM_INDEX
+        delete files.WASM_TEST
+    }
+    if (ops.type === 'wasm') {
+        delete files.QUERIES
+    }
+
+    const fileDirs: Partial<typeof FILES> = {}
+
+    Object.entries(files).forEach(([key, name]) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        fileDirs[key] = path.join(projectPath, name)
+    })
+    return fileDirs
+}
+
+function createFileFromTemplate(
+    logger: Logger,
+    ops: AugmentedInitOptions,
+    templatePath: string,
+    targetPath: string
+) {
+    const targetFileName = path.basename(targetPath)
+    logger.verbose(`Creating "${targetFileName}"`)
+
+    const templateSrc = fs.readFileSync(templatePath).toString('utf-8')
+    const template = Handlebars.compile(templateSrc)
+    const result = template(ops)
+    fs.writeFileSync(targetPath, result)
+}
+
+export interface InitOptions {
+    name: string
+    description: string
+    logo: string
+    tags: string
+    chain: string
+    type: 'sql' | 'wasm'
+}
+
+interface AugmentedInitOptions extends InitOptions {
+    jsonTags: string
+    kebabName: string
+}
+
+export default {
+    init,
+}
