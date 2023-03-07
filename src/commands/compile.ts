@@ -1,11 +1,9 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import { Writable } from 'node:stream'
-
+import colors from 'colors'
 import type { Command } from 'commander'
 import * as asc from 'assemblyscript/cli/asc'
-
-import colors from 'colors'
 
 import manifestService from '../services/mainfest'
 import { Manifest, ManifestJob } from '../types'
