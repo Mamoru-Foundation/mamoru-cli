@@ -151,7 +151,7 @@ describe('init', () => {
             version: '0.0.1',
         })
     })
-    it('FAIL - Fail if project is already in folder - type=rest', () => {
+    it('FAIL - Fail if project is already in folder', () => {
         const dir = getTempFolder()
         console.log(colors.green('Temp Folder: ' + dir))
         const options: InitOptions = {
