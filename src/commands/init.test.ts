@@ -31,7 +31,7 @@ const getTempFolder = (): string => {
 describe(colors.yellow('init'), () => {
     it('OK - Should create Files - type=sql', () => {
         const dir = getTempFolder()
-        // console.log(colors.green('Temp Folder: ' + dir))
+        console.log(colors.green('Temp Folder: ' + dir))
         const options: InitOptions = {
             type: 'sql',
             name: 'TEST name',
@@ -44,7 +44,7 @@ describe(colors.yellow('init'), () => {
         init.init(programMock, dir, options)
 
         const files = fs.readdirSync(dir)
-        assert.strictEqual(files.length, 4)
+        assert.strictEqual(files.length, 5)
         assert.strictEqual(files.includes('README.md'), true)
         assert.strictEqual(files.includes('package.json'), true)
         assert.strictEqual(files.includes('manifest.yml'), true)
@@ -108,10 +108,12 @@ describe(colors.yellow('init'), () => {
         init.init(programMock, dir, options)
 
         const files = fs.readdirSync(dir)
-        assert.strictEqual(files.length, 5)
+        assert.strictEqual(files.length, 6)
+
         assert.strictEqual(files.includes('README.md'), true)
         assert.strictEqual(files.includes('package.json'), true)
         assert.strictEqual(files.includes('manifest.yml'), true)
+        assert.strictEqual(files.includes('.gitignore'), true)
         assert.strictEqual(files.includes('src'), true)
         assert.strictEqual(files.includes('test'), true)
 
