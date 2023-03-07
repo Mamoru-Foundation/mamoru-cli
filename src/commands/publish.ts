@@ -4,7 +4,7 @@ import fs from 'fs'
 import { create } from 'ipfs-http-client'
 import axios from 'axios'
 
-import manifest from '../services/mainfest'
+import manifest from '../services/mainfest-old'
 import colors from 'colors'
 
 async function publish(

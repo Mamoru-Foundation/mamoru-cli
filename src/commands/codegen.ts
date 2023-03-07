@@ -2,7 +2,7 @@ import * as fs from 'fs'
 import path from 'path'
 import { Command } from 'commander'
 import colors from 'colors'
-import manifestService from '../services/mainfest'
+import manifestService from '../services/mainfest-old'
 import Handlebars from 'handlebars'
 import {
     ManifestEntityField,
