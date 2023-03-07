@@ -4,10 +4,23 @@ import * as fs from 'fs'
 import { program, InvalidArgumentError, Option } from 'commander'
 import initCommand, { InitOptions } from './commands/init'
 import codegenCommand from './commands/codegen'
-import compileCommand from './commands/compile'
+import compileCommand from './commands/build'
 import publishCommand from './commands/publish'
 
 function parseDirectoryPath(path: string) {
+    if (fs.existsSync(path) && fs.lstatSync(path).isDirectory()) {
+        return path
+    } else {
+        throw new InvalidArgumentError(
+            'Provided path is not exist or not a folder.'
+        )
+    }
+}
+
+function parseOrSetCurrentDirectoryPath(path: string) {
+    if (!path) {
+        return '.'
+    }
     if (fs.existsSync(path) && fs.lstatSync(path).isDirectory()) {
         return path
     } else {
@@ -114,15 +127,16 @@ program
     })
 
 program
-    .command('compile')
+    .command('build')
     .argument(
-        '<path>',
+        '[path]',
         'path to folder with queryable project',
-        parseDirectoryPath
+        parseOrSetCurrentDirectoryPath,
+        '.'
     )
     .description('compile project')
     .action((path: string) => {
-        compileCommand.compile(program, path)
+        compileCommand.build(program, path)
     })
 
 program

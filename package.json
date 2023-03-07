@@ -38,8 +38,7 @@
     "pretty-quick": "^3.1.3",
     "ts-loader": "^9.3.1",
     "ts-node": "^10.9.1",
-    "typescript": "^4.8.4",
-    "yaml": "^2.2.1"
+    "typescript": "^4.8.4"
   },
   "dependencies": {
     "assemblyscript": "^0.19.23",
@@ -49,7 +48,8 @@
     "dashify": "^2.0.0",
     "handlebars": "^4.7.7",
     "ipfs-http-client": "56",
-    "joi": "^17.6.0"
+    "joi": "^17.6.0",
+    "yaml": "^2.2.1"
   },
   "lint-staged": {
     "**/*.{js,ts}": [

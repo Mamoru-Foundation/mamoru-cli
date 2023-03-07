@@ -2,6 +2,7 @@
     "compilerOptions": {
         "lib": [
             "ES6",
+            "DOM"
         ],
         "outDir": "./dist/",
         "noImplicitAny": true,
@@ -22,3 +23,4 @@
         "./src"
     ]
 }
+   
