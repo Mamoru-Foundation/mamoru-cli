@@ -13,6 +13,7 @@ const TEMPLATES = {
     WASM_INDEX: 'src/templates/init/src/index.ts.hbs',
     WASM_TEST: 'src/templates/init/test/index.spec.ts.hbs',
     README: 'src/templates/init/README.md.hbs',
+    GITIGNORE: 'src/templates/init/gitignore.hbs',
 }
 
 const FILES: typeof TEMPLATES = {
@@ -22,6 +23,7 @@ const FILES: typeof TEMPLATES = {
     WASM_INDEX: 'src/index.ts',
     WASM_TEST: 'test/index.spec.ts',
     README: 'README.md',
+    GITIGNORE: '.gitignore',
 }
 
 function init(program: Command, projectPath: string, options: InitOptions) {
@@ -38,6 +40,7 @@ function init(program: Command, projectPath: string, options: InitOptions) {
     createFile(logger, augOps, TEMPLATES.PACKAGE_JSON, files.PACKAGE_JSON)
     createFile(logger, augOps, TEMPLATES.MANIFEST, files.MANIFEST)
     createFile(logger, augOps, TEMPLATES.README, files.README)
+    createFile(logger, augOps, TEMPLATES.GITIGNORE, files.GITIGNORE)
 
     if (options.type === 'sql') {
         createFile(logger, augOps, TEMPLATES.QUERIES, files.QUERIES)

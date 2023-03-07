@@ -68,7 +68,7 @@ describe(colors.yellow('build'), () => {
         await build.build(programMock, dir)
 
         const files = fs.readdirSync(dir)
-        assert.strictEqual(files.length, 5 + 1) // +1 for the dist folder
+        assert.strictEqual(files.length, 6 + 1) // +1 for the dist folder
         assert.strictEqual(files.includes('README.md'), true)
         const srcDir = path.join(dir, 'src')
         assert.strictEqual(fs.existsSync(srcDir), true)
