@@ -31,7 +31,7 @@ const getTempFolder = (): string => {
 describe('init', () => {
     it('OK - Should create Files - type=sql', () => {
         const dir = getTempFolder()
-        console.log(colors.green('Temp Folder: ' + dir))
+        // console.log(colors.green('Temp Folder: ' + dir))
         const options: InitOptions = {
             type: 'sql',
             name: 'TEST name',
@@ -76,6 +76,7 @@ describe('init', () => {
             name: 'test-name',
             tags: ['test', 'cli'],
             version: '0.0.1',
+            type: 'sql',
         })
 
         const queries = fs.readFileSync(path.join(dir, 'queries.yml'), 'utf-8')
@@ -94,7 +95,7 @@ describe('init', () => {
     })
     it('OK - Should create Files - type=wasm', () => {
         const dir = getTempFolder()
-        console.log(colors.green('Temp Folder: ' + dir))
+        // console.log(colors.green('Temp Folder: ' + dir))
         const options: InitOptions = {
             type: 'wasm',
             name: 'TEST name',
@@ -149,11 +150,12 @@ describe('init', () => {
             name: 'test-name',
             tags: ['test', 'cli'],
             version: '0.0.1',
+            type: 'wasm',
         })
     })
     it('FAIL - Fail if project is already in folder', () => {
         const dir = getTempFolder()
-        console.log(colors.green('Temp Folder: ' + dir))
+        // console.log(colors.green('Temp Folder: ' + dir))
         const options: InitOptions = {
             type: 'sql',
             name: 'TEST name',
