@@ -1,6 +1,5 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { Writable } from 'node:stream'
 import type { Command } from 'commander'
 import * as asc from 'assemblyscript/cli/asc'
 
@@ -9,8 +8,7 @@ import {
     validateAndReadManifest,
 } from '../services/manifest'
 import { Logger } from '../services/console'
-
-const OUT_DIR = 'build'
+import { OUT_DIR } from '../services/constants'
 
 async function build(program: Command, projectPath: string) {
     const verbosity = program.opts().verbose

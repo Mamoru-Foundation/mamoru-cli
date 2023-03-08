@@ -8,6 +8,7 @@ import path from 'node:path'
 import fs from 'node:fs'
 import colors from 'colors'
 import yaml from 'yaml'
+import { OUT_DIR } from '../services/constants'
 
 const programMock: Command = {
     opts: () => {
@@ -75,7 +76,7 @@ describe(colors.yellow('build'), () => {
         const srcFiles = fs.readdirSync(srcDir)
         assert.strictEqual(srcFiles.length, 1)
 
-        const outDir = path.join(dir, 'build')
+        const outDir = path.join(dir, OUT_DIR)
         assert.strictEqual(fs.existsSync(outDir), true)
         const outFiles = fs.readdirSync(outDir)
         assert.strictEqual(outFiles.length, 3)

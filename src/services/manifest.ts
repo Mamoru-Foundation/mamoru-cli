@@ -4,14 +4,8 @@ import fs from 'node:fs'
 import { Logger } from './console'
 import yaml from 'yaml'
 import joi from 'joi'
-
-export type Manifest = {
-    version: string
-    type: 'sql' | 'wasm'
-    description?: string
-    logoUrl?: string
-    name: string
-}
+import { ONLY_ALPHA_NUMERIC } from './constants'
+import { Manifest } from '../types'
 
 export const validateAndReadManifest = (
     logger: Logger,
@@ -60,10 +54,39 @@ function getManifest(logger: Logger, program: Command, projectPath: string) {
     program.error(' manifest not found.')
 }
 
+const manifestParameterSchema = joi.object().keys({
+    type: joi.any().valid('STRING', 'NUMBER', 'BOOLEAN').required(),
+    /**
+     * @testcases
+     *  - key: 'abc'
+     * - key: 'abc123'
+     * - key: 'abc-123'
+     * - key: 'abc_123'
+     * - key: 'abc 123'
+     * - key: 'abc.123'
+     * - key: 'abc,123'
+     * - key: 'abc:123'
+     * - key: 'abc    123   '
+     */
+    key: joi.string().required().pattern(ONLY_ALPHA_NUMERIC),
+    /**
+     * @testcases
+     * - description: 'abc'
+     * - description: '  sadasasd   ' // trim
+     * - description: 'multiline description' // remove line breaks
+     * - description: 'hello        hello' // remove extra spaces
+     */
+    description: joi.string().required(),
+    defaultValue: joi.string().required(),
+    requiredFor: joi.array().items(joi.string()).optional(),
+    hiddenFor: joi.array().items(joi.string()).optional(),
+})
+
 const manifestSchema = joi.object().keys({
     version: joi.any().valid('0.0.1').required(),
     type: joi.any().valid('wasm').required(),
     description: joi.string().optional(),
+    subscribable: joi.boolean().optional(),
     name: joi.string().required(),
     chain: joi.string(),
     tags: joi.array().items(joi.string()).optional(),
@@ -71,6 +94,7 @@ const manifestSchema = joi.object().keys({
         .string()
         .uri({ scheme: ['http', 'https'] })
         .optional(),
+    parameters: joi.array().items(manifestParameterSchema).optional(),
 })
 
 function validateManifestContent(

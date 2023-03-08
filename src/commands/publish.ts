@@ -6,76 +6,78 @@ import axios from 'axios'
 
 import manifest from '../services/mainfest-old'
 import colors from 'colors'
+import { Logger } from '../services/console'
+import { validateAndReadManifest } from '../services/manifest'
+import { OUT_DIR } from '../services/constants'
+import { WebsocketClient } from '@cosmjs/tendermint-rpc'
+
+export interface PublishOptions {
+    rpcUrl: string
+    key: string
+}
 
 async function publish(
     program: Command,
-    queryableProjectPath: string,
-    queryableServerUrl: string,
-    ipfsDaemonUrl: string
+    projectPath: string,
+    options: PublishOptions
 ) {
     const verbosity = program.opts().verbose
+    const logger = new Logger(verbosity)
 
-    const buildPath = path.join(queryableProjectPath, '.queryable')
+    const buildPath = path.join(projectPath, OUT_DIR)
 
-    if (!fs.existsSync(buildPath)) {
-        program.error('Project is not compiled, compile it first')
-    }
-
-    console.log(colors.green('Validating Queryable manifest'))
-
-    const content = (
-        await manifest.readAndValidateManifest(
-            program,
-            ipfsDaemonUrl,
-            buildPath,
-            verbosity,
-            true
+    if (!fs.existsSync(buildPath))
+        program.error(
+            'Project is not compiled, compile it first, use "mamoru-cli build"'
         )
-    ).content
 
-    console.log(colors.green('Publishing to IPFS'))
+    logger.ok('Validating Queryable manifest')
 
-    const url = new URL(ipfsDaemonUrl)
+    const manifest = validateAndReadManifest(logger, program, buildPath)
 
-    const client = create({ url })
+    logger.ok('Publishing to IPFS')
 
-    const { cid } = await client.add(content)
+    // const url = new URL(ipfsDaemonUrl)
 
-    const ipfsPath = `/ipfs/${cid.toString()}`
+    // const client = create({ url })
 
-    console.log(colors.green('Published to IPFS'), ipfsPath)
+    // const { cid } = await client.add(content)
 
-    let apiUrl: string
+    // const ipfsPath = `/ipfs/${cid.toString()}`
 
-    if (ipfsDaemonUrl === 'https://api.queryable.com/') {
-        console.log(colors.green('Registering on Queryable'))
+    // console.log(colors.green('Published to IPFS'), ipfsPath)
 
-        apiUrl = `${queryableServerUrl}/management/jobs`
-    } else {
-        console.log(colors.green('Registering on Queryable server'))
+    // let apiUrl: string
 
-        apiUrl = `${queryableServerUrl}/management/jobs`
-    }
+    // if (ipfsDaemonUrl === 'https://api.queryable.com/') {
+    //     console.log(colors.green('Registering on Queryable'))
 
-    try {
-        await axios.post(apiUrl, {
-            source_type: 'Queryable',
-            ipfs_path: ipfsPath,
-        })
-    } catch (error) {
-        if (error.response && error.response.data) {
-            if (verbosity > 1) {
-                console.log(colors.grey('Received response'))
-                console.log(JSON.stringify(error.response.data))
-            }
+    //     apiUrl = `${queryableServerUrl}/management/jobs`
+    // } else {
+    //     console.log(colors.green('Registering on Queryable server'))
 
-            program.error(
-                `Project failed to register, reason: ${error.response.data.message}`
-            )
-        }
-    }
+    //     apiUrl = `${queryableServerUrl}/management/jobs`
+    // }
 
-    console.log(colors.green('Done!'))
+    // try {
+    //     await axios.post(apiUrl, {
+    //         source_type: 'Queryable',
+    //         ipfs_path: ipfsPath,
+    //     })
+    // } catch (error) {
+    //     if (error.response && error.response.data) {
+    //         if (verbosity > 1) {
+    //             console.log(colors.grey('Received response'))
+    //             console.log(JSON.stringify(error.response.data))
+    //         }
+
+    //         program.error(
+    //             `Project failed to register, reason: ${error.response.data.message}`
+    //         )
+    //     }
+    // }
+
+    logger.ok('Published successfully')
 }
 
 export default {

@@ -5,7 +5,7 @@ import { program, InvalidArgumentError, Option } from 'commander'
 import initCommand, { InitOptions } from './commands/init'
 import codegenCommand from './commands/codegen'
 import compileCommand from './commands/build'
-import publishCommand from './commands/publish'
+import publishCommand, { PublishOptions } from './commands/publish'
 
 function parseDirectoryPath(path: string) {
     if (fs.existsSync(path) && fs.lstatSync(path).isDirectory()) {
@@ -105,6 +105,12 @@ program
             'Logo of the project, should be an url'
         ).default('https://mamoru.ai/default-daemon-logo.png')
     )
+    .addOption(
+        new Option(
+            '--subscribable',
+            'If the project is subscribable, or standalone'
+        )
+    )
     .action((path: string, options: InitOptions) => {
         initCommand.init(program, path, options)
     })
@@ -142,34 +148,22 @@ program
 program
     .command('publish')
     .argument(
-        '<path>',
+        '[path]',
         'path to folder with queryable project',
-        parseDirectoryPath
+        parseOrSetCurrentDirectoryPath,
+        '.'
     )
-    .option(
-        '--queryable-server-url <url>',
-        'url of queryable server',
-        'http://localhost:8081'
-    )
-    .option(
-        '--ipfs-gateway <url>',
-        'url of ipfs gateway',
-        'http://localhost:5001'
+    .option('--rpc <rpcUrl>', 'rpc url of the chain')
+    .addOption(
+        new Option(
+            '-k, --private-key <key>',
+            'Private key of the account that will be used to publish the project'
+        ).makeOptionMandatory()
     )
     .description('publish project')
-    .action(
-        (
-            path: string,
-            options: { queryableServerUrl: string; ipfsGateway: string }
-        ) => {
-            publishCommand.publish(
-                program,
-                path,
-                options.queryableServerUrl,
-                options.ipfsGateway
-            )
-        }
-    )
+    .action((path: string, options: PublishOptions) => {
+        publishCommand.publish(program, path, options)
+    })
 
 program.configureOutput({
     // Visibly override write routines as example!

@@ -132,6 +132,7 @@ function createFolder(logger: Logger, projectPath: string, folderPath: string) {
 export interface InitOptions {
     name: string
     description: string
+    subscribable: boolean
     logo: string
     tags: string
     chain: string
