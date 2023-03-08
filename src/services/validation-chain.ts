@@ -1,13 +1,22 @@
 import { JsonRpcClient, JsonRpcRequest } from '@cosmjs/json-rpc'
-import { CreateDaemonMetadataDTO, Manifest } from '../types'
+import {
+    CreateDaemonMetadataDTO,
+    DaemonContent,
+    DaemonContentQuery,
+    Manifest,
+} from '../types'
 
-class ValidationChain {
+class ValidationChainService {
     client: JsonRpcClient
-    constructor() {
-        this.client = new JsonRpcClient('http://localhost:26657')
+    constructor(url: string, privateKey: string) {
+        this.client = new JsonRpcClient(url)
     }
 
-    async registerDaemonMetadata(manifest: Manifest) {
+    async registerDaemonMetadata(
+        manifest: Manifest,
+        queries: DaemonContentQuery[],
+        wasmModule?: string
+    ) {
         const payload: CreateDaemonMetadataDTO = {
             logoUrl: manifest.logoUrl,
             metadataType: getSubcribableType(manifest),
@@ -16,10 +25,18 @@ class ValidationChain {
             tags: manifest.tags,
             supportedChains: [{ chainId: manifest.chain }],
             parameters: manifest.parameters,
+            content: getDaemonContent(manifest, queries, wasmModule),
         }
-        const request = createJsonRpcRequest('registerDaemonMetadata', {})
+        const request = await createJsonRpcRequest(
+            'registerDaemonMetadata',
+            payload
+        )
+
+        return request
     }
 }
+
+export default ValidationChainService
 
 function getSubcribableType(manifest: Manifest) {
     if (manifest.subscribable) {
@@ -28,16 +45,20 @@ function getSubcribableType(manifest: Manifest) {
     return 'SOLE'
 }
 
-function getDaemonContent(manifest: Manifest) {
+function getDaemonContent(
+    manifest: Manifest,
+    queries: DaemonContentQuery[],
+    wasmModule?: string
+): DaemonContent {
     if (manifest.type === 'wasm') {
         return {
             type: 'WASM',
-            wasmModule: '',
+            wasmModule,
         }
     }
     return {
         type: 'SQL',
-        queries: [],
+        queries,
     }
 }
 

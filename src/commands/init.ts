@@ -1,30 +1,10 @@
 import * as fs from 'fs'
 import path from 'path'
 import { Command } from 'commander'
-import colors from 'colors'
 import Handlebars from 'handlebars'
 import { Logger } from '../services/console'
 import dashify from 'dashify'
-
-const TEMPLATES = {
-    PACKAGE_JSON: 'src/templates/init/package.json.hbs',
-    MANIFEST: 'src/templates/init/manifest.yml.hbs',
-    QUERIES: 'src/templates/init/queries.yml.hbs',
-    WASM_INDEX: 'src/templates/init/src/index.ts.hbs',
-    WASM_TEST: 'src/templates/init/test/index.spec.ts.hbs',
-    README: 'src/templates/init/README.md.hbs',
-    GITIGNORE: 'src/templates/init/gitignore.hbs',
-}
-
-const FILES: typeof TEMPLATES = {
-    PACKAGE_JSON: 'package.json',
-    MANIFEST: 'manifest.yml',
-    QUERIES: 'queries.yml',
-    WASM_INDEX: 'src/index.ts',
-    WASM_TEST: 'test/index.spec.ts',
-    README: 'README.md',
-    GITIGNORE: '.gitignore',
-}
+import { FILES, TEMPLATES } from '../services/constants'
 
 function init(program: Command, projectPath: string, options: InitOptions) {
     const verbosity = program.opts().verbose

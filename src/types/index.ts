@@ -22,9 +22,16 @@ export type Chain = {
     chainId: string
 }
 
+export enum IncidentSeverity {
+    INFO = 'INFO',
+    WARNING = 'WARNING',
+    ERROR = 'ERROR',
+    ALERT = 'ALERT',
+}
+
 export type DaemonContentQuery = {
     query: string
-    severity: 'INFO' | 'WARNING' | 'ERROR' | 'ALERT'
+    severity: IncidentSeverity
     incidentMessage: string
 }
 

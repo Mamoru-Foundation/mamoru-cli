@@ -6,6 +6,7 @@ import yaml from 'yaml'
 import joi from 'joi'
 import { ONLY_ALPHA_NUMERIC } from './constants'
 import { Manifest } from '../types'
+import { formatJoiError } from './utils'
 
 export const validateAndReadManifest = (
     logger: Logger,
@@ -112,14 +113,4 @@ function validateManifestContent(
         const formatted = formatJoiError(error)
         program.error(formatted)
     }
-}
-
-function formatJoiError(error: joi.ValidationError): string {
-    const formattedExplanation = error.details
-        .map((error, index) => {
-            return `${index + 1}. ${error.context.message || error.message}`
-        })
-        .join('\n')
-
-    return `manifest contains invalid structure.\nErrors:\n${formattedExplanation}`
 }
