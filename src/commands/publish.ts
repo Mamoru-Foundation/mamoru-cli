@@ -31,7 +31,8 @@ async function publish(
     logger.ok('Publishing to Validation chain')
     const vcService = new ValidationChainService(
         options.rpcUrl,
-        options.privateKey
+        options.privateKey,
+        logger
     )
 
     if (manifest.type === 'sql') {
