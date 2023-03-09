@@ -18,7 +18,8 @@
         "format": "prettier --write -c ./src/**/*.ts",
         "prepare": "husky install",
         "dev": "ts-node ./src/index.ts",
-        "test": "NODE_ENV=test node --test --test-reporter spec --require ts-node/register ./src/**/*.test.ts"
+        "test": "NODE_ENV=test node --test --require ts-node/register ./src/**/*.test.ts",
+        "test:watch": "NODE_ENV=test node --watch --require ts-node/register ./src/**/*.test.ts"
     },
     "bin": {
         "mamoru-cli": "./dist/index.js",

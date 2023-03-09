@@ -1,32 +1,13 @@
-import { Command } from 'commander'
 import assert from 'node:assert'
 import { describe, it } from 'node:test'
 import init, { InitOptions } from './init'
-import os from 'node:os'
 import path from 'node:path'
 import fs from 'node:fs'
 import colors from 'colors'
 import yaml from 'yaml'
+import { getProgramMock, getTempFolder } from '../utils/test'
 
-const programMock: Command = {
-    opts: () => {
-        return {
-            verbose: 0,
-        }
-    },
-    error: (str: string) => {
-        throw new Error(str)
-    },
-} as unknown as Command
-
-const getTempFolder = (): string => {
-    const tmp = os.tmpdir()
-    const folderName =
-        'mamoru-cli-test-' + Math.random().toString(5).substring(2, 15)
-    const folderPath = path.join(tmp, folderName)
-    fs.mkdirSync(folderPath)
-    return folderPath
-}
+const programMock = getProgramMock()
 
 describe(colors.yellow('init'), () => {
     it('OK - Should create Files - type=sql', () => {
@@ -77,6 +58,7 @@ describe(colors.yellow('init'), () => {
             tags: ['test', 'cli'],
             version: '0.0.1',
             type: 'sql',
+            subscribable: false,
         })
 
         const queries = fs.readFileSync(path.join(dir, 'queries.yml'), 'utf-8')
@@ -85,10 +67,10 @@ describe(colors.yellow('init'), () => {
             queries: [
                 {
                     query: 'Select * from EXAMPLE',
-                    incident: {
-                        message: 'Incident: {{query.name}} - {{query.message}}',
-                        severity: 'warn',
-                    },
+
+                    incidentMessage:
+                        'Incident: {{query.name}} - {{query.message}}',
+                    severity: 'WARNING',
                 },
             ],
         })
