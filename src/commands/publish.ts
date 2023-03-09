@@ -7,10 +7,11 @@ import { OUT_DIR, WASM_INDEX } from '../services/constants'
 import queryManifest from '../services/query-manifest'
 import ValidationChainService from '../services/validation-chain'
 import { prepareBinaryFile } from '../services/assemblyscript'
+import { Manifest } from '../types'
 
 export interface PublishOptions {
     rpcUrl: string
-    key: string
+    privateKey: string
 }
 
 async function publish(
@@ -24,14 +25,17 @@ async function publish(
     const buildPath = path.join(projectPath, OUT_DIR)
 
     logger.ok('Validating Query manifest')
-    validateBuildPath(program, buildPath)
-    const manifest = validateAndReadManifest(logger, program, buildPath)
+    const manifest = validateAndReadManifest(logger, program, projectPath)
+    validateBuildPath(program, buildPath, manifest)
 
     logger.ok('Publishing to Validation chain')
-    const vcService = new ValidationChainService(options.rpcUrl, options.key)
+    const vcService = new ValidationChainService(
+        options.rpcUrl,
+        options.privateKey
+    )
 
     if (manifest.type === 'sql') {
-        const queries = queryManifest.getQueries(projectPath)
+        const queries = queryManifest.getQueries(logger, projectPath)
         await vcService.registerDaemonMetadata(manifest, queries)
     }
 
@@ -43,7 +47,12 @@ async function publish(
     logger.ok('Published successfully')
 }
 
-function validateBuildPath(program: Command, buildPath: string): void {
+function validateBuildPath(
+    program: Command,
+    buildPath: string,
+    manifest: Manifest
+): void {
+    if (manifest.type === 'sql') return
     if (!fs.existsSync(buildPath))
         program.error(
             'Project is not compiled, compile it first, use "mamoru-cli build"'

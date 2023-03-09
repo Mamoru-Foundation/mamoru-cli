@@ -2,31 +2,39 @@ import joi from 'joi'
 import * as fs from 'fs'
 import * as path from 'path'
 import yaml from 'yaml'
-import { DaemonContentQuery, IncidentSeverity } from '../types'
+import { IncidentSeverity } from '../types'
 import { formatJoiError } from './utils'
 import { FILES } from './constants'
+import { DaemonMetadataContentQuery } from 'validation-chain-client-ts/validationchain.validationchain'
+import { Logger } from './console'
 
 class QueryManifestService {
-    private getFile(projectPath: string) {
+    private getFile(logger: Logger, projectPath: string) {
         const p = path.join(projectPath, FILES.QUERIES)
-        if (fs.existsSync(p)) {
+        logger.verbose(`Checking if "${p}" exists`)
+        if (!fs.existsSync(p)) {
             throw new Error('queries.yml file not found')
         }
 
         return fs.readFileSync(p, 'utf-8')
     }
-    private parseFile(file: string): { queries: DaemonContentQuery[] } {
+    private parseFile(file: string): { queries: DaemonMetadataContentQuery[] } {
         return yaml.parse(file)
     }
 
-    public getQueries(projectPath: string): DaemonContentQuery[] {
-        const file = this.getFile(projectPath)
+    public getQueries(
+        logger: Logger,
+        projectPath: string
+    ): DaemonMetadataContentQuery[] {
+        const file = this.getFile(logger, projectPath)
         const parsed = this.parseFile(file)
         this.validateFile(parsed)
         return parsed.queries
     }
 
-    private validateFile(file: { queries: DaemonContentQuery[] }): void {
+    private validateFile(file: {
+        queries: DaemonMetadataContentQuery[]
+    }): void {
         const { error } = this.fileSchema.validate(file)
         if (error) {
             const formatted = formatJoiError(error)

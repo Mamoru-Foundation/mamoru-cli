@@ -1,9 +1,6 @@
 {
     "compilerOptions": {
-        "lib": [
-            "ES6",
-            "DOM"
-        ],
+        "lib": ["ES6", "DOM"],
         "outDir": "./dist/",
         "noImplicitAny": true,
         "module": "CommonJS",
@@ -19,8 +16,6 @@
         "skipLibCheck": true,
         "typeRoots": ["./node_modules/@types", "./src/@types"]
     },
-    "include": [
-        "./src"
-    ]
+    "include": ["./src"],
+    "exclude": ["../../../validation-chain/ts-client/**/*"]
 }
-   

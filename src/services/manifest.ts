@@ -85,7 +85,7 @@ const manifestParameterSchema = joi.object().keys({
 
 const manifestSchema = joi.object().keys({
     version: joi.any().valid('0.0.1').required(),
-    type: joi.any().valid('wasm').required(),
+    type: joi.any().valid('wasm', 'sql').required(),
     description: joi.string().optional(),
     subscribable: joi.boolean().optional(),
     name: joi.string().required(),
@@ -104,8 +104,6 @@ function validateManifestContent(
     manifest: Record<string, any>
 ) {
     logger.verbose(`Validating manifest`)
-    if (manifest.type == 'sql')
-        program.error('Oops, nothing to build for SQL based daemons.')
 
     const { error } = manifestSchema.validate(manifest)
 

@@ -3,7 +3,6 @@ import colors from 'colors'
 import * as fs from 'fs'
 import { program, InvalidArgumentError, Option } from 'commander'
 import initCommand, { InitOptions } from './commands/init'
-import codegenCommand from './commands/codegen'
 import compileCommand from './commands/build'
 import publishCommand, { PublishOptions } from './commands/publish'
 
@@ -109,27 +108,10 @@ program
         new Option(
             '--subscribable',
             'If the project is subscribable, or standalone'
-        )
+        ).default(false)
     )
     .action((path: string, options: InitOptions) => {
         initCommand.init(program, path, options)
-    })
-
-program
-    .command('codegen')
-    .argument(
-        '<path>',
-        'path to folder with queryable project',
-        parseDirectoryPath
-    )
-    .option(
-        '--ipfs-gateway <url>',
-        'url of ipfs gateway',
-        'http://localhost:5001'
-    )
-    .description('generate entities')
-    .action((path: string, options: { ipfsGateway: string }) => {
-        codegenCommand.codegen(program, path, options.ipfsGateway)
     })
 
 program

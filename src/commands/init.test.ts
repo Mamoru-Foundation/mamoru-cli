@@ -31,7 +31,6 @@ const getTempFolder = (): string => {
 describe(colors.yellow('init'), () => {
     it('OK - Should create Files - type=sql', () => {
         const dir = getTempFolder()
-        console.log(colors.green('Temp Folder: ' + dir))
         const options: InitOptions = {
             type: 'sql',
             name: 'TEST name',
@@ -39,6 +38,7 @@ describe(colors.yellow('init'), () => {
             description: 'TEST_DESCRIPTION',
             chain: 'sui',
             logo: 'https://test.com/logo.png',
+            subscribable: false,
         }
 
         init.init(programMock, dir, options)
@@ -103,6 +103,7 @@ describe(colors.yellow('init'), () => {
             description: 'TEST_DESCRIPTION',
             chain: 'sui',
             logo: 'https://test.com/logo.png',
+            subscribable: false,
         }
 
         init.init(programMock, dir, options)
@@ -153,6 +154,7 @@ describe(colors.yellow('init'), () => {
             tags: ['test', 'cli'],
             version: '0.0.1',
             type: 'wasm',
+            subscribable: false,
         })
     })
     it('FAIL - Fail if project is already in folder', () => {
@@ -165,6 +167,7 @@ describe(colors.yellow('init'), () => {
             description: 'TEST_DESCRIPTION',
             chain: 'sui',
             logo: 'https://test.com/logo.png',
+            subscribable: false,
         }
         init.init(programMock, dir, options)
 

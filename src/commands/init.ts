@@ -5,6 +5,7 @@ import Handlebars from 'handlebars'
 import { Logger } from '../services/console'
 import dashify from 'dashify'
 import { FILES, TEMPLATES } from '../services/constants'
+import colors from 'colors'
 
 function init(program: Command, projectPath: string, options: InitOptions) {
     const verbosity = program.opts().verbose
@@ -40,7 +41,7 @@ function init(program: Command, projectPath: string, options: InitOptions) {
     ℹ️ To start the project locally, run:
         npm run start
     ℹ️ To know more about how to create your own daemons, visit:
-        https://mamoru.ai/docs/daemon-development
+        ${colors.blue('https://docs.mamoru.io')}
     `)
 }
 

@@ -1,3 +1,9 @@
+import {
+    DaemonMetadataContentQuery,
+    DaemonMetadataParemeter,
+} from 'validation-chain-client-ts/validationchain.validationchain'
+import { Chain_ChainType } from 'validation-chain-client-ts/validationchain.validationchain/types/validationchain/validationchain/chain'
+
 export class DaemonParameters {
     type: 'STRING' | 'NUMBER' | 'BOOLEAN'
     key: string
@@ -11,9 +17,9 @@ export class Manifest {
     name: string
     type: 'sql' | 'wasm'
     logoUrl: string
-    chain: string
+    chain: Chain_ChainType
     tags: string[]
-    parameters?: DaemonParameters[]
+    parameters?: DaemonMetadataParemeter[]
     subscribable: boolean
     description: string
 }
@@ -29,15 +35,9 @@ export enum IncidentSeverity {
     ALERT = 'ALERT',
 }
 
-export type DaemonContentQuery = {
-    query: string
-    severity: IncidentSeverity
-    incidentMessage: string
-}
-
 export type DaemonContentSql = {
     type: 'SQL'
-    queries: DaemonContentQuery[]
+    queries: DaemonMetadataContentQuery[]
 }
 
 export type DaemonContentWasm = {

@@ -38,6 +38,7 @@ const generateInitOptions = (obj: Partial<InitOptions> = {}): InitOptions => {
         description: 'TEST_DESCRIPTION',
         chain: 'sui',
         logo: 'https://test.com/logo.png',
+        subscribable: false,
         ...obj,
     }
 }

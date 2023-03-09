@@ -9,6 +9,7 @@ import {
 } from '../services/manifest'
 import { Logger } from '../services/console'
 import { OUT_DIR } from '../services/constants'
+import { Manifest } from '../types'
 
 async function build(program: Command, projectPath: string) {
     const verbosity = program.opts().verbose
@@ -16,6 +17,7 @@ async function build(program: Command, projectPath: string) {
     logger.verbose('Building project')
 
     const manifest = validateAndReadManifest(logger, program, projectPath)
+    validateIsWasmProject(program, manifest)
     const buildPath = prepareBuildPath(logger, projectPath)
     const inFile = path.join(projectPath, 'src', 'index.ts')
     const outFile = path.join(buildPath, 'index.wasm')
@@ -36,6 +38,12 @@ function prepareBuildPath(logger: Logger, projectPath: string): string {
     fs.mkdirSync(p)
 
     return p
+}
+
+function validateIsWasmProject(program: Command, manifest: Manifest): void {
+    if (manifest.type !== 'wasm') {
+        program.error('Oops, nothing to build for SQL based daemons')
+    }
 }
 
 async function buildAssemblyScript(
