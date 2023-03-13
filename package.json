@@ -19,7 +19,8 @@
         "prepare": "husky install",
         "dev": "ts-node ./src/index.ts",
         "test": "NODE_ENV=test node --test --require ts-node/register ./src/**/*.test.ts",
-        "test:watch": "NODE_ENV=test node --watch --require ts-node/register ./src/**/*.test.ts"
+        "test:watch": "NODE_ENV=test node --watch --require ts-node/register ./src/**/*.test.ts",
+        "postinstall": "sh fix-client.sh"
     },
     "bin": {
         "mamoru-cli": "./dist/index.js",
