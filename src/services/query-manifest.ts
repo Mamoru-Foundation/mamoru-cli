@@ -5,8 +5,8 @@ import yaml from 'yaml'
 import { IncidentSeverity } from '../types'
 import { formatJoiError } from './utils'
 import { FILES } from './constants'
-import { DaemonMetadataContentQuery } from 'validation-chain-client-ts/validationchain.validationchain'
 import { Logger } from './console'
+import { DaemonMetadataContentQuery } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_utils'
 
 class QueryManifestService {
     private getFile(logger: Logger, projectPath: string) {

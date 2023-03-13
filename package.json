@@ -44,6 +44,7 @@
     "dependencies": {
         "@cosmjs/json-rpc": "^0.29.5",
         "@cosmjs/tendermint-rpc": "^0.29.5",
+        "@mamoru-ai/validation-chain-ts-client": "^0.0.3",
         "assemblyscript": "^0.19.23",
         "axios": "^0.27.2",
         "colors": "^1.4.0",
@@ -52,8 +53,7 @@
         "handlebars": "^4.7.7",
         "ipfs-http-client": "56",
         "joi": "^17.6.0",
-        "yaml": "^2.2.1",
-        "validation-chain-client-ts": "../validation-chain/ts-client"
+        "yaml": "^2.2.1"
     },
     "lint-staged": {
         "**/*.{js,ts}": [

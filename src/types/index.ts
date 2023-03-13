@@ -1,5 +1,5 @@
-import { DaemonMetadataParemeter } from 'validation-chain-client-ts/validationchain.validationchain'
-import { Chain_ChainType } from 'validation-chain-client-ts/validationchain.validationchain/types/validationchain/validationchain/chain'
+import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
+import { DaemonMetadataParemeter } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_utils'
 
 export class Manifest {
     version: string
