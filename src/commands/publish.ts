@@ -35,17 +35,38 @@ async function publish(
         logger
     )
 
+    let metadataId = ''
+
     if (manifest.type === 'sql') {
         const queries = queryManifest.getQueries(logger, projectPath)
-        await vcService.registerDaemonMetadata(manifest, queries)
+        const r = await vcService.registerDaemonMetadata(manifest, queries)
+        metadataId = r.daemonMetadataId
     }
 
     if (manifest.type === 'wasm') {
         const wasm = prepareBinaryFile(path.join(buildPath, WASM_INDEX))
-        await vcService.registerDaemonMetadata(manifest, [], wasm)
+        const r = await vcService.registerDaemonMetadata(manifest, [], wasm)
+        metadataId = r.daemonMetadataId
     }
 
+    if (!manifest.subscribable) {
+        logger.ok('Registering Daemon to Validation chain')
+        const r = await vcService.registerDaemon(manifest, metadataId)
+
+        logger.ok(
+            `Daemon registered successfully, Metadata ID: ${metadataId}, Daemon ID: ${r.daemonId}`
+        )
+
+        return {
+            metadataId,
+            daemonId: r.daemonId,
+        }
+    }
     logger.ok('Published successfully')
+
+    return {
+        metadataId,
+    }
 }
 
 function validateBuildPath(

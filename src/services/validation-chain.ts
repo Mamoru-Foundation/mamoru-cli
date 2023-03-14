@@ -17,6 +17,7 @@ import { DaemonRegisterCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-
 import {
     MsgCreateDaemonMetadata,
     MsgCreateDaemonMetadataResponse,
+    MsgRegisterDaemonResponse,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/tx'
 import protobuf from 'protobufjs'
 
@@ -39,6 +40,7 @@ export type ValidationChainMsgs =
     | MsgRegisterDaemon
     | MsgCreateDaemonMetadata
     | MsgCreateDaemonMetadataResponse
+    | MsgRegisterDaemonResponse
 
 class ValidationChainService {
     /**
@@ -118,7 +120,6 @@ class ValidationChainService {
         })
 
         const data: Uint8Array = r.data as unknown as Uint8Array
-        console.log(r)
         const decodeTxMessages = this.decodeTxMessages(data)
         const msg = decodeTxMessages[0] as MsgCreateDaemonMetadataResponse
 
@@ -140,6 +141,10 @@ class ValidationChainService {
 
         message MsgCreateDaemonMetadataResponse {
             string daemonMetadataId = 1;
+        }
+
+        message MsgRegisterDaemonResponse {
+            string daemonId = 1;
         }
 
         message TxMsgData {
@@ -167,9 +172,12 @@ class ValidationChainService {
         )
     }
 
-    async registerDaemon(manifest: Manifest, daemonMetadataId: string) {
+    async registerDaemon(
+        manifest: Manifest,
+        daemonMetadataId: string
+    ): Promise<MsgRegisterDaemonResponse> {
         this.logger.verbose('Registering daemon')
-        const client = await this.getClient()
+        const txClient = await this.getTxClient()
         const address = await this.getAddress()
 
         const payload: DaemonRegisterCommandRequestDTO = {
@@ -192,9 +200,11 @@ class ValidationChainService {
 
         this.logger.verbose('Payload', payload)
 
-        await client.ValidationchainValidationchain.tx.sendMsgCreateDaemon(
-            message
-        )
+        const r = await txClient.sendMsgRegisterDaemon({ value: message })
+        const data: Uint8Array = r.data as unknown as Uint8Array
+
+        const decodeTxMessages = this.decodeTxMessages(data)
+        return decodeTxMessages[0] as MsgRegisterDaemonResponse
     }
     /**
      * Utility function that can be used for debug messages from validation-chain protobuf API.

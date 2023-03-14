@@ -9,7 +9,6 @@ import {
     getProgramMock,
     getTempFolder,
 } from '../utils/test'
-import { promisify } from 'node:util'
 import { runCommand } from '../utils/utils'
 
 const programMock = getProgramMock()
@@ -79,7 +78,7 @@ describe(colors.yellow('publish'), () => {
                 privateKey: 'Z5a1pRrwP1yqQxM8Nt7j19i9YSjufjY9n8U0pYDyqeg=',
                 rpcUrl: 'http://0.0.0.0:26657',
             })
-        })
+        }, 10000)
         it('OK - SUBSCRIBABLE', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({
@@ -127,6 +126,6 @@ describe(colors.yellow('publish'), () => {
                 privateKey: 'Z5a1pRrwP1yqQxM8Nt7j19i9YSjufjY9n8U0pYDyqeg=',
                 rpcUrl: 'http://0.0.0.0:26657',
             })
-        })
+        }, 10000)
     })
 })
