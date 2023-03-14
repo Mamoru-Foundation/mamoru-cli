@@ -12,6 +12,7 @@ const programMock = getProgramMock()
 describe(colors.yellow('init'), () => {
     it('OK - Should create Files - type=sql', () => {
         const dir = getTempFolder()
+        console.log(colors.green('Temp Folder: ' + dir))
         const options: InitOptions = {
             type: 'sql',
             name: 'TEST name',
