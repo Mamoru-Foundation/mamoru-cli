@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { describe, it } from 'node:test'
+import { describe, it } from '@jest/globals'
 import publish from './publish'
 import colors from 'colors'
 import init from './init'
@@ -9,6 +9,8 @@ import {
     getProgramMock,
     getTempFolder,
 } from '../utils/test'
+import { promisify } from 'node:util'
+import { runCommand } from '../utils/utils'
 
 const programMock = getProgramMock()
 
@@ -118,6 +120,8 @@ describe(colors.yellow('publish'), () => {
             const dir = getTempFolder()
             const options = generateInitOptions({ type: 'wasm' })
             init.init(programMock, dir, options)
+            await runCommand('npm install --prefix ' + dir)
+
             build.build(programMock, dir)
             await publish.publish(programMock, dir, {
                 privateKey: 'Z5a1pRrwP1yqQxM8Nt7j19i9YSjufjY9n8U0pYDyqeg=',

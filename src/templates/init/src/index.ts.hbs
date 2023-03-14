@@ -1,5 +1,4 @@
 import { http, HttpMethod, report, IncidentSeverity, query } from '@mamoru-ai/mamoru-sdk-as/assembly';
-import { JSON } from "assemblyscript-json/assembly";
 
 export function main(): void {
     const response = http(
@@ -19,7 +18,7 @@ export function main(): void {
         }
     }
 
-    query('SELECT * FROM transactions').forEach((tx: JSON.Obj) => {
+    query('SELECT * FROM transactions').forEach((tx) => {
         const hash = tx.getString!("hash")!.valueOf();
 
         if (hash == "0x0") {

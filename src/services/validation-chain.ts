@@ -118,7 +118,7 @@ class ValidationChainService {
         })
 
         const data: Uint8Array = r.data as unknown as Uint8Array
-
+        console.log(r)
         const decodeTxMessages = this.decodeTxMessages(data)
         const msg = decodeTxMessages[0] as MsgCreateDaemonMetadataResponse
 
@@ -146,7 +146,6 @@ class ValidationChainService {
             repeated Any msg_responses = 2;
         }
         `).root
-        console.log(root.lookupType(`.${parsedName}`))
         return root.lookupType(`.${parsedName}`)
     }
 

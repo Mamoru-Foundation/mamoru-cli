@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { describe, it } from 'node:test'
+import { describe, it } from '@jest/globals'
 import init, { InitOptions } from './init'
 import path from 'node:path'
 import fs from 'node:fs'
@@ -36,14 +36,19 @@ describe(colors.yellow('init'), () => {
             path.join(dir, 'package.json'),
             'utf-8'
         )
-        const parsed = JSON.parse(packageJson)
+        const packageParsed = JSON.parse(packageJson)
 
-        assert.deepEqual(parsed, {
+        assert.deepEqual(packageParsed, {
+            dependencies: { '@mamoru-ai/mamoru-sdk-as': '^0.2.0' },
             description: 'TEST_DESCRIPTION',
-            name: 'test-name',
-            version: '0.0.1',
-            tags: ['test', 'cli'],
+            devDependencies: { assemblyscript: '^0.27.1' },
             license: 'Apache-2.0',
+            name: 'test-name',
+            scripts: {
+                build: 'asc src/index.ts --outFile build/index.wasm -b build/index.wat --sourceMap --optimize --exportRuntime --runtime stub --lib',
+            },
+            tags: ['test', 'cli'],
+            version: '0.0.1',
         })
 
         const manifest = fs.readFileSync(
@@ -76,7 +81,7 @@ describe(colors.yellow('init'), () => {
             ],
         })
     })
-    it('OK - Should create Files - type=wasm', () => {
+    it('OK - Should create Files - type=wasm', async () => {
         const dir = getTempFolder()
         // console.log(colors.green('Temp Folder: ' + dir))
         const options: InitOptions = {
@@ -117,11 +122,16 @@ describe(colors.yellow('init'), () => {
         const parsedPackage = JSON.parse(packageJson)
 
         assert.deepEqual(parsedPackage, {
+            dependencies: { '@mamoru-ai/mamoru-sdk-as': '^0.2.0' },
             description: 'TEST_DESCRIPTION',
-            name: 'test-name',
-            version: '0.0.1',
-            tags: ['test', 'cli'],
+            devDependencies: { assemblyscript: '^0.27.1' },
             license: 'Apache-2.0',
+            name: 'test-name',
+            scripts: {
+                build: 'asc src/index.ts --outFile build/index.wasm -b build/index.wat --sourceMap --optimize --exportRuntime --runtime stub --lib',
+            },
+            tags: ['test', 'cli'],
+            version: '0.0.1',
         })
 
         const manifest = fs.readFileSync(

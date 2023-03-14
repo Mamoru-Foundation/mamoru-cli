@@ -1,7 +1,6 @@
 import * as fs from 'fs'
 import * as path from 'path'
 import type { Command } from 'commander'
-import * as asc from 'assemblyscript/cli/asc'
 
 import {
     serializeAndSaveManifest,
@@ -10,6 +9,7 @@ import {
 import { Logger } from '../services/console'
 import { OUT_DIR } from '../services/constants'
 import { Manifest } from '../types'
+import { runCommand } from '../utils/utils'
 
 async function build(program: Command, projectPath: string) {
     const verbosity = program.opts().verbose
@@ -22,7 +22,7 @@ async function build(program: Command, projectPath: string) {
     const inFile = path.join(projectPath, 'src', 'index.ts')
     const outFile = path.join(buildPath, 'index.wasm')
 
-    await buildAssemblyScript(logger, program, inFile, outFile)
+    await buildAssemblyScript(logger, program, inFile, outFile, projectPath)
     await checkAssemblyScriptBuild(logger, program, outFile)
     serializeAndSaveManifest(logger, manifest, buildPath)
 
@@ -50,52 +50,40 @@ async function buildAssemblyScript(
     logger: Logger,
     program: Command,
     inFile: string,
-    outFile: string
+    outFile: string,
+    projectPath: string
 ) {
     logger.ok('Compiling source code')
     if (!fs.existsSync(inFile))
         program.error(`Input File "${inFile}" not found`)
 
-    await new Promise((resolve) => {
-        // const stdout = new Writable()
-        // const stderr = new Writable()
+    await runCommand(`npm run build --prefix "${projectPath}"`)
 
-        asc.main(
-            [
-                inFile,
-                '--exportRuntime',
-                '--runtime',
-                'stub',
-                '--lib',
-                '--outFile',
-                outFile,
-                '--optimize',
-                '--debug',
-                '--sourceMap',
-            ],
-            {
-                // stdout,
-                // stderr,
-            },
-            (error: Error) => {
-                if (error) {
-                    logger.verbose('Compilation failed with error')
-                    console.error(error)
-                    program.error('Compilation failed')
-                }
-
-                logger.ok('Compilation successful')
-
-                resolve({
-                    // stdout,
-                    // stderr,
-                    error: null,
-                })
-
-                return 0
-            }
-        )
-    })
+    // const result = await asc
+    //     .main([
+    //         inFile,
+    //         '--exportRuntime',
+    //         // Stub runtime, does not implement garbage collection
+    //         '--runtime',
+    //         'stub',
+    //         '--lib',
+    //         '--outFile',
+    //         outFile,
+    //         '--optimize',
+    //         '--noAssert',
+    //         '--sourceMap',
+    //         '--path',
+    //         `"${path.join(projectPath, 'node_modules')}"`,
+    //     ])
+    //     .then((result) => {
+    //         logger.verbose('Compilation finished')
+    //         return 0
+    //     })
+    //     .catch((error) => {
+    //         logger.verbose('Compilation failed with error')
+    //         console.error(error)
+    //         program.error('Compilation failed')
+    //     })
 }
 
 async function checkAssemblyScriptBuild(

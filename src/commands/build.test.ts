@@ -11,6 +11,7 @@ import {
     getProgramMock,
     getTempFolder,
 } from '../utils/test'
+import { runCommand } from '../utils/utils'
 
 const programMock = getProgramMock()
 
@@ -38,6 +39,7 @@ describe(colors.yellow('build'), () => {
         console.log(colors.green('Temp Folder: ' + dir))
         const options = generateInitOptions({ type: 'wasm' })
         init.init(programMock, dir, options)
+        await runCommand('npm install --prefix ' + dir)
         await build.build(programMock, dir)
 
         const files = fs.readdirSync(dir)
