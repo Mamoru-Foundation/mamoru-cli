@@ -4,6 +4,12 @@ import fs from 'fs'
 import { Command } from 'commander'
 import { InitOptions } from '../commands/init'
 
+export const isUUID = (str: string): boolean => {
+    return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(
+        str
+    )
+}
+
 export const getProgramMock = (): Command => {
     const programMock: Command = {
         opts: () => {

@@ -35,37 +35,37 @@ async function publish(
         logger
     )
 
-    let metadataId = ''
+    let daemonMetadataId = ''
 
     if (manifest.type === 'sql') {
         const queries = queryManifest.getQueries(logger, projectPath)
         const r = await vcService.registerDaemonMetadata(manifest, queries)
-        metadataId = r.daemonMetadataId
+        daemonMetadataId = r.daemonMetadataId
     }
 
     if (manifest.type === 'wasm') {
         const wasm = prepareBinaryFile(path.join(buildPath, WASM_INDEX))
         const r = await vcService.registerDaemonMetadata(manifest, [], wasm)
-        metadataId = r.daemonMetadataId
+        daemonMetadataId = r.daemonMetadataId
     }
 
     if (!manifest.subscribable) {
         logger.ok('Registering Daemon to Validation chain')
-        const r = await vcService.registerDaemon(manifest, metadataId)
+        const r = await vcService.registerDaemon(manifest, daemonMetadataId)
 
         logger.ok(
-            `Daemon registered successfully, Metadata ID: ${metadataId}, Daemon ID: ${r.daemonId}`
+            `Daemon registered successfully, Metadata ID: ${daemonMetadataId}, Daemon ID: ${r.daemonId}`
         )
 
         return {
-            metadataId,
+            daemonMetadataId,
             daemonId: r.daemonId,
         }
     }
     logger.ok('Published successfully')
 
     return {
-        metadataId,
+        daemonMetadataId,
     }
 }
 

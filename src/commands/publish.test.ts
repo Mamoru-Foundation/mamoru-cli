@@ -8,6 +8,7 @@ import {
     generateInitOptions,
     getProgramMock,
     getTempFolder,
+    isUUID,
 } from '../utils/test'
 import { runCommand } from '../utils/utils'
 
@@ -74,10 +75,14 @@ describe(colors.yellow('publish'), () => {
             const options = generateInitOptions({ type: 'sql' })
             init.init(programMock, dir, options)
 
-            await publish.publish(programMock, dir, {
+            const r = await publish.publish(programMock, dir, {
                 privateKey: 'Z5a1pRrwP1yqQxM8Nt7j19i9YSjufjY9n8U0pYDyqeg=',
                 rpcUrl: 'http://0.0.0.0:26657',
             })
+
+            assert.ok(r)
+            assert.equal(isUUID(r.daemonId), true)
+            assert.equal(isUUID(r.daemonMetadataId), true)
         }, 10000)
         it('OK - SUBSCRIBABLE', async () => {
             const dir = getTempFolder()
@@ -87,10 +92,12 @@ describe(colors.yellow('publish'), () => {
             })
             init.init(programMock, dir, options)
 
-            await publish.publish(programMock, dir, {
+            const r = await publish.publish(programMock, dir, {
                 privateKey: 'Z5a1pRrwP1yqQxM8Nt7j19i9YSjufjY9n8U0pYDyqeg=',
                 rpcUrl: 'http://0.0.0.0:26657',
             })
+            assert.equal(isUUID(r.daemonMetadataId), true)
+            assert.equal(r.daemonId, undefined)
         })
     })
 
@@ -122,10 +129,13 @@ describe(colors.yellow('publish'), () => {
             await runCommand('npm install --prefix ' + dir)
 
             build.build(programMock, dir)
-            await publish.publish(programMock, dir, {
+            const r = await publish.publish(programMock, dir, {
                 privateKey: 'Z5a1pRrwP1yqQxM8Nt7j19i9YSjufjY9n8U0pYDyqeg=',
                 rpcUrl: 'http://0.0.0.0:26657',
             })
+            assert.ok(r)
+            assert.equal(isUUID(r.daemonId), true)
+            assert.equal(isUUID(r.daemonMetadataId), true)
         }, 10000)
     })
 })
