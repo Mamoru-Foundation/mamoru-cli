@@ -5,10 +5,10 @@
   "description": "{{ description }}",
   "tags": {{{jsonTags}}},
   "scripts":{
-    "build": "asc src/index.ts --outFile build/index.wasm -b build/index.wat --sourceMap --optimize --exportRuntime --runtime stub --lib"
+    "build": "asc src/index.ts --exportRuntime --outFile build/index.wasm -b build/index.wat --sourceMap --optimize --exportRuntime --runtime stub --lib"
   },
   "dependencies": {
-    "@mamoru-ai/mamoru-sdk-as": "^0.2.0"
+    "@mamoru-ai/mamoru-sdk-as": "^0.2.1"
   },
   "devDependencies": {
     "assemblyscript": "^0.27.1"

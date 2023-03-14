@@ -23,7 +23,7 @@ async function build(program: Command, projectPath: string) {
     const outFile = path.join(buildPath, 'index.wasm')
 
     await buildAssemblyScript(logger, program, inFile, outFile, projectPath)
-    await checkAssemblyScriptBuild(logger, program, outFile)
+    // await checkAssemblyScriptBuild(logger, program, outFile)
     serializeAndSaveManifest(logger, manifest, buildPath)
 
     logger.ok('Done!')

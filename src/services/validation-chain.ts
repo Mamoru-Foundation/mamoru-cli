@@ -97,6 +97,7 @@ class ValidationChainService {
         this.logger.verbose('Registering daemon metadata')
         const txClient = await this.getTxClient()
         const address = await this.getAddress()
+        console.log('!!!!!!!!!!!!!!!address', address)
 
         const payload: CreateDaemonMetadataCommandRequestDTO = {
             logoUrl: manifest.logoUrl,

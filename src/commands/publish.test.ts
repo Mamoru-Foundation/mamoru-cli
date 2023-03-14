@@ -9,7 +9,7 @@ import {
     getProgramMock,
     getTempFolder,
     isUUID,
-} from '../utils/test'
+} from '../utils/test-utils'
 import { runCommand } from '../utils/utils'
 
 const programMock = getProgramMock()
@@ -125,10 +125,11 @@ describe(colors.yellow('publish'), () => {
         it('OK - SOLE', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({ type: 'wasm' })
+            console.log(colors.green('dir '), dir)
             init.init(programMock, dir, options)
             await runCommand('npm install --prefix ' + dir)
 
-            build.build(programMock, dir)
+            await build.build(programMock, dir)
             const r = await publish.publish(programMock, dir, {
                 privateKey: 'Z5a1pRrwP1yqQxM8Nt7j19i9YSjufjY9n8U0pYDyqeg=',
                 rpcUrl: 'http://0.0.0.0:26657',

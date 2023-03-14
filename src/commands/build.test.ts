@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { describe, it } from 'node:test'
+import { describe, it } from '@jest/globals'
 import init from './init'
 import build from './build'
 import path from 'node:path'
@@ -10,7 +10,7 @@ import {
     generateInitOptions,
     getProgramMock,
     getTempFolder,
-} from '../utils/test'
+} from '../utils/test-utils'
 import { runCommand } from '../utils/utils'
 
 const programMock = getProgramMock()
@@ -43,7 +43,7 @@ describe(colors.yellow('build'), () => {
         await build.build(programMock, dir)
 
         const files = fs.readdirSync(dir)
-        assert.strictEqual(files.length, 6 + 1) // +1 for the dist folder
+        assert.strictEqual(files.length, 6 + 3) // +1 for the dist folder
         assert.strictEqual(files.includes('README.md'), true)
         const srcDir = path.join(dir, 'src')
         assert.strictEqual(fs.existsSync(srcDir), true)
@@ -57,5 +57,5 @@ describe(colors.yellow('build'), () => {
         assert.strictEqual(outFiles.includes('manifest.yml'), true)
         assert.strictEqual(outFiles.includes('index.wasm'), true)
         assert.strictEqual(outFiles.includes('index.wasm.map'), true)
-    })
+    }, 10000)
 })

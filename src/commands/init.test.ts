@@ -5,7 +5,7 @@ import path from 'node:path'
 import fs from 'node:fs'
 import colors from 'colors'
 import yaml from 'yaml'
-import { getProgramMock, getTempFolder } from '../utils/test'
+import { getProgramMock, getTempFolder } from '../utils/test-utils'
 
 const programMock = getProgramMock()
 
@@ -39,7 +39,7 @@ describe(colors.yellow('init'), () => {
         const packageParsed = JSON.parse(packageJson)
 
         assert.deepEqual(packageParsed, {
-            dependencies: { '@mamoru-ai/mamoru-sdk-as': '^0.2.0' },
+            dependencies: { '@mamoru-ai/mamoru-sdk-as': '^0.2.1' },
             description: 'TEST_DESCRIPTION',
             devDependencies: { assemblyscript: '^0.27.1' },
             license: 'Apache-2.0',
@@ -122,7 +122,7 @@ describe(colors.yellow('init'), () => {
         const parsedPackage = JSON.parse(packageJson)
 
         assert.deepEqual(parsedPackage, {
-            dependencies: { '@mamoru-ai/mamoru-sdk-as': '^0.2.0' },
+            dependencies: { '@mamoru-ai/mamoru-sdk-as': '^0.2.1' },
             description: 'TEST_DESCRIPTION',
             devDependencies: { assemblyscript: '^0.27.1' },
             license: 'Apache-2.0',
