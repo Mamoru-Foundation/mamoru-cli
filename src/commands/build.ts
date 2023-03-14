@@ -1,6 +1,5 @@
 import * as fs from 'fs'
 import * as path from 'path'
-import { Writable } from 'node:stream'
 import type { Command } from 'commander'
 import * as asc from 'assemblyscript/cli/asc'
 
@@ -9,8 +8,8 @@ import {
     validateAndReadManifest,
 } from '../services/manifest'
 import { Logger } from '../services/console'
-
-const OUT_DIR = 'build'
+import { OUT_DIR } from '../services/constants'
+import { Manifest } from '../types'
 
 async function build(program: Command, projectPath: string) {
     const verbosity = program.opts().verbose
@@ -18,6 +17,7 @@ async function build(program: Command, projectPath: string) {
     logger.verbose('Building project')
 
     const manifest = validateAndReadManifest(logger, program, projectPath)
+    validateIsWasmProject(program, manifest)
     const buildPath = prepareBuildPath(logger, projectPath)
     const inFile = path.join(projectPath, 'src', 'index.ts')
     const outFile = path.join(buildPath, 'index.wasm')
@@ -38,6 +38,12 @@ function prepareBuildPath(logger: Logger, projectPath: string): string {
     fs.mkdirSync(p)
 
     return p
+}
+
+function validateIsWasmProject(program: Command, manifest: Manifest): void {
+    if (manifest.type !== 'wasm') {
+        program.error('Oops, nothing to build for SQL based daemons')
+    }
 }
 
 async function buildAssemblyScript(
