@@ -137,6 +137,11 @@ program
     )
     .option('--rpc <rpcUrl>', 'rpc url of the chain')
     .addOption(
+        new Option('--gas <gas>', 'gas fee of the transaction').default(
+            '200000'
+        )
+    )
+    .addOption(
         new Option(
             '-k, --private-key <key>',
             'Private key of the account that will be used to publish the project'

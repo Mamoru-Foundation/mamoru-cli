@@ -10,8 +10,9 @@ import { prepareBinaryFile } from '../services/assemblyscript'
 import { Manifest } from '../types'
 
 export interface PublishOptions {
-    rpcUrl: string
+    rpcUrl?: string
     privateKey: string
+    gas?: string
 }
 
 async function publish(
@@ -45,7 +46,12 @@ async function publish(
 
     if (manifest.type === 'wasm') {
         const wasm = prepareBinaryFile(path.join(buildPath, WASM_INDEX))
-        const r = await vcService.registerDaemonMetadata(manifest, [], wasm)
+        const r = await vcService.registerDaemonMetadata(
+            manifest,
+            [],
+            wasm,
+            options.gas
+        )
         daemonMetadataId = r.daemonMetadataId
     }
 

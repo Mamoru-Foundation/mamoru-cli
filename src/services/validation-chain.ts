@@ -30,6 +30,16 @@ type AnyMsg = {
     value: Uint8Array
 }
 
+type DeliverTxResponse = {
+    code: number
+    height: number
+    rawLog?: string
+    transactionHash: string
+    gasUsed: number
+    gasWanted: number
+    data?: any
+}
+
 export type Msgs =
     | MsgRegisterDaemon
     | MsgCreateDaemonMetadata
@@ -92,12 +102,12 @@ class ValidationChainService {
     async registerDaemonMetadata(
         manifest: Manifest,
         queries: DaemonMetadataContentQuery[],
-        wasmModule?: string
+        wasmModule?: string,
+        gas?: string
     ): Promise<MsgCreateDaemonMetadataResponse> {
         this.logger.verbose('Registering daemon metadata')
         const txClient = await this.getTxClient()
         const address = await this.getAddress()
-        console.log('!!!!!!!!!!!!!!!address', address)
 
         const payload: CreateDaemonMetadataCommandRequestDTO = {
             logoUrl: manifest.logoUrl,
@@ -118,7 +128,18 @@ class ValidationChainService {
 
         const r = await txClient.sendMsgCreateDaemonMetadata({
             value: message,
+            fee: {
+                amount: [],
+                gas: gas || '200000',
+            },
         })
+        this.throwOnError('MsgCreateDaemonMetadata', r)
+
+        console.log(r)
+
+        if (r.code) {
+            throw new Error()
+        }
 
         const data: Uint8Array = r.data as unknown as Uint8Array
         const decodeTxMessages = this.decodeTxMessages(data)
@@ -194,18 +215,33 @@ class ValidationChainService {
             },
         }
 
-        const message: MsgRegisterDaemon = {
+        const value: MsgRegisterDaemon = {
             creator: address,
             daemon: payload,
         }
 
         this.logger.verbose('Payload', payload)
 
-        const r = await txClient.sendMsgRegisterDaemon({ value: message })
+        const r = await txClient.sendMsgRegisterDaemon({
+            value,
+        })
+        this.throwOnError('MsgRegisterDaemon', r)
+
         const data: Uint8Array = r.data as unknown as Uint8Array
 
         const decodeTxMessages = this.decodeTxMessages(data)
         return decodeTxMessages[0] as MsgRegisterDaemonResponse
+    }
+
+    private formatError(msgType: string, error: DeliverTxResponse) {
+        const { code, rawLog } = error
+        return `Error sending "${msgType}" code: "${code}", log: "${rawLog}" hash: "${error.transactionHash}"`
+    }
+    private throwOnError(MsgType: string, response: DeliverTxResponse) {
+        if (response.code) {
+            throw new Error(this.formatError(MsgType, response))
+        }
+        return response
     }
     /**
      * Utility function that can be used for debug messages from validation-chain protobuf API.

@@ -45,7 +45,7 @@ describe(colors.yellow('init'), () => {
             license: 'Apache-2.0',
             name: 'test-name',
             scripts: {
-                build: 'asc src/index.ts --outFile build/index.wasm -b build/index.wat --sourceMap --optimize --exportRuntime --runtime stub --lib',
+                build: 'asc src/index.ts --exportRuntime --outFile build/index.wasm -b build/index.wat --sourceMap --optimize --exportRuntime --runtime stub --lib',
             },
             tags: ['test', 'cli'],
             version: '0.0.1',
@@ -128,7 +128,7 @@ describe(colors.yellow('init'), () => {
             license: 'Apache-2.0',
             name: 'test-name',
             scripts: {
-                build: 'asc src/index.ts --outFile build/index.wasm -b build/index.wat --sourceMap --optimize --exportRuntime --runtime stub --lib',
+                build: 'asc src/index.ts --exportRuntime --outFile build/index.wasm -b build/index.wat --sourceMap --optimize --exportRuntime --runtime stub --lib',
             },
             tags: ['test', 'cli'],
             version: '0.0.1',

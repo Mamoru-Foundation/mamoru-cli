@@ -122,7 +122,32 @@ describe(colors.yellow('publish'), () => {
                     )
                 })
         })
-        it('OK - SOLE', async () => {
+        it('FAIL - SOLE -no enough gas', async () => {
+            const dir = getTempFolder()
+            const options = generateInitOptions({ type: 'wasm' })
+            console.log(colors.green('dir '), dir)
+            init.init(programMock, dir, options)
+            await runCommand('npm install --prefix ' + dir)
+
+            await build.build(programMock, dir)
+            const r = await publish
+                .publish(programMock, dir, {
+                    privateKey: 'Z5a1pRrwP1yqQxM8Nt7j19i9YSjufjY9n8U0pYDyqeg=',
+                    rpcUrl: 'http://0.0.0.0:26657',
+                    gas: (500000).toString(),
+                })
+                .then(() => {
+                    throw new Error('An error should have been thrown')
+                })
+                .catch((error) => {
+                    assert.match(
+                        error.message,
+                        /Error sending "MsgCreateDaemonMetadata"/
+                    )
+                    assert.match(error.message, /out of gas/)
+                })
+        }, 10000)
+        it.only('OK - SOLE', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({ type: 'wasm' })
             console.log(colors.green('dir '), dir)
@@ -133,10 +158,11 @@ describe(colors.yellow('publish'), () => {
             const r = await publish.publish(programMock, dir, {
                 privateKey: 'Z5a1pRrwP1yqQxM8Nt7j19i9YSjufjY9n8U0pYDyqeg=',
                 rpcUrl: 'http://0.0.0.0:26657',
+                gas: (1000 * 1000).toString(),
             })
             assert.ok(r)
             assert.equal(isUUID(r.daemonId), true)
             assert.equal(isUUID(r.daemonMetadataId), true)
-        }, 10000)
+        }, 20000)
     })
 })
