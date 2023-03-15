@@ -1,5 +1,5 @@
 import assert from 'node:assert'
-import { describe, it } from 'node:test'
+import { describe, it } from '@jest/globals'
 import publish from './publish'
 import colors from 'colors'
 import init from './init'
@@ -8,7 +8,9 @@ import {
     generateInitOptions,
     getProgramMock,
     getTempFolder,
-} from '../utils/test'
+    isUUID,
+} from '../utils/test-utils'
+import { runCommand } from '../utils/utils'
 
 const programMock = getProgramMock()
 
@@ -73,11 +75,15 @@ describe(colors.yellow('publish'), () => {
             const options = generateInitOptions({ type: 'sql' })
             init.init(programMock, dir, options)
 
-            await publish.publish(programMock, dir, {
+            const r = await publish.publish(programMock, dir, {
                 privateKey: 'Z5a1pRrwP1yqQxM8Nt7j19i9YSjufjY9n8U0pYDyqeg=',
                 rpcUrl: 'http://0.0.0.0:26657',
             })
-        })
+
+            assert.ok(r)
+            assert.equal(isUUID(r.daemonId), true)
+            assert.equal(isUUID(r.daemonMetadataId), true)
+        }, 10000)
         it('OK - SUBSCRIBABLE', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({
@@ -86,10 +92,12 @@ describe(colors.yellow('publish'), () => {
             })
             init.init(programMock, dir, options)
 
-            await publish.publish(programMock, dir, {
+            const r = await publish.publish(programMock, dir, {
                 privateKey: 'Z5a1pRrwP1yqQxM8Nt7j19i9YSjufjY9n8U0pYDyqeg=',
                 rpcUrl: 'http://0.0.0.0:26657',
             })
+            assert.equal(isUUID(r.daemonMetadataId), true)
+            assert.equal(r.daemonId, undefined)
         })
     })
 
@@ -114,15 +122,47 @@ describe(colors.yellow('publish'), () => {
                     )
                 })
         })
+        it('FAIL - SOLE -no enough gas', async () => {
+            const dir = getTempFolder()
+            const options = generateInitOptions({ type: 'wasm' })
+            console.log(colors.green('dir '), dir)
+            init.init(programMock, dir, options)
+            await runCommand('npm install --prefix ' + dir)
+
+            await build.build(programMock, dir)
+            const r = await publish
+                .publish(programMock, dir, {
+                    privateKey: 'Z5a1pRrwP1yqQxM8Nt7j19i9YSjufjY9n8U0pYDyqeg=',
+                    rpcUrl: 'http://0.0.0.0:26657',
+                    gas: (500000).toString(),
+                })
+                .then(() => {
+                    throw new Error('An error should have been thrown')
+                })
+                .catch((error) => {
+                    assert.match(
+                        error.message,
+                        /Error sending "MsgCreateDaemonMetadata"/
+                    )
+                    assert.match(error.message, /out of gas/)
+                })
+        }, 10000)
         it('OK - SOLE', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({ type: 'wasm' })
+            console.log(colors.green('dir '), dir)
             init.init(programMock, dir, options)
-            build.build(programMock, dir)
-            await publish.publish(programMock, dir, {
+            await runCommand('npm install --prefix ' + dir)
+
+            await build.build(programMock, dir)
+            const r = await publish.publish(programMock, dir, {
                 privateKey: 'Z5a1pRrwP1yqQxM8Nt7j19i9YSjufjY9n8U0pYDyqeg=',
                 rpcUrl: 'http://0.0.0.0:26657',
+                gas: (1000 * 1000).toString(),
             })
-        })
+            assert.ok(r)
+            assert.equal(isUUID(r.daemonId), true)
+            assert.equal(isUUID(r.daemonMetadataId), true)
+        }, 20000)
     })
 })

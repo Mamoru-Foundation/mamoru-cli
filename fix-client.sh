@@ -8,9 +8,10 @@ export client_path='node_modules/@cosmjs/stargate/build/stargateclient.js'
 
 
 # Path: check if line " tx: result.tx," exist
-export line_exist=$(grep -c "tx: result.tx," $client_path)
+export line_exist=$(grep -c "data: result.data," $client_path)
 
 # Path: if line not exist, add it
 if [ $line_exist -eq 0 ]; then
-    sed -i '' 's/gasWanted: result.gasWanted,/gasWanted: result.gasWanted, tx: result.tx,/' "$client_path";
+    sed -i '' 's/gasWanted: result.gasWanted,/gasWanted: result.gasWanted, data: result.data,/' "$client_path";
+    sed -i '' 's/gasWanted: tx.result.gasWanted,/gasWanted: tx.result.gasWanted, data: tx.result.data,/' "$client_path";
 fi

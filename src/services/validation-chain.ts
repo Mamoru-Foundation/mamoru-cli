@@ -17,6 +17,7 @@ import { DaemonRegisterCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-
 import {
     MsgCreateDaemonMetadata,
     MsgCreateDaemonMetadataResponse,
+    MsgRegisterDaemonResponse,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/tx'
 import protobuf from 'protobufjs'
 
@@ -29,6 +30,16 @@ type AnyMsg = {
     value: Uint8Array
 }
 
+type DeliverTxResponse = {
+    code: number
+    height: number
+    rawLog?: string
+    transactionHash: string
+    gasUsed: number
+    gasWanted: number
+    data?: any
+}
+
 export type Msgs =
     | MsgRegisterDaemon
     | MsgCreateDaemonMetadata
@@ -39,6 +50,7 @@ export type ValidationChainMsgs =
     | MsgRegisterDaemon
     | MsgCreateDaemonMetadata
     | MsgCreateDaemonMetadataResponse
+    | MsgRegisterDaemonResponse
 
 class ValidationChainService {
     /**
@@ -90,7 +102,8 @@ class ValidationChainService {
     async registerDaemonMetadata(
         manifest: Manifest,
         queries: DaemonMetadataContentQuery[],
-        wasmModule?: string
+        wasmModule?: string,
+        gas?: string
     ): Promise<MsgCreateDaemonMetadataResponse> {
         this.logger.verbose('Registering daemon metadata')
         const txClient = await this.getTxClient()
@@ -115,10 +128,20 @@ class ValidationChainService {
 
         const r = await txClient.sendMsgCreateDaemonMetadata({
             value: message,
+            fee: {
+                amount: [],
+                gas: gas || '200000',
+            },
         })
+        this.throwOnError('MsgCreateDaemonMetadata', r)
+
+        console.log(r)
+
+        if (r.code) {
+            throw new Error()
+        }
 
         const data: Uint8Array = r.data as unknown as Uint8Array
-
         const decodeTxMessages = this.decodeTxMessages(data)
         const msg = decodeTxMessages[0] as MsgCreateDaemonMetadataResponse
 
@@ -142,11 +165,14 @@ class ValidationChainService {
             string daemonMetadataId = 1;
         }
 
+        message MsgRegisterDaemonResponse {
+            string daemonId = 1;
+        }
+
         message TxMsgData {
             repeated Any msg_responses = 2;
         }
         `).root
-        console.log(root.lookupType(`.${parsedName}`))
         return root.lookupType(`.${parsedName}`)
     }
 
@@ -168,9 +194,12 @@ class ValidationChainService {
         )
     }
 
-    async registerDaemon(manifest: Manifest, daemonMetadataId: string) {
+    async registerDaemon(
+        manifest: Manifest,
+        daemonMetadataId: string
+    ): Promise<MsgRegisterDaemonResponse> {
         this.logger.verbose('Registering daemon')
-        const client = await this.getClient()
+        const txClient = await this.getTxClient()
         const address = await this.getAddress()
 
         const payload: DaemonRegisterCommandRequestDTO = {
@@ -186,16 +215,33 @@ class ValidationChainService {
             },
         }
 
-        const message: MsgRegisterDaemon = {
+        const value: MsgRegisterDaemon = {
             creator: address,
             daemon: payload,
         }
 
         this.logger.verbose('Payload', payload)
 
-        await client.ValidationchainValidationchain.tx.sendMsgCreateDaemon(
-            message
-        )
+        const r = await txClient.sendMsgRegisterDaemon({
+            value,
+        })
+        this.throwOnError('MsgRegisterDaemon', r)
+
+        const data: Uint8Array = r.data as unknown as Uint8Array
+
+        const decodeTxMessages = this.decodeTxMessages(data)
+        return decodeTxMessages[0] as MsgRegisterDaemonResponse
+    }
+
+    private formatError(msgType: string, error: DeliverTxResponse) {
+        const { code, rawLog } = error
+        return `Error sending "${msgType}" code: "${code}", log: "${rawLog}" hash: "${error.transactionHash}"`
+    }
+    private throwOnError(MsgType: string, response: DeliverTxResponse) {
+        if (response.code) {
+            throw new Error(this.formatError(MsgType, response))
+        }
+        return response
     }
     /**
      * Utility function that can be used for debug messages from validation-chain protobuf API.
