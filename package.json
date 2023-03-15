@@ -18,6 +18,7 @@
         "format": "prettier --write -c ./src/**/*.ts",
         "prepare": "husky install",
         "dev": "ts-node ./src/index.ts",
+        "generate:docs": "ts-node src/utils/generate-docs.ts",
         "test": "NODE_ENV=test jest",
         "test:watch": "NODE_ENV=test jest",
         "postinstall": "sh fix-client.sh"
