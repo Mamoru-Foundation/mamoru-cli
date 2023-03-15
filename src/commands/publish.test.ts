@@ -147,7 +147,7 @@ describe(colors.yellow('publish'), () => {
                     assert.match(error.message, /out of gas/)
                 })
         }, 10000)
-        it.only('OK - SOLE', async () => {
+        it('OK - SOLE', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({ type: 'wasm' })
             console.log(colors.green('dir '), dir)
