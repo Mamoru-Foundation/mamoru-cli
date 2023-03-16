@@ -13,14 +13,15 @@
     "scripts": {
         "build": "tsc",
         "build:watch": "tsc --watch",
-        "lint": "eslint ./src",
-        "lint:format": "prettier -c ./src/**/*.ts",
+        "lint": "eslint ./src --fix",
+        "lint:ci": "eslint ./src",
+        "format:ci": "prettier -c ./src/**/*.ts",
         "format": "prettier --write -c ./src/**/*.ts",
         "prepare": "husky install",
         "dev": "ts-node ./src/index.ts",
         "generate:docs": "ts-node src/utils/generate-docs.ts",
         "test": "NODE_ENV=test jest",
-        "test:watch": "NODE_ENV=test jest",
+        "test:watch": "NODE_ENV=test jest --watch",
         "postinstall": "sh fix-client.sh"
     },
     "bin": {
