@@ -22,6 +22,7 @@ jobs:
             submodule_commit: ${{ steps.submodule-version.outputs.commit }}
 
     check_code:
+        needs: [login-ecr]
         runs-on: ubuntu-latest
         strategy:
             matrix:
