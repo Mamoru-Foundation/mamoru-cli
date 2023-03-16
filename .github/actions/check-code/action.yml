@@ -17,3 +17,5 @@ runs:
           shell: bash
         - run: yarn build
           shell: bash
+        - run: yarn test:ci
+          shell: bash
