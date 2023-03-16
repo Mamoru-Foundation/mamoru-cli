@@ -32,7 +32,7 @@ jobs:
             - uses: ./.github/actions/check-code
         services:
             validation-chain:
-                image: ${{ needs.login-ecr.outputs.registry }}/mamoru-foundation/validation-chain-dev:${{ needs.login-ecr.outputs.submodule_commit }}
+                image: ${{ needs.login-ecr.outputs.registry }}/mamoru-foundation/validation-chain-dev:latest
                 credentials:
                     username: ${{ needs.login-ecr.outputs.docker_username }}
                     password: ${{ needs.login-ecr.outputs.docker_password }}
