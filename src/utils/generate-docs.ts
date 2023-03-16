@@ -16,44 +16,6 @@ ${command.helpInformation()}
 `
     }, '')
 
-    // const markdown = commands.reduce((acc, command) => {
-    //     const { name, description, /*options,*/ args } = command
-
-    //     command.helpInformation()
-    //     // const optionsMarkdown = options.reduce((acc, option) => {
-    //     //     const { flags, description, defaultValue } = option
-
-    //     //     return (
-    //     //         acc +
-    //     //         `| ${flags} | ${description} | ${defaultValue || ''} | \n`
-    //     //     )
-    //     // }, '')
-
-    //     // const argsMarkdown = args.reduce((acc, arg) => {
-    //     //     const { name, description, defaultValue } = arg
-
-    //     //     return (
-    //     //         acc + `| ${name} | ${description} | ${defaultValue || ''} | \n`
-    //     //     )
-    //     // }, '')
-
-    //     // return (
-    //     //     acc +
-    //     //     `## \`${name}\`\n\n` +
-    //     //     `${description}\n\n` +
-    //     //     `### Options\n\n` +
-    //     //     `| Option | Description | Default | \n` +
-    //     //     `| --- | --- | --- | \n` +
-    //     //     // `${optionsMarkdown}\n` +
-    //     //     `### Arguments\n\n` +
-    //     //     `| Argument | Description | Default | \n` +
-    //     //     `| --- | --- | --- | \n`
-    //     //     // `${argsMarkdown}\n`
-    //     // )
-
-    //     return ''
-    // }, '')
-
     return `# Mamoru CLI Reference
 
 ## Basic Usage
