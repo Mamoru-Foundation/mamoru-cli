@@ -19,7 +19,7 @@ Options:
 Usage:  init [options] <path>
 
 Arguments:
-  path                             path to folder with queryable project (default: "")
+  path                             path to folder with Mamoru project (default: "")
 
 Options:
   -t, --type <type>                Type of project (choices: "sql", "wasm", default: "wasm")
@@ -42,7 +42,7 @@ Usage:  build [options] [path]
 compile project
 
 Arguments:
-  path        path to folder with queryable project (default: ".")
+  path        path to folder with Mamoru project (default: ".")
 
 Options:
   -h, --help  display help for command
@@ -57,7 +57,7 @@ Usage:  publish [options] [path]
 publish project
 
 Arguments:
-  path                     path to folder with queryable project (default: ".")
+  path                     path to folder with Mamoru project (default: ".")
 
 Options:
   --rpc <rpcUrl>           rpc url of the chain

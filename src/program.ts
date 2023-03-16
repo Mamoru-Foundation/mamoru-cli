@@ -67,7 +67,7 @@ program
     .command('init')
     .argument(
         '<path>',
-        'path to folder with queryable project',
+        'path to folder with Mamoru project',
         parseOrCreateDirectoryPath,
         ''
     )
@@ -118,7 +118,7 @@ program
     .command('build')
     .argument(
         '[path]',
-        'path to folder with queryable project',
+        'path to folder with Mamoru project',
         parseOrSetCurrentDirectoryPath,
         '.'
     )
@@ -131,7 +131,7 @@ program
     .command('publish')
     .argument(
         '[path]',
-        'path to folder with queryable project',
+        'path to folder with Mamoru project',
         parseOrSetCurrentDirectoryPath,
         '.'
     )
