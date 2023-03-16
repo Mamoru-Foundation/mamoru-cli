@@ -5,7 +5,7 @@
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/queryable-labs/queryable-cli"
+        "url": "git+https://github.com/Mamoru-Foundation/mamoru-cli.git"
     },
     "files": [
         "dist"
@@ -18,13 +18,14 @@
         "format": "prettier --write -c ./src/**/*.ts",
         "prepare": "husky install",
         "dev": "ts-node ./src/index.ts",
+        "generate:docs": "ts-node src/utils/generate-docs.ts",
         "test": "NODE_ENV=test jest",
         "test:watch": "NODE_ENV=test jest",
         "postinstall": "sh fix-client.sh"
     },
     "bin": {
-        "mamoru-cli": "./dist/index.js",
-        "mamoru": "./dist/index.js",
+        "mamoru-cli": "dist/index.js",
+        "mamoru": "dist/index.js",
         "mamoru-cli-dev": "ts-node ./src/index.ts"
     },
     "devDependencies": {
@@ -70,5 +71,14 @@
             "npm run format",
             "npm run lint -- --fix"
         ]
-    }
+    },
+    "description": "## Installation",
+    "bugs": {
+        "url": "https://github.com/Mamoru-Foundation/mamoru-cli/issues"
+    },
+    "homepage": "https://github.com/Mamoru-Foundation/mamoru-cli#readme",
+    "directories": {
+        "doc": "docs"
+    },
+    "author": ""
 }

@@ -16,7 +16,7 @@ function init(program: Command, projectPath: string, options: InitOptions) {
     const files = getFilesToCreate(projectPath, augOps)
 
     checkFolderEmptyness(program, Object.values(files))
-    logger.ok('Creating Queryable project files')
+    logger.ok('Creating Mamoru project files')
 
     createFile(logger, augOps, TEMPLATES.PACKAGE_JSON, files.PACKAGE_JSON)
     createFile(logger, augOps, TEMPLATES.MANIFEST, files.MANIFEST)
@@ -33,7 +33,7 @@ function init(program: Command, projectPath: string, options: InitOptions) {
         createFile(logger, augOps, TEMPLATES.WASM_TEST, files.WASM_TEST)
     }
 
-    logger.ok('Queryable project files created!')
+    logger.ok('Mamoru project files created!')
     logger.log(`
     ℹ️ To start working on your project, run:
         cd ${projectPath}

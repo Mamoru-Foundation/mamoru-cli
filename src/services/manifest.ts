@@ -13,7 +13,7 @@ export const validateAndReadManifest = (
     program: Command,
     projectPath: string
 ): Manifest => {
-    logger.ok('Validating Queryable manifest')
+    logger.ok('Validating Mamoru manifest')
     const manifestPath = getManifest(logger, program, projectPath)
     const manifestSrc = fs.readFileSync(manifestPath, 'utf-8')
     logger.verbose(`Content of "${manifestPath}" is`, manifestSrc)
