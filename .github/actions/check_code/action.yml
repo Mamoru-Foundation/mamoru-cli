@@ -1,0 +1,21 @@
+name: Run and Check Node.js Code
+description: Run and Check Node.js Code
+
+runs:
+    using: composite
+    steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+        - name: Use Node.js ${{ matrix.node-version }}
+          uses: actions/setup-node@v3
+          with:
+              node-version: ${{ matrix.node-version }}
+              cache: 'npm'
+        - run: yarn install --frozen-lockfile
+          shell: bash
+        - run: yarn format:ci
+          shell: bash
+        - run: yarn lint:ci
+          shell: bash
+        - run: yarn build
+          shell: bash

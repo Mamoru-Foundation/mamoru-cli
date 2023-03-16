@@ -1,0 +1,22 @@
+name: Test
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+jobs:
+    check_code:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [18.x]
+        steps:
+            - uses: ./.github/actions/check-code
+    release:
+        needs: [check_code]
+        name: Release
+        runs-on: ubuntu-latest
+        steps:
+            - uses: ./.github/actions/release
