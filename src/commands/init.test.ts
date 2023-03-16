@@ -27,7 +27,7 @@ describe(colors.yellow('init'), () => {
 
         const files = fs.readdirSync(dir)
         assert.strictEqual(files.length, 5)
-        assert.strictEqual(files.includes('README.md'), true)
+        assert.strictEqual(files.includes('readme.md'), true)
         assert.strictEqual(files.includes('package.json'), true)
         assert.strictEqual(files.includes('manifest.yml'), true)
         assert.strictEqual(files.includes('queries.yml'), true)
@@ -99,7 +99,7 @@ describe(colors.yellow('init'), () => {
         const files = fs.readdirSync(dir)
         assert.strictEqual(files.length, 6)
 
-        assert.strictEqual(files.includes('README.md'), true)
+        assert.strictEqual(files.includes('readme.md'), true)
         assert.strictEqual(files.includes('package.json'), true)
         assert.strictEqual(files.includes('manifest.yml'), true)
         assert.strictEqual(files.includes('.gitignore'), true)
