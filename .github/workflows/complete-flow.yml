@@ -12,6 +12,7 @@ jobs:
         steps:
             - uses: actions/checkout@v3
             - uses: ./.github/actions/login-ecr
+              id: ecr-login
               with:
                   aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
                   aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
