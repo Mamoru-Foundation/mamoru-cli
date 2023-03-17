@@ -42,7 +42,6 @@
         "@typescript-eslint/eslint-plugin": "^5.40.1",
         "@typescript-eslint/parser": "^5.40.1",
         "babel-jest": "^29.5.0",
-        "commander": "^9.4.0",
         "delay": "^5.0.0",
         "eslint": "^8.26.0",
         "husky": "^8.0.0",
@@ -68,6 +67,7 @@
         "handlebars": "^4.7.7",
         "ipfs-http-client": "56",
         "joi": "^17.6.0",
+        "commander": "^9.4.0",
         "yaml": "^2.2.1"
     },
     "lint-staged": {
