@@ -1,0 +1,32 @@
+name: Login to Amazon ECR
+description: Login to Amazon ECR
+inputs:
+    aws-access-key-id:
+        description: AWS Access Key ID
+        required: true
+    aws-secret-access-key:
+        description: AWS Secret Access Key
+        required: true
+runs:
+    using: composite
+    steps:
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+              aws-access-key-id: ${{ inputs.aws-access-key-id }}
+              aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+              aws-region: us-east-1
+              mask-aws-account-id: 'false'
+        - name: Login to Amazon ECR
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v1
+outputs:
+    registry:
+        description: ECR Registry
+        value: ${{ steps.login-ecr.outputs.registry }}
+    docker_username:
+        description: Docker username for `docker login` command
+        value: ${{ steps.login-ecr.outputs.docker_username_016162762067_dkr_ecr_us_east_1_amazonaws_com }}
+    docker_password:
+        description: Docker password for `docker login` command
+        value: ${{ steps.login-ecr.outputs.docker_password_016162762067_dkr_ecr_us_east_1_amazonaws_com }}

@@ -1,0 +1,29 @@
+name: Login to Amazon ECR
+description: Login to Amazon ECR
+inputs:
+    GITHUB_TOKEN:
+        description: GH Token
+        required: true
+    NPM_TOKEN:
+        description: NPM Token
+        required: true
+runs:
+    using: composite
+    steps:
+        - name: Checkout
+          uses: actions/checkout@v3
+          with:
+              fetch-depth: 0
+        - name: Setup Node.js
+          uses: actions/setup-node@v3
+          with:
+              node-version: 'lts/*'
+        - name: Install dependencies
+          run: yarn install --frozen-lockfile
+          shell: bash
+        - name: Release
+          shell: bash
+          env:
+              GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+              NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+          run: npx semantic-release

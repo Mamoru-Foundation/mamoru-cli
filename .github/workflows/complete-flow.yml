@@ -1,0 +1,55 @@
+name: Test
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+        branches:
+            - main
+jobs:
+    login-ecr:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/login-ecr
+              id: ecr-login
+              with:
+                  aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
+                  aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        outputs:
+            registry: ${{ steps.ecr-login.outputs.registry }}
+            docker_username: ${{ steps.ecr-login.outputs.docker_username }}
+            docker_password: ${{ steps.ecr-login.outputs.docker_password }}
+            submodule_commit: ${{ steps.submodule-version.outputs.commit }}
+
+    check_code:
+        needs: [login-ecr]
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node-version: [18.x]
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/check-code
+        services:
+            validation-chain:
+                image: ${{ needs.login-ecr.outputs.registry }}/mamoru-foundation/validation-chain-dev:latest
+                credentials:
+                    username: ${{ needs.login-ecr.outputs.docker_username }}
+                    password: ${{ needs.login-ecr.outputs.docker_password }}
+                ports:
+                    - 4500:4500
+                    - 9090:9090
+                    - 1317:1317
+                    - 26657:26657
+
+    release:
+        needs: [check_code]
+        name: Release
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: ./.github/actions/release
+              with:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

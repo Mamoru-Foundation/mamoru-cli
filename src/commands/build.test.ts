@@ -44,7 +44,7 @@ describe(colors.yellow('build'), () => {
 
         const files = fs.readdirSync(dir)
         assert.strictEqual(files.length, 6 + 3) // +1 for the dist folder
-        assert.strictEqual(files.includes('README.md'), true)
+        assert.strictEqual(files.includes('readme.md'), true)
         const srcDir = path.join(dir, 'src')
         assert.strictEqual(fs.existsSync(srcDir), true)
         const srcFiles = fs.readdirSync(srcDir)
@@ -58,4 +58,5 @@ describe(colors.yellow('build'), () => {
         assert.strictEqual(outFiles.includes('index.wasm'), true)
         assert.strictEqual(outFiles.includes('index.wasm.map'), true)
     }, 10000)
+    it.todo('OK - should build type=wasm projects, with multiple parameters')
 })

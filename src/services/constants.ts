@@ -7,7 +7,7 @@ export const TEMPLATES = {
     QUERIES: 'src/templates/init/queries.yml.hbs',
     WASM_INDEX: 'src/templates/init/src/index.ts.hbs',
     WASM_TEST: 'src/templates/init/test/index.spec.ts.hbs',
-    README: 'src/templates/init/README.md.hbs',
+    README: 'src/templates/init/readme.md.hbs',
     GITIGNORE: 'src/templates/init/gitignore.hbs',
 }
 
@@ -17,7 +17,7 @@ export const FILES: typeof TEMPLATES = {
     QUERIES: 'queries.yml',
     WASM_INDEX: 'src/index.ts',
     WASM_TEST: 'test/index.spec.ts',
-    README: 'README.md',
+    README: 'readme.md',
     GITIGNORE: '.gitignore',
 }
 
