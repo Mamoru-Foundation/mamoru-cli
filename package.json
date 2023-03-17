@@ -8,7 +8,8 @@
         "url": "https://github.com/Mamoru-Foundation/mamoru-cli.git"
     },
     "files": [
-        "dist"
+        "dist",
+        "fix-client.sh"
     ],
     "scripts": {
         "build": "tsc",
