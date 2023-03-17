@@ -1,7 +1,7 @@
 export const OUT_DIR = 'build'
 export const WASM_INDEX = 'index.wasm'
 
-const BASE_DIR = process.env.NODE_ENV === 'test' ? '../' : 'src'
+const BASE_DIR = process.env.NODE_ENV === 'test' ? '../' : '../'
 
 export const TEMPLATES = {
     PACKAGE_JSON: BASE_DIR + 'templates/init/package.json.hbs',

@@ -17,5 +17,8 @@
         "typeRoots": ["./node_modules/@types", "./src/@types"]
     },
     "include": ["./src"],
-    "exclude": ["../../../validation-chain/ts-client/**/*"]
+    "exclude": [
+        "../../../validation-chain/ts-client/**/*",
+        "./src/**/*.test.ts"
+    ]
 }
