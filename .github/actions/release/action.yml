@@ -21,6 +21,9 @@ runs:
         - name: Install dependencies
           run: yarn install --frozen-lockfile
           shell: bash
+        - name: Build
+          run: yarn build
+          shell: bash
         - name: Release
           shell: bash
           env:
