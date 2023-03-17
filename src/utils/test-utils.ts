@@ -3,6 +3,48 @@ import path from 'path'
 import fs from 'fs'
 import { Command } from 'commander'
 import { InitOptions } from '../commands/init'
+import { DirectSecp256k1HdWallet as Wallet } from '@cosmjs/proto-signing'
+import axios from 'axios'
+
+export const generateUser = async (): Promise<{
+    mnemonic: string
+    address: string
+    privkey: string
+}> => {
+    const wallet = await Wallet.generate(24)
+    const accounts = await wallet.getAccounts()
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const [priv] = await wallet.getAccountsWithPrivkeys()
+
+    return {
+        mnemonic: wallet.mnemonic,
+        address: accounts[0].address,
+        privkey: Uint8ArrayToBase64String(priv.privkey),
+    }
+}
+
+function Uint8ArrayToBase64String(u8a: Uint8Array): string {
+    const buf = Buffer.from(u8a)
+    return buf.toString('base64')
+}
+
+function useFaucet(address: string): Promise<void> {
+    return axios.post('http://0.0.0.0:4500', {
+        address,
+        coins: ['20token'],
+    })
+}
+
+export const generateFoundedUser = async (): Promise<{
+    mnemonic: string
+    address: string
+    privkey: string
+}> => {
+    const user = await generateUser()
+    await useFaucet(user.address)
+    return user
+}
 
 export const isUUID = (str: string): boolean => {
     return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(
