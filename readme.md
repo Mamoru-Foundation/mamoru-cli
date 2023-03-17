@@ -6,7 +6,6 @@
 npm install -g mamoru-cli
 
 # or
-
 yarn global add mamoru-cli
 ```
 
