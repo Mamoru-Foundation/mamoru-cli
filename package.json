@@ -9,7 +9,8 @@
     },
     "files": [
         "dist",
-        "fix-client.sh"
+        "fix-client.sh",
+        "src"
     ],
     "scripts": {
         "build": "tsc",
