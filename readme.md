@@ -9,7 +9,7 @@ $ npm install -g mamoru-cli
 ## Usage
 
 ```bash
-$ mamoru --help
+$ mamoru-cli --help
 ```
 
 ## License
