@@ -3,13 +3,17 @@
 ## Installation
 
 ```bash
-$ npm install -g mamoru-cli
+npm install -g mamoru-cli
+
+# or
+
+yarn global add mamoru-cli
 ```
 
 ## Usage
 
 ```bash
-$ mamoru-cli --help
+mamoru-cli --help
 ```
 
 ## License
