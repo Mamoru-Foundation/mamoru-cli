@@ -1,14 +1,16 @@
 export const OUT_DIR = 'build'
 export const WASM_INDEX = 'index.wasm'
 
+const BASE_DIR = process.env.NODE_ENV === 'test' ? '../' : 'src'
+
 export const TEMPLATES = {
-    PACKAGE_JSON: 'src/templates/init/package.json.hbs',
-    MANIFEST: 'src/templates/init/manifest.yml.hbs',
-    QUERIES: 'src/templates/init/queries.yml.hbs',
-    WASM_INDEX: 'src/templates/init/src/index.ts.hbs',
-    WASM_TEST: 'src/templates/init/test/index.spec.ts.hbs',
-    README: 'src/templates/init/readme.md.hbs',
-    GITIGNORE: 'src/templates/init/gitignore.hbs',
+    PACKAGE_JSON: BASE_DIR + 'templates/init/package.json.hbs',
+    MANIFEST: BASE_DIR + 'templates/init/manifest.yml.hbs',
+    QUERIES: BASE_DIR + 'templates/init/queries.yml.hbs',
+    WASM_INDEX: BASE_DIR + 'templates/init/src/index.ts.hbs',
+    WASM_TEST: BASE_DIR + 'templates/init/test/index.spec.ts.hbs',
+    README: BASE_DIR + 'templates/init/readme.md.hbs',
+    GITIGNORE: BASE_DIR + 'templates/init/gitignore.hbs',
 }
 
 export const FILES: typeof TEMPLATES = {

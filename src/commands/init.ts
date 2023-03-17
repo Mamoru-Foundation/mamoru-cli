@@ -95,8 +95,8 @@ function createFile(
 ) {
     const targetFileName = path.basename(targetPath)
     logger.verbose(`Creating "${targetFileName}"`)
-
-    const templateSrc = fs.readFileSync(templatePath).toString('utf-8')
+    const absoluteTemplatePath = path.join(__dirname, templatePath)
+    const templateSrc = fs.readFileSync(absoluteTemplatePath).toString('utf-8')
     const template = Handlebars.compile(templateSrc)
     const result = template(ops)
     fs.writeFileSync(targetPath, result)
