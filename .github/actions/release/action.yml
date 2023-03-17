@@ -1,5 +1,12 @@
 name: Login to Amazon ECR
 description: Login to Amazon ECR
+inputs:
+    GITHUB_TOKEN:
+        description: GH Token
+        required: true
+    NPM_TOKEN:
+        description: NPM Token
+        required: true
 runs:
     using: composite
     steps:
@@ -17,6 +24,6 @@ runs:
         - name: Release
           shell: bash
           env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+              GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+              NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
           run: npx semantic-release
