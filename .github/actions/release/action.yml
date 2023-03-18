@@ -1,5 +1,5 @@
-name: Login to Amazon ECR
-description: Login to Amazon ECR
+name: Release CLI
+description: Release and publish CLI
 inputs:
     GITHUB_TOKEN:
         description: GH Token
