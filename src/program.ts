@@ -145,7 +145,9 @@ program
         new Option(
             '-k, --private-key <key>',
             'Private key of the account that will be used to publish the project'
-        ).makeOptionMandatory()
+        )
+            .makeOptionMandatory()
+            .env('MAMORU_PRIVATE_KEY')
     )
     .description('publish project')
     .action((path: string, options: PublishOptions) => {
