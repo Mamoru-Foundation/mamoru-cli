@@ -6,6 +6,10 @@ on:
     pull_request:
         branches:
             - main
+concurrency:
+    # cancel redundant builds on PRs (only on PR, not on branches)
+    group: ${{ github.workflow }}-${{ github.sha }}
+    cancel-in-progress: true
 jobs:
     login-ecr:
         runs-on: ubuntu-latest
