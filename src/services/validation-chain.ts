@@ -97,9 +97,6 @@ class ValidationChainService {
                 call: '',
             },
         }
-        console.log('registerDaemon:PAYLOAD', payload)
-
-        // console.log(payload)
 
         const value: MsgRegisterDaemon = {
             creator: address,
@@ -192,7 +189,6 @@ class ValidationChainService {
             content: getDaemonContent(manifest, queries, wasmModule),
         }
 
-        console.log('registerDaemonMetadata:PAYLOD', payload)
         const message: MsgCreateDaemonMetadata = {
             creator: address,
             daemonMetadata: payload,
@@ -208,8 +204,6 @@ class ValidationChainService {
             },
         })
         this.throwOnError('MsgCreateDaemonMetadata', r)
-
-        console.log(r)
 
         if (r.code) {
             throw new Error()
