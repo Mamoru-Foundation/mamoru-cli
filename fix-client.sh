@@ -1,7 +1,10 @@
 #! /bin/bash
 # This scripts adds tx: result.tx, to the stargateclient.js file
 # This is a temporary fix for an issue where the tx is not returned from the stargateclient.js
+#   without the tx, we can't get the result data from the transaction in the blockchain.
+#
 #   I don't know why they didn't added. but this was faster an easier than doing a Fork and storing it in NPM
+# forking would require us to maintain the forked repo and update it every time the original repo is updated.
 
 set -e
 export client_path='node_modules/@cosmjs/stargate/build/stargateclient.js'

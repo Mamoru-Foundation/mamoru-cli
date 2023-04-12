@@ -5,6 +5,7 @@ import { program, InvalidArgumentError, Option } from 'commander'
 import initCommand, { InitOptions } from './commands/init'
 import compileCommand from './commands/build'
 import publishCommand, { PublishOptions } from './commands/publish'
+import spawn from './commands/spawn'
 
 function parseDirectoryPath(path: string) {
     if (fs.existsSync(path) && fs.lstatSync(path).isDirectory()) {
@@ -152,6 +153,19 @@ program
     .description('publish project')
     .action((path: string, options: PublishOptions) => {
         publishCommand.publish(program, path, options)
+    })
+
+program
+    .command('spawn')
+    .description('spawn daemon from subscribable metadata')
+    .addOption(
+        new Option(
+            '--metadataid, -m',
+            'Daemon MetadataId'
+        ).makeOptionMandatory()
+    )
+    .action((options: any) => {
+        spawn()
     })
 
 program.configureOutput({

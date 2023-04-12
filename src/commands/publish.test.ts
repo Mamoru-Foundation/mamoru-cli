@@ -2,7 +2,7 @@ import assert from 'node:assert'
 import { describe, it } from '@jest/globals'
 import publish from './publish'
 import colors from 'colors'
-import init from './init'
+import init, { InitOptions } from './init'
 import build from './build'
 import {
     generateFoundedUser,
@@ -51,36 +51,33 @@ describe(colors.yellow('publish'), () => {
         }
     }, 20000)
     describe(colors.cyan('SQL'), () => {
-        it('OK - SOLE', async () => {
-            const dir = getTempFolder()
-            const options = generateInitOptions({ type: 'sql' })
-            init.init(programMock, dir, options)
-            const { privkey } = await generateFoundedUser()
-            const r = await publish.publish(programMock, dir, {
-                privateKey: privkey,
-                rpcUrl: 'http://0.0.0.0:26657',
-            })
+        it.each([
+            [{ type: 'sql', chain: 'sui' }, true],
+            [{ type: 'sql', chain: 'ethereum' }, true],
+            [{ type: 'sql', chain: 'bsc' }, true],
+            [{ type: 'sql', chain: 'aptos' }, true],
+            [{ type: 'sql', subscribable: true, chain: 'sui' }, false],
+            [{ type: 'sql', subscribable: true, chain: 'ethereum' }, false],
+            [{ type: 'sql', subscribable: true, chain: 'bsc' }, false],
+            [{ type: 'sql', subscribable: true, chain: 'aptos' }, false],
+        ])(
+            `OK - SOLE %s`,
+            async (obj, wasDaemonCreated) => {
+                const dir = getTempFolder()
+                const options = generateInitOptions(obj as InitOptions)
+                init.init(programMock, dir, options)
+                const { privkey } = await generateFoundedUser()
+                const r = await publish.publish(programMock, dir, {
+                    privateKey: privkey,
+                    rpcUrl: 'http://0.0.0.0:26657',
+                })
 
-            assert.ok(r)
-            assert.equal(isUUID(r.daemonId), true)
-            assert.equal(isUUID(r.daemonMetadataId), true)
-        }, 20000)
-        it('OK - SUBSCRIBABLE', async () => {
-            const dir = getTempFolder()
-            const options = generateInitOptions({
-                type: 'sql',
-                subscribable: true,
-            })
-            init.init(programMock, dir, options)
-            const { privkey } = await generateFoundedUser()
-
-            const r = await publish.publish(programMock, dir, {
-                privateKey: privkey,
-                rpcUrl: 'http://0.0.0.0:26657',
-            })
-            assert.equal(isUUID(r.daemonMetadataId), true)
-            assert.equal(r.daemonId, undefined)
-        }, 20000)
+                assert.ok(r)
+                assert.equal(isUUID(r.daemonId as string), wasDaemonCreated)
+                assert.equal(isUUID(r.daemonMetadataId), true)
+            },
+            20000
+        )
     })
 
     describe(colors.cyan('WASM'), () => {
@@ -145,7 +142,7 @@ describe(colors.yellow('publish'), () => {
                 gas: (1000 * 1000 * 100).toString(),
             })
             assert.ok(r)
-            assert.equal(isUUID(r.daemonId), true)
+            assert.equal(isUUID(r.daemonId as string), true)
             assert.equal(isUUID(r.daemonMetadataId), true)
         }, 20000)
     })

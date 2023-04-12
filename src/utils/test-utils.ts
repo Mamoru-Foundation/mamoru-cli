@@ -5,7 +5,9 @@ import { Command } from 'commander'
 import { InitOptions } from '../commands/init'
 import { DirectSecp256k1HdWallet as Wallet } from '@cosmjs/proto-signing'
 import axios from 'axios'
-
+/**
+ * Generates a user with a mnemonic, address and private key from wallet
+ */
 export const generateUser = async (): Promise<{
     mnemonic: string
     address: string
@@ -85,8 +87,12 @@ export const generateInitOptions = (
         tags: 'test,cli',
         description: 'TEST_DESCRIPTION',
         chain: 'sui',
-        logo: 'https://mamoru.ai/default-mamoru-logo',
+        logo: 'https://mamoru.ai/default-mamoru-logo.png',
         subscribable: false,
         ...obj,
     }
 }
+
+generateFoundedUser().then((user) => {
+    console.log(user)
+})

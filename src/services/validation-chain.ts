@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Manifest } from '../types'
 import { Client } from '@mamoru-ai/validation-chain-ts-client'
 import { DirectSecp256k1Wallet } from '@cosmjs/proto-signing'
@@ -18,8 +19,12 @@ import {
     MsgCreateDaemonMetadata,
     MsgCreateDaemonMetadataResponse,
     MsgRegisterDaemonResponse,
+    MsgRegisterSniffer,
+    MsgRegisterSnifferResponse,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/tx'
 import protobuf from 'protobufjs'
+import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
+import { SnifferRegisterCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/sniffer_register_command_request_dto'
 
 type TxMsgData = {
     msgResponses: AnyMsg[]
@@ -64,12 +69,79 @@ class ValidationChainService {
         private readonly logger: Logger
     ) {}
 
-    async getWallet() {
+    private async getWallet() {
         if (this.wallet) return this.wallet
         const key = fromBase64(this.privateKey)
         const wallet = await DirectSecp256k1Wallet.fromKey(key)
         this.wallet = wallet
         return wallet
+    }
+
+    async registerDaemon(
+        manifest: Manifest,
+        daemonMetadataId: string
+    ): Promise<MsgRegisterDaemonResponse> {
+        this.logger.verbose('Registering daemon')
+        const txClient = await this.getTxClient()
+        const address = await this.getAddress()
+
+        const payload: DaemonRegisterCommandRequestDTO = {
+            chain: { chainType: this.getChainType(manifest) },
+            daemonMetadataId,
+            // @TODO: add parameters
+            parameters: [],
+            // @TODO: add relay
+            relay: {
+                type: 0,
+                address: '',
+                call: '',
+            },
+        }
+        console.log('registerDaemon:PAYLOAD', payload)
+
+        // console.log(payload)
+
+        const value: MsgRegisterDaemon = {
+            creator: address,
+            daemon: payload,
+        }
+
+        this.logger.verbose('Payload', payload)
+
+        const r = await txClient.sendMsgRegisterDaemon({
+            value,
+        })
+        this.throwOnError('MsgRegisterDaemon', r)
+
+        const data: Uint8Array = r.data as unknown as Uint8Array
+
+        const decodeTxMessages = this.decodeTxMessages(data)
+        return decodeTxMessages[0] as MsgRegisterDaemonResponse
+    }
+
+    async registerSniffer(address: string, chain: Chain_ChainType) {
+        const txClient = await this.getTxClient()
+
+        const payload: SnifferRegisterCommandRequestDTO = {
+            chains: [{ chainType: chain }],
+            sniffer: address,
+        }
+
+        const message: MsgRegisterSniffer = {
+            creator: address,
+            sniffer: payload,
+        }
+
+        const result = await txClient.sendMsgRegisterSniffer({
+            value: message,
+        })
+
+        this.throwOnError('MsgRegisterSniffer', result)
+
+        const data: Uint8Array = result.data as unknown as Uint8Array
+
+        const decodeTxMessages = this.decodeTxMessages(data)
+        return decodeTxMessages[0] as MsgRegisterSnifferResponse
     }
 
     private async getClient(): Promise<any> {
@@ -115,10 +187,12 @@ class ValidationChainService {
             title: manifest.name,
             description: manifest.description,
             tags: manifest.tags,
-            supportedChains: [{ chainType: manifest.chain }],
+            supportedChains: [{ chainType: this.getChainType(manifest) }],
             parameters: manifest.parameters,
             content: getDaemonContent(manifest, queries, wasmModule),
         }
+
+        console.log('registerDaemonMetadata:PAYLOD', payload)
         const message: MsgCreateDaemonMetadata = {
             creator: address,
             daemonMetadata: payload,
@@ -140,7 +214,7 @@ class ValidationChainService {
         if (r.code) {
             throw new Error()
         }
-
+        // @WARNING: this data only comes after hack the installed ts-client!!!
         const data: Uint8Array = r.data as unknown as Uint8Array
         const decodeTxMessages = this.decodeTxMessages(data)
         const msg = decodeTxMessages[0] as MsgCreateDaemonMetadataResponse
@@ -194,45 +268,6 @@ class ValidationChainService {
         )
     }
 
-    async registerDaemon(
-        manifest: Manifest,
-        daemonMetadataId: string
-    ): Promise<MsgRegisterDaemonResponse> {
-        this.logger.verbose('Registering daemon')
-        const txClient = await this.getTxClient()
-        const address = await this.getAddress()
-
-        const payload: DaemonRegisterCommandRequestDTO = {
-            chain: { chainType: manifest.chain },
-            daemonMetadataId,
-            // @TODO: add parameters
-            parameters: [],
-            // @TODO: add relay
-            relay: {
-                type: 0,
-                address: '',
-                call: '',
-            },
-        }
-
-        const value: MsgRegisterDaemon = {
-            creator: address,
-            daemon: payload,
-        }
-
-        this.logger.verbose('Payload', payload)
-
-        const r = await txClient.sendMsgRegisterDaemon({
-            value,
-        })
-        this.throwOnError('MsgRegisterDaemon', r)
-
-        const data: Uint8Array = r.data as unknown as Uint8Array
-
-        const decodeTxMessages = this.decodeTxMessages(data)
-        return decodeTxMessages[0] as MsgRegisterDaemonResponse
-    }
-
     private formatError(msgType: string, error: DeliverTxResponse) {
         const { code, rawLog } = error
         return `Error sending "${msgType}" code: "${code}", log: "${rawLog}" hash: "${error.transactionHash}"`
@@ -242,6 +277,22 @@ class ValidationChainService {
             throw new Error(this.formatError(MsgType, response))
         }
         return response
+    }
+
+    private getChainType(manifest: Manifest): Chain_ChainType {
+        switch (manifest.chain) {
+            case 'sui':
+                return Chain_ChainType.SUI_DEVNET
+            case 'aptos':
+                // @ts-ignore
+                return 7
+            case 'bsc':
+                return Chain_ChainType.BSC_MAINNET
+            case 'ethereum':
+                return Chain_ChainType.ETH_MAINNET
+            default:
+                break
+        }
     }
     /**
      * Utility function that can be used for debug messages from validation-chain protobuf API.
