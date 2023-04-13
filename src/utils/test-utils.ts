@@ -92,7 +92,3 @@ export const generateInitOptions = (
         ...obj,
     }
 }
-
-generateFoundedUser().then((user) => {
-    console.log(user)
-})
