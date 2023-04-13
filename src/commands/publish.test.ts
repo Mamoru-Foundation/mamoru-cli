@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import assert from 'node:assert'
 import { describe, it } from '@jest/globals'
 import publish from './publish'
@@ -12,6 +13,8 @@ import {
     isUUID,
 } from '../utils/test-utils'
 import { runCommand } from '../utils/utils'
+import { getAvailableChains } from '../services/utils'
+import { boolean } from 'joi'
 
 const programMock = getProgramMock()
 
@@ -51,16 +54,25 @@ describe(colors.yellow('publish'), () => {
         }
     }, 20000)
     describe(colors.cyan('SQL'), () => {
-        it.each([
-            [{ type: 'sql', chain: 'sui' }, true],
-            [{ type: 'sql', chain: 'ethereum' }, true],
-            [{ type: 'sql', chain: 'bsc' }, true],
-            [{ type: 'sql', chain: 'aptos' }, true],
-            [{ type: 'sql', subscribable: true, chain: 'sui' }, false],
-            [{ type: 'sql', subscribable: true, chain: 'ethereum' }, false],
-            [{ type: 'sql', subscribable: true, chain: 'bsc' }, false],
-            [{ type: 'sql', subscribable: true, chain: 'aptos' }, false],
-        ])(
+        // @ts-ignore
+        const cases: [Partial<InitOptions>, boolean] = [
+            ...getAvailableChains().map((chain) => [
+                {
+                    type: 'sql',
+                    chain,
+                },
+                true,
+            ]),
+            ...getAvailableChains().map((chain) => [
+                {
+                    type: 'sql',
+                    subscribable: true,
+                    chain,
+                },
+                false,
+            ]),
+        ]
+        it.each(cases)(
             `OK - SOLE %s`,
             async (obj, wasDaemonCreated) => {
                 const dir = getTempFolder()

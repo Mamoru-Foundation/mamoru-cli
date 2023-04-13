@@ -25,6 +25,7 @@ import {
 import protobuf from 'protobufjs'
 import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import { SnifferRegisterCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/sniffer_register_command_request_dto'
+import { getAvailableChains } from './utils'
 
 type TxMsgData = {
     msgResponses: AnyMsg[]
@@ -274,22 +275,33 @@ class ValidationChainService {
         }
         return response
     }
-
-    private getChainType(manifest: Manifest): Chain_ChainType {
-        switch (manifest.chain) {
-            case 'sui':
-                return Chain_ChainType.SUI_DEVNET
-            case 'aptos':
-                // @ts-ignore
-                return 7
-            case 'bsc':
-                return Chain_ChainType.BSC_MAINNET
-            case 'ethereum':
-                return Chain_ChainType.ETH_MAINNET
-            default:
-                break
+    /**
+     * Get the chain type from the manifest.
+     * Exported just for testing purposes
+     * @returns
+     */
+    public getChainType(manifest: Manifest): Chain_ChainType {
+        if (!manifest.chain) {
+            throw new Error('Chain type not defined in manifest')
         }
+        if (
+            !getAvailableChains().includes(
+                manifest.chain as unknown as Chain_ChainType
+            )
+        ) {
+            throw new Error(
+                `Chain type "${
+                    manifest.chain
+                }" not supported, supported values are: ${getAvailableChains().join(
+                    ', '
+                )}`
+            )
+        }
+        return Chain_ChainType[
+            manifest.chain as unknown as number
+        ] as unknown as Chain_ChainType
     }
+
     /**
      * Utility function that can be used for debug messages from validation-chain protobuf API.
      * Uncomment if you need to debug messages.

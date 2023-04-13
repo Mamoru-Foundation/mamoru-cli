@@ -5,6 +5,7 @@ import { Command } from 'commander'
 import { InitOptions } from '../commands/init'
 import { DirectSecp256k1HdWallet as Wallet } from '@cosmjs/proto-signing'
 import axios from 'axios'
+import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 /**
  * Generates a user with a mnemonic, address and private key from wallet
  */
@@ -86,7 +87,7 @@ export const generateInitOptions = (
         name: 'TEST name',
         tags: 'test,cli',
         description: 'TEST_DESCRIPTION',
-        chain: 'sui',
+        chain: 'SUI_DEVNET' as keyof Chain_ChainType,
         logo: 'https://mamoru.ai/default-mamoru-logo.png',
         subscribable: false,
         ...obj,

@@ -6,6 +6,7 @@ import initCommand, { InitOptions } from './commands/init'
 import compileCommand from './commands/build'
 import publishCommand, { PublishOptions } from './commands/publish'
 import spawn from './commands/spawn'
+import { getAvailableChains } from './services/utils'
 
 function parseDirectoryPath(path: string) {
     if (fs.existsSync(path) && fs.lstatSync(path).isDirectory()) {
@@ -79,7 +80,7 @@ program
     )
     .addOption(
         new Option('-c, --chain <chain>', 'Chain where the daemon runs')
-            .choices(['ethereum', 'bsc', 'sui'])
+            .choices(getAvailableChains() as unknown as string[])
             .makeOptionMandatory()
     )
     .addOption(

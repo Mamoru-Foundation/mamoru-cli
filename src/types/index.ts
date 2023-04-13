@@ -5,7 +5,7 @@ export class Manifest {
     name: string
     type: 'sql' | 'wasm'
     logoUrl: string
-    chain: 'sui' | 'ethereum' | 'bsc' | 'aptos'
+    chain: string
     tags: string[]
     parameters?: DaemonMetadataParemeter[]
     subscribable: boolean

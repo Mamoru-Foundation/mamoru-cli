@@ -29,7 +29,7 @@ async function publish(
     const manifest = validateAndReadManifest(logger, program, projectPath)
     validateBuildPath(program, buildPath, manifest)
 
-    logger.ok('Publishing to Validation chain', options)
+    logger.ok('Publishing to Validation chain')
     const vcService = new ValidationChainService(
         options.rpc,
         options.privateKey,
