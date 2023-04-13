@@ -27,7 +27,8 @@
         "test:watch": "NODE_ENV=test jest --watch",
         "postinstall": "bash fix-client.sh",
         "semantic-release": "semantic-release",
-        "commit": "commit"
+        "commit": "commit",
+        "test-account": "ts-node src/utils/generate-founded-user.ts"
     },
     "bin": {
         "mamoru-cli": "dist/index.js",

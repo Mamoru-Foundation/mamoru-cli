@@ -64,7 +64,7 @@ class ValidationChainService {
     client: any
     wallet: DirectSecp256k1Wallet
     constructor(
-        private readonly url: string,
+        private readonly rpc: string,
         private readonly privateKey: string,
         private readonly logger: Logger
     ) {}
@@ -145,11 +145,13 @@ class ValidationChainService {
         if (this.client) return this.client
 
         const wallet = await this.getWallet()
-
+        console.log(this.rpc)
         this.client = new Client(
             {
+                //@ts-ignore
+                rpcURL: this.rpc || 'http://0.0.0.0:26657',
+
                 apiURL: 'http://0.0.0.0:1317',
-                rpcURL: this.url || 'http://0.0.0.0:26657',
             },
             wallet
         )

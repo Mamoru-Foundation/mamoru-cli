@@ -10,7 +10,7 @@ import { prepareBinaryFile } from '../services/assemblyscript'
 import { Manifest } from '../types'
 
 export interface PublishOptions {
-    rpcUrl?: string
+    rpc?: string
     privateKey: string
     gas?: string
 }
@@ -29,9 +29,9 @@ async function publish(
     const manifest = validateAndReadManifest(logger, program, projectPath)
     validateBuildPath(program, buildPath, manifest)
 
-    logger.ok('Publishing to Validation chain')
+    logger.ok('Publishing to Validation chain', options)
     const vcService = new ValidationChainService(
-        options.rpcUrl,
+        options.rpc,
         options.privateKey,
         logger
     )

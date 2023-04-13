@@ -26,7 +26,7 @@ describe(colors.yellow('publish'), () => {
         try {
             await publish.publish(programMock, dir, {
                 privateKey: 'privateKey',
-                rpcUrl: 'rpcUrl',
+                rpc: 'rpcUrl',
             })
         } catch (error) {
             assert.match(error.message, /manifest contains invalid structure/)
@@ -40,7 +40,7 @@ describe(colors.yellow('publish'), () => {
         try {
             await publish.publish(programMock, dir, {
                 privateKey: 'privateKey',
-                rpcUrl: 'rpcUrl',
+                rpc: 'rpcUrl',
             })
             throw new Error('Should not reach here')
         } catch (error) {
@@ -69,7 +69,7 @@ describe(colors.yellow('publish'), () => {
                 const { privkey } = await generateFoundedUser()
                 const r = await publish.publish(programMock, dir, {
                     privateKey: privkey,
-                    rpcUrl: 'http://0.0.0.0:26657',
+                    rpc: 'http://0.0.0.0:26657',
                 })
 
                 assert.ok(r)
@@ -89,7 +89,7 @@ describe(colors.yellow('publish'), () => {
             await publish
                 .publish(programMock, dir, {
                     privateKey: privkey,
-                    rpcUrl: 'http://0.0.0.0:26657',
+                    rpc: 'http://0.0.0.0:26657',
                 })
                 .then(() => {
                     throw new Error('Should not reach here')
@@ -113,7 +113,7 @@ describe(colors.yellow('publish'), () => {
             const r = await publish
                 .publish(programMock, dir, {
                     privateKey: privkey,
-                    rpcUrl: 'http://0.0.0.0:26657',
+                    rpc: 'http://0.0.0.0:26657',
                     gas: (500000).toString(),
                 })
                 .then(() => {
@@ -138,7 +138,7 @@ describe(colors.yellow('publish'), () => {
             await build.build(programMock, dir)
             const r = await publish.publish(programMock, dir, {
                 privateKey: privkey,
-                rpcUrl: 'http://0.0.0.0:26657',
+                rpc: 'http://0.0.0.0:26657',
                 gas: (1000 * 1000 * 100).toString(),
             })
             assert.ok(r)
