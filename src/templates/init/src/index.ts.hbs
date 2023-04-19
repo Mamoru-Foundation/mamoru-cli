@@ -18,7 +18,7 @@ export function main(): void {
         }
     }
 
-    query('SELECT * FROM transactions').forEach((tx) => {
+    query('SELECT 1 FROM transactions').forEach((tx) => {
         const hash = tx.getString!("hash")!.valueOf();
 
         if (hash == "0x0") {

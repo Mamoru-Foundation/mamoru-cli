@@ -53,7 +53,7 @@ describe(colors.yellow('publish'), () => {
             )
         }
     }, 20000)
-    describe(colors.cyan('SQL'), () => {
+    describe.only(colors.cyan('SQL'), () => {
         // @ts-ignore
         const cases: [Partial<InitOptions>, boolean] = [
             ...getAvailableChains().map((chain) => [

@@ -198,6 +198,7 @@ class ValidationChainService {
         }
 
         this.logger.verbose('message', message)
+        console.log('MESSAGE!!', JSON.stringify(message, null, 2))
 
         const r = await txClient.sendMsgCreateDaemonMetadata({
             value: message,
