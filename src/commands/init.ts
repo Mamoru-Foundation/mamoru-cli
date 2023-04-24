@@ -61,6 +61,30 @@ function getAugmentedInitOptions(options: InitOptions): AugmentedInitOptions {
         ...options,
         jsonTags: JSON.stringify(options.tags.split(',')),
         kebabName: dashify(options.name),
+        defaultQuery: getDefaultQuery(options.chain),
+    }
+}
+
+function getDefaultQuery(type: string): string {
+    switch (type) {
+        case 'SUI_DEVNET':
+        case 'SUI_TESTNET':
+            return `SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')`
+        case 'BSC_TESTNET':
+        case 'BSC_MAINNET':
+            return `SELECT 1 FROM transactions t WHERE starts_with(t.tx_hash, '0x1_this_is_an_example_query')`
+
+        case 'ETH_TESTNET':
+        case 'ETH_MAINNET':
+            return `SELECT 1 FROM transactions t WHERE starts_with(t.tx_hash, '0x1_this_is_an_example_query')`
+
+        case 'APTOS_TESTNET':
+        case 'APTOS_MAINNET':
+            // return `SELECT * FROM transactions`
+            return `SELECT 1 FROM transactions t WHERE starts_with(t.hash, '0x1_this_is_an_example_query')`
+
+        default:
+            return `SELECT 1 FROM transactions`
     }
 }
 
@@ -123,6 +147,7 @@ export interface InitOptions {
 interface AugmentedInitOptions extends InitOptions {
     jsonTags: string
     kebabName: string
+    defaultQuery: string
 }
 
 export default {

@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Manifest } from '../types'
+/* @ts-ignore */
 import { Client } from '@mamoru-ai/validation-chain-ts-client'
 import { DirectSecp256k1Wallet } from '@cosmjs/proto-signing'
 import { fromBase64 } from '@cosmjs/encoding'
@@ -198,6 +199,7 @@ class ValidationChainService {
         }
 
         this.logger.verbose('message', message)
+        console.log('MESSAGE!!', JSON.stringify(message, null, 2))
 
         const r = await txClient.sendMsgCreateDaemonMetadata({
             value: message,
