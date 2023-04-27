@@ -3,11 +3,15 @@ import path from 'path'
 import fs from 'fs'
 import { Logger } from '../services/console'
 import { validateAndReadManifest } from '../services/manifest'
-import { OUT_DIR, WASM_INDEX } from '../services/constants'
+import { MAMORU_EXPLORER_URL, OUT_DIR, WASM_INDEX } from '../services/constants'
 import queryManifest from '../services/query-manifest'
 import ValidationChainService from '../services/validation-chain'
 import { prepareBinaryFile } from '../services/assemblyscript'
 import { Manifest } from '../types'
+import colors from 'colors'
+import short from 'short-uuid'
+
+const translator = short()
 
 export interface PublishOptions {
     rpc?: string
@@ -59,14 +63,42 @@ async function publish(
         logger.ok('Registering Daemon to Validation chain')
         const r = await vcService.registerDaemon(manifest, daemonMetadataId)
 
-        logger.ok(
-            `Daemon registered successfully, Metadata ID: ${daemonMetadataId}, Daemon ID: ${r.daemonId}`
+        logger.log(
+            `Daemon registered successfully 🎉
+
+    ℹ️  Metadata ShortUUID: 
+
+        ${colors.magenta(translator.fromUUID(daemonMetadataId))}
+
+    ℹ️  Daemon ShortUUID: 
+
+        ${colors.magenta(translator.fromUUID(r.daemonId))}
+
+    ℹ️  Explorer Url (it may take a few seconds to become available):
+
+        ${colors.underline.blue(
+            `${MAMORU_EXPLORER_URL}/explorer/${daemonMetadataId}`
+        )}`
         )
 
         return {
             daemonMetadataId,
             daemonId: r.daemonId,
         }
+    } else {
+        logger.log(
+            `Daemon registered successfully 🎉
+
+    ℹ️  DaemonMetadata (template) ShortUUID: 
+
+        ${colors.magenta(translator.fromUUID(daemonMetadataId))}
+
+    ℹ️  Explorer Url (it may take a few seconds to become available):
+
+        ${colors.underline.blue(
+            `${MAMORU_EXPLORER_URL}/explorer/${daemonMetadataId}`
+        )}`
+        )
     }
     logger.ok('Published successfully')
 

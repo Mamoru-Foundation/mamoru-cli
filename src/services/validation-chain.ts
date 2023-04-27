@@ -147,7 +147,6 @@ class ValidationChainService {
         if (this.client) return this.client
 
         const wallet = await this.getWallet()
-        console.log(this.rpc)
         this.client = new Client(
             {
                 //@ts-ignore
@@ -199,7 +198,6 @@ class ValidationChainService {
         }
 
         this.logger.verbose('message', message)
-        console.log('MESSAGE!!', JSON.stringify(message, null, 2))
 
         const r = await txClient.sendMsgCreateDaemonMetadata({
             value: message,

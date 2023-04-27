@@ -75,6 +75,7 @@
         "handlebars": "^4.7.7",
         "ipfs-http-client": "56",
         "joi": "^17.6.0",
+        "short-uuid": "^4.2.2",
         "yaml": "^2.2.1"
     },
     "lint-staged": {
