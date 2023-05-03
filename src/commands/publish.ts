@@ -69,10 +69,18 @@ async function publish(
     ℹ️  Metadata ShortUUID: 
 
         ${colors.magenta(translator.fromUUID(daemonMetadataId))}
+    
+    ℹ️  Metadata UUID: 
+
+        ${colors.magenta(daemonMetadataId)}
 
     ℹ️  Daemon ShortUUID: 
 
         ${colors.magenta(translator.fromUUID(r.daemonId))}
+
+    ℹ️  Daemon UUID: 
+
+        ${colors.magenta(r.daemonId)}
 
     ℹ️  Explorer Url (it may take a few seconds to become available):
 
@@ -92,6 +100,10 @@ async function publish(
     ℹ️  DaemonMetadata (template) ShortUUID: 
 
         ${colors.magenta(translator.fromUUID(daemonMetadataId))}
+
+    ℹ️  DaemonMetadata (template) UUID: 
+
+        ${colors.magenta(daemonMetadataId)}
 
     ℹ️  Explorer Url (it may take a few seconds to become available):
 

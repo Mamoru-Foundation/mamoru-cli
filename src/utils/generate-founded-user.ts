@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { generateFoundedUser } from './test-utils'
 
 generateFoundedUser().then((user) => {

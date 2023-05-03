@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import assert from 'node:assert'
 import { describe, it } from '@jest/globals'
@@ -14,7 +15,6 @@ import {
 } from '../utils/test-utils'
 import { runCommand } from '../utils/utils'
 import { getAvailableChains } from '../services/utils'
-import { boolean } from 'joi'
 
 const programMock = getProgramMock()
 

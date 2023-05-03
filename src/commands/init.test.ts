@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import assert from 'node:assert'
 import { describe, it } from '@jest/globals'
 import init, { InitOptions } from './init'
