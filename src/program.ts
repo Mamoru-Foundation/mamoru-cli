@@ -166,7 +166,9 @@ program
         ).makeOptionMandatory()
     )
     .action((options: any) => {
-        spawn()
+        spawn({
+            metadataId: options.metadataid,
+        })
     })
 
 program.configureOutput({
