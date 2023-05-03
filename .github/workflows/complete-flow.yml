@@ -28,12 +28,19 @@ jobs:
 
     check_code:
         needs: [login-ecr]
+        
         runs-on: ubuntu-latest
         strategy:
             matrix:
                 node-version: [18.x]
         steps:
             - uses: actions/checkout@v3
+            - name: wait for ignite CLI at http://localhost:4500 to be ready (max 5 minutes)
+              run: |
+                  for i in {1..30}; do
+                      curl -s http://localhost:4500 && break
+                      sleep 10
+                  done
             - uses: ./.github/actions/check-code
         services:
             validation-chain:
@@ -46,12 +53,6 @@ jobs:
                     - 9090:9090
                     - 1317:1317
                     - 26657:26657
-                options: >-
-                    --health-cmd "timeout 10s bash -c ':> /dev/tcp/127.0.0.1/4500' || exit 1 || exit 1"
-                    --health-interval 30s
-                    --health-timeout 10s
-                    --health-retries 5
-                    --health-start-period 30s
 
     release:
         needs: [check_code]
