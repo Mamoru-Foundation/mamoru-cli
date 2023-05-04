@@ -26,7 +26,7 @@ async function publish(
 ) {
     const verbosity = program.opts().verbose
     const logger = new Logger(verbosity)
-
+    console.log('HEY')
     const buildPath = path.join(projectPath, OUT_DIR)
 
     logger.ok('Validating Query manifest')
@@ -88,8 +88,8 @@ async function publish(
     ℹ️  Explorer Url (it may take a few seconds to become available):
 
         ${colors.underline.blue(
-            `${MAMORU_EXPLORER_URL}/explorer/${daemonMetadataId}`
-        )}`
+                `${MAMORU_EXPLORER_URL}/explorer/${daemonMetadataId}`
+            )}`
         )
 
         return {
@@ -111,8 +111,8 @@ async function publish(
     ℹ️  Explorer Url (it may take a few seconds to become available):
 
         ${colors.underline.blue(
-            `${MAMORU_EXPLORER_URL}/explorer/${daemonMetadataId}`
-        )}`
+                `${MAMORU_EXPLORER_URL}/explorer/${daemonMetadataId}`
+            )}`
         )
     }
     logger.ok('Published successfully')
