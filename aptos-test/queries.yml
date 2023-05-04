@@ -1,4 +1,0 @@
-queries:
-  - query: "SELECT 1 FROM transactions t WHERE starts_with(t.hash, '0x1_this_is_an_example_query')"
-    incidentMessage: "This is an example Daemon Incident Message"
-    severity: WARNING

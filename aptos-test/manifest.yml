@@ -1,8 +1,0 @@
-version: 0.0.1
-name: default-name
-type: sql
-subscribable: false
-description: Mamoru Daemon
-logoUrl: https://mamoru.ai/default-daemon-logo.png
-chain: APTOS_TESTNET
-tags: [mamoru,daemon]
