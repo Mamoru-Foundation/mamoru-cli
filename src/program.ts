@@ -157,8 +157,8 @@ program
     })
 
 program
-    .command('spawn')
-    .description('spawn daemon from subscribable metadata')
+    .command('launch')
+    .description('launch daemon from subscribable metadata')
     .addOption(
         new Option(
             '--metadataid, -m',
