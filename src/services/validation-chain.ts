@@ -8,6 +8,7 @@ import { Logger } from './console'
 import {
     MsgRegisterDaemon,
     txClient,
+    queryClient,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/module'
 import { CreateDaemonMetadataCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_create_command_dto'
 import {
@@ -27,6 +28,7 @@ import protobuf from 'protobufjs'
 import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import { SnifferRegisterCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/sniffer_register_command_request_dto'
 import { getAvailableChains } from './utils'
+import { DaemonMetadata } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata'
 
 type TxMsgData = {
     msgResponses: AnyMsg[]
@@ -65,21 +67,25 @@ class ValidationChainService {
      */
     client: any
     wallet: DirectSecp256k1Wallet
+    apiUrl: string
     constructor(
-        private readonly rpc: string,
+        private readonly rpcUrl: string = 'http://0.0.0.0:26657',
         private readonly privateKey: string,
         private readonly logger: Logger
-    ) {}
+    ) {
+        this.apiUrl = getApiURl(rpcUrl)
+    }
 
     private async getWallet() {
         if (this.wallet) return this.wallet
         const key = fromBase64(this.privateKey)
         const wallet = await DirectSecp256k1Wallet.fromKey(key)
+
         this.wallet = wallet
         return wallet
     }
 
-    async registerDaemon(
+    async registerDaemonFromManifest(
         manifest: Manifest,
         daemonMetadataId: string
     ): Promise<MsgRegisterDaemonResponse> {
@@ -89,6 +95,44 @@ class ValidationChainService {
 
         const payload: DaemonRegisterCommandRequestDTO = {
             chain: { chainType: this.getChainType(manifest) },
+            daemonMetadataId,
+            // @TODO: add parameters
+            parameters: [],
+            // @TODO: add relay
+            relay: {
+                type: 0,
+                address: '',
+                call: '',
+            },
+        }
+
+        const value: MsgRegisterDaemon = {
+            creator: address,
+            daemon: payload,
+        }
+
+        this.logger.verbose('Payload', payload)
+
+        const r = await txClient.sendMsgRegisterDaemon({
+            value,
+        })
+        this.throwOnError('MsgRegisterDaemon', r)
+
+        const data: Uint8Array = r.data as unknown as Uint8Array
+
+        const decodeTxMessages = this.decodeTxMessages(data)
+        return decodeTxMessages[0] as MsgRegisterDaemonResponse
+    }
+    async registerDaemon(
+        daemonMetadataId: string,
+        chainType: Chain_ChainType
+    ): Promise<MsgRegisterDaemonResponse> {
+        this.logger.verbose('Registering daemon')
+        const txClient = await this.getTxClient()
+        const address = await this.getAddress()
+
+        const payload: DaemonRegisterCommandRequestDTO = {
+            chain: { chainType: chainType },
             daemonMetadataId,
             // @TODO: add parameters
             parameters: [],
@@ -143,17 +187,15 @@ class ValidationChainService {
         return decodeTxMessages[0] as MsgRegisterSnifferResponse
     }
 
-    private async getClient(): Promise<any> {
+    private async getVcClient(): Promise<any> {
         if (this.client) return this.client
 
         const wallet = await this.getWallet()
-        console.log(this.rpc)
+
         this.client = new Client(
             {
-                //@ts-ignore
-                rpcURL: this.rpc || 'http://0.0.0.0:26657',
-
-                apiURL: 'http://0.0.0.0:1317',
+                rpcURL: this.rpcUrl,
+                apiURL: this.apiUrl,
             },
             wallet
         )
@@ -162,8 +204,17 @@ class ValidationChainService {
     }
 
     private async getTxClient(): Promise<ReturnType<typeof txClient>> {
-        const client = await this.getClient()
+        const client = await this.getVcClient()
         return client.ValidationchainValidationchain.tx
+    }
+
+    private async getQueryClient(): Promise<ReturnType<typeof queryClient>> {
+        // const client = axios.create({
+        //     baseURL: this.apiUrl
+        // })
+        // return client
+        const client = await this.getVcClient()
+        return client.ValidationchainValidationchain.query
     }
 
     private async getAddress() {
@@ -199,7 +250,6 @@ class ValidationChainService {
         }
 
         this.logger.verbose('message', message)
-        console.log('MESSAGE!!', JSON.stringify(message, null, 2))
 
         const r = await txClient.sendMsgCreateDaemonMetadata({
             value: message,
@@ -219,6 +269,24 @@ class ValidationChainService {
         const msg = decodeTxMessages[0] as MsgCreateDaemonMetadataResponse
 
         return msg
+    }
+
+    async getDaemonMetadataById(id: string): Promise<DaemonMetadata> {
+        const client = await this.getQueryClient()
+        const result = await client
+            .queryDaemonMetadata(id, {
+                // client throws an issue when tries to serialize response for this call
+                format: 'json',
+            })
+            .catch((err) => {
+                if (err.response.status === 404) {
+                    return null
+                }
+                throw err
+            })
+        if (!result) return null
+
+        return result.data.daemonMetadata
     }
 
     private getDecoder(name = 'TxMsgData') {
@@ -375,4 +443,11 @@ function createJsonRpcRequest(
         method: method,
         params: paramsCopy,
     }
+}
+
+function getApiURl(rpcUrl: string): string {
+    if (rpcUrl) {
+        return rpcUrl.replace(':26657', ':1317')
+    }
+    return 'http://localhost:1317'
 }

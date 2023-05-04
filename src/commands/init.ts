@@ -34,15 +34,37 @@ function init(program: Command, projectPath: string, options: InitOptions) {
     }
 
     logger.ok('Mamoru project files created!')
-    logger.log(`
+    if (options.type === 'wasm') {
+        logger.log(`
     ℹ️ To start working on your project, run:
-        cd ${projectPath}
-        npm install
+        
+        ${colors.grey(`cd ${projectPath}`)}
+        ${colors.grey(`npm install`)}
+    
     ℹ️ To start the project locally, run:
-        npm run start
+        
+        ${colors.grey(`npm run start`)}
+    
     ℹ️ To know more about how to create your own daemons, visit:
-        ${colors.blue('https://docs.mamoru.io')}
+        
+        ${colors.underline.blue(
+            'https://mamoru-foundation.github.io/guides/using-the-mamoru-cli.html'
+        )}
     `)
+    }
+    if (options.type === 'sql') {
+        logger.log(`
+    ℹ️ To start working on your project, run:
+        
+        ${colors.grey(`cd ${projectPath}`)}
+    
+    ℹ️ To know more about how to create your own daemons, visit:
+        
+        ${colors.underline.blue(
+            'https://mamoru-foundation.github.io/guides/using-the-mamoru-cli.html'
+        )}
+    `)
+    }
 }
 
 function checkFolderEmptyness(program: Command, paths: string[]): void {

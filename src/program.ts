@@ -5,7 +5,7 @@ import { program, InvalidArgumentError, Option } from 'commander'
 import initCommand, { InitOptions } from './commands/init'
 import compileCommand from './commands/build'
 import publishCommand, { PublishOptions } from './commands/publish'
-import spawn from './commands/spawn'
+import spawn, { SpawnOptions } from './commands/spawn'
 import { getAvailableChains } from './services/utils'
 
 function parseDirectoryPath(path: string) {
@@ -157,16 +157,35 @@ program
     })
 
 program
-    .command('spawn')
-    .description('spawn daemon from subscribable metadata')
+    .command('launch')
+    .description('launch daemon from subscribable metadata')
     .addOption(
         new Option(
             '--metadataid, -m',
             'Daemon MetadataId'
         ).makeOptionMandatory()
     )
-    .action((options: any) => {
-        spawn()
+    .option('--rpc <rpcUrl>', 'rpc url of the chain')
+    .addOption(
+        new Option('--gas <gas>', 'gas fee of the transaction').default(
+            '200000'
+        )
+    )
+    .addOption(
+        new Option(
+            '-k, --private-key <key>',
+            'Private key of the account that will be used to publish the project'
+        )
+            .makeOptionMandatory()
+            .env('MAMORU_PRIVATE_KEY')
+    )
+    .action((options: SpawnOptions) => {
+        spawn(program, {
+            metadataId: options.metadataId,
+            privateKey: options.privateKey,
+            gas: options.gas,
+            rpc: options.rpc,
+        })
     })
 
 program.configureOutput({
