@@ -61,7 +61,10 @@ async function publish(
 
     if (!manifest.subscribable) {
         logger.ok('Registering Daemon to Validation chain')
-        const r = await vcService.registerDaemon(manifest, daemonMetadataId)
+        const r = await vcService.registerDaemonFromManifest(
+            manifest,
+            daemonMetadataId
+        )
 
         logger.log(
             `Daemon registered successfully 🎉
@@ -95,7 +98,7 @@ async function publish(
         }
     } else {
         logger.log(
-            `Daemon registered successfully 🎉
+            `DaemonMetadata registered successfully 🎉
 
     ℹ️  DaemonMetadata (template) ShortUUID: 
 

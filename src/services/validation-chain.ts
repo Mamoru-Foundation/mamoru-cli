@@ -28,6 +28,7 @@ import protobuf from 'protobufjs'
 import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import { SnifferRegisterCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/sniffer_register_command_request_dto'
 import { getAvailableChains } from './utils'
+import { DaemonMetadata } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata'
 
 type TxMsgData = {
     msgResponses: AnyMsg[]
@@ -84,7 +85,7 @@ class ValidationChainService {
         return wallet
     }
 
-    async registerDaemon(
+    async registerDaemonFromManifest(
         manifest: Manifest,
         daemonMetadataId: string
     ): Promise<MsgRegisterDaemonResponse> {
@@ -94,6 +95,44 @@ class ValidationChainService {
 
         const payload: DaemonRegisterCommandRequestDTO = {
             chain: { chainType: this.getChainType(manifest) },
+            daemonMetadataId,
+            // @TODO: add parameters
+            parameters: [],
+            // @TODO: add relay
+            relay: {
+                type: 0,
+                address: '',
+                call: '',
+            },
+        }
+
+        const value: MsgRegisterDaemon = {
+            creator: address,
+            daemon: payload,
+        }
+
+        this.logger.verbose('Payload', payload)
+
+        const r = await txClient.sendMsgRegisterDaemon({
+            value,
+        })
+        this.throwOnError('MsgRegisterDaemon', r)
+
+        const data: Uint8Array = r.data as unknown as Uint8Array
+
+        const decodeTxMessages = this.decodeTxMessages(data)
+        return decodeTxMessages[0] as MsgRegisterDaemonResponse
+    }
+    async registerDaemon(
+        daemonMetadataId: string,
+        chainType: Chain_ChainType
+    ): Promise<MsgRegisterDaemonResponse> {
+        this.logger.verbose('Registering daemon')
+        const txClient = await this.getTxClient()
+        const address = await this.getAddress()
+
+        const payload: DaemonRegisterCommandRequestDTO = {
+            chain: { chainType: chainType },
             daemonMetadataId,
             // @TODO: add parameters
             parameters: [],
@@ -232,19 +271,22 @@ class ValidationChainService {
         return msg
     }
 
-    async getDaemonMetadataById(id: string) {
+    async getDaemonMetadataById(id: string): Promise<DaemonMetadata> {
         const client = await this.getQueryClient()
-        return client.queryDaemonMetadata(id).catch((err) => {
-            if (err.response.status === 404) {
-                return null
-            }
-            throw err
-        })
+        const result = await client
+            .queryDaemonMetadata(id, {
+                // client throws an issue when tries to serialize response for this call
+                format: 'json',
+            })
+            .catch((err) => {
+                if (err.response.status === 404) {
+                    return null
+                }
+                throw err
+            })
+        if (!result) return null
 
-        // const result = await client.get(`/validation-chain/validationchain/daemon_metadata/${id}`).catch(err => {
-        //     if ()
-        //         console.error(err)
-        // });
+        return result.data.daemonMetadata
     }
 
     private getDecoder(name = 'TxMsgData') {
