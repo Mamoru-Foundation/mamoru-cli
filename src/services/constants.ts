@@ -25,4 +25,4 @@ export const FILES: typeof TEMPLATES = {
 
 export const ONLY_ALPHA_NUMERIC = /^[a-zA-Z0-9]+$/
 
-export const MAMORU_EXPLORER_URL = 'https://mamoru.foundation'
+export const MAMORU_EXPLORER_URL = 'https://mamoru.ai'
