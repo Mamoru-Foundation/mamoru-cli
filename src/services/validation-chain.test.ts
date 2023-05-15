@@ -2,10 +2,7 @@ import { describe, expect, it } from '@jest/globals'
 import ValidationChainService from './validation-chain'
 import { Logger } from './console'
 import { Manifest } from '../types'
-import { DirectSecp256k1HdWallet as Wallet } from '@cosmjs/proto-signing'
-import axios from 'axios'
 import { generateFoundedUser } from '../utils/test-utils'
-import { IncidentSeverity } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/incident'
 
 describe('ValidationChain', () => {
     describe('getChainType', () => {
@@ -14,9 +11,9 @@ describe('ValidationChain', () => {
             const vc = new ValidationChainService('', '', new Logger(2))
 
             expect(() =>
-                vc.getChainType({ chain: 'notsupported' } as Manifest)
+                vc.getChainType({ chain: 'SUI_DEVNET' } as Manifest)
             ).toThrowError(
-                'Chain type "notsupported" not supported, supported values are: SUI_DEVNET, SUI_TESTNET, BSC_TESTNET, BSC_MAINNET, ETH_TESTNET, ETH_MAINNET, APTOS_TESTNET, APTOS_MAINNET'
+                'Chain type "SUI_DEVNET" not supported, supported values are: SUI_TESTNET, BSC_TESTNET, BSC_MAINNET, ETH_TESTNET, ETH_MAINNET, APTOS_TESTNET, APTOS_MAINNET, SUI_MAINNET'
             )
         })
         it('should return the correct chain type', () => {
