@@ -14,7 +14,7 @@ const programMock = getProgramMock()
 describe(colors.yellow('init'), () => {
     const cases = [
         [
-            'SUI_DEVNET' as keyof Chain_ChainType,
+            'SUI_MAINNET' as keyof Chain_ChainType,
             "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
         ],
         [
