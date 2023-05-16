@@ -89,7 +89,7 @@ function getAugmentedInitOptions(options: InitOptions): AugmentedInitOptions {
 
 function getDefaultQuery(type: string): string {
     switch (type) {
-        case 'SUI_DEVNET':
+        case 'SUI_MAINNET':
         case 'SUI_TESTNET':
             return `SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')`
         case 'BSC_TESTNET':

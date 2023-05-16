@@ -272,8 +272,12 @@ class ValidationChainService {
         if (r.code) {
             throw new Error()
         }
+
         // @WARNING: this data only comes after hack the installed ts-client!!!
         const data: Uint8Array = r.data as unknown as Uint8Array
+        if (data === undefined) {
+            throw new Error('registerDaemonMetadata data is empty')
+        }
         const decodeTxMessages = this.decodeTxMessages(data)
         const msg = decodeTxMessages[0] as MsgCreateDaemonMetadataResponse
 

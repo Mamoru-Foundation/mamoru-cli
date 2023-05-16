@@ -16,3 +16,9 @@ export function getAvailableChains(): Chain_ChainType[] {
         (x) => !(parseInt(x) >= -1 || x == 'UNRECOGNIZED' || x == 'SUI_DEVNET')
     ) as unknown as Chain_ChainType[]
 }
+
+export function getNotSupportedChains(): Chain_ChainType[] {
+    return Object.keys(Chain_ChainType).filter(
+        (x) => parseInt(x) == 0 || x == 'SUI_DEVNET'
+    ) as unknown as Chain_ChainType[]
+}

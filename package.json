@@ -64,8 +64,9 @@
     },
     "dependencies": {
         "@cosmjs/json-rpc": "^0.29.5",
+        "@cosmjs/proto-signing": "^0.30.1",
         "@cosmjs/tendermint-rpc": "^0.29.5",
-        "@mamoru-ai/validation-chain-ts-client": "^0.9.0",
+        "@mamoru-ai/validation-chain-ts-client": "^0.13.0",
         "assemblyscript": "^0.27.1",
         "axios": "^0.27.2",
         "colors": "^1.4.0",
