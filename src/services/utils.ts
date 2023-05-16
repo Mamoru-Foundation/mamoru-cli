@@ -13,9 +13,7 @@ export function formatJoiError(error: joi.ValidationError): string {
 
 export function getAvailableChains(): Chain_ChainType[] {
     return Object.keys(Chain_ChainType).filter(
-        (x) =>
-            !(parseInt(x) >= -1 || x == 'UNRECOGNIZED') &&
-            !(parseInt(x) == 0 || x == 'SUI_DEVNET')
+        (x) => !(parseInt(x) >= -1 || x == 'UNRECOGNIZED' || x == 'SUI_DEVNET')
     ) as unknown as Chain_ChainType[]
 }
 

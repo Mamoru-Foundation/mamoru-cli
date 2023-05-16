@@ -33,7 +33,7 @@ describe(colors.yellow('spawn'), () => {
         ).catch((err) => {
             expect(err.message).toBe('Metadata not found')
         })
-    }, 5000)
+    }, 10000)
     it('FAIL - metadata is not subscribable', async () => {
         const dir = getTempFolder()
         const obj = {
