@@ -15,6 +15,9 @@ import {
     DaemonMetadataContentQuery,
     DaemonMetadataType,
     DaemonMetadataContent,
+    DaemonMetadataParemeter,
+    DaemonMetadataParemeter_DaemonParemeterType,
+    DaemonMetadataContentType,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_utils'
 import { DaemonRegisterCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_register_command_request_dto'
 import {
@@ -29,6 +32,12 @@ import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/vali
 import { SnifferRegisterCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/sniffer_register_command_request_dto'
 import { getAvailableChains } from './utils'
 import { DaemonMetadata } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata'
+import {
+    ValidationchainDaemonMetadataContentQuery,
+    ValidationchainQueryGetDaemonMetadataResponse,
+} from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/rest'
+import { AxiosResponse } from 'axios'
+import { IncidentSeverity } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/incident'
 
 type TxMsgData = {
     msgResponses: AnyMsg[]
@@ -273,20 +282,60 @@ class ValidationChainService {
 
     async getDaemonMetadataById(id: string): Promise<DaemonMetadata> {
         const client = await this.getQueryClient()
-        const result = await client
-            .queryDaemonMetadata(id, {
-                // client throws an issue when tries to serialize response for this call
-                format: 'json',
-            })
-            .catch((err) => {
-                if (err.response.status === 404) {
-                    return null
-                }
-                throw err
-            })
+        const result: AxiosResponse<ValidationchainQueryGetDaemonMetadataResponse> =
+            await client
+                .queryDaemonMetadata(id, {
+                    // client throws an issue when tries to serialize response for this call
+                    format: 'json',
+                })
+                .catch((err) => {
+                    if (err.response.status === 404) {
+                        return null
+                    }
+                    throw err
+                })
         if (!result) return null
-
-        return result.data.daemonMetadata
+        const metadata = result.data.daemonMetadata
+        return {
+            daemonMetadataId: metadata.daemonMetadataId || null,
+            logoUrl: metadata.logoUrl || null,
+            developerAddress: metadata.developerAddress || null,
+            type: DaemonMetadataType[metadata.type] || null,
+            title: metadata.title || null,
+            description: metadata.description || null,
+            tags: metadata.tags || [],
+            supportedChains:
+                metadata.supportedChains?.map((el) => ({
+                    chainType: Chain_ChainType[el.chain_type],
+                })) || [],
+            parameters:
+                metadata.parameters?.map(
+                    (el) =>
+                        ({
+                            defaultValue: el.defaultValue,
+                            description: el.description,
+                            hiddenFor: el.hiddenFor,
+                            key: el.key,
+                            requiredFor: el.requiredFor,
+                            title: el.title,
+                            type: DaemonMetadataParemeter_DaemonParemeterType[
+                                el.type
+                            ],
+                        } as DaemonMetadataParemeter)
+                ) || [],
+            content: {
+                query: metadata.content.query?.map(
+                    (el: ValidationchainDaemonMetadataContentQuery) => ({
+                        incidentMessage: el.incidentMessage,
+                        severity: IncidentSeverity[el.severity],
+                        query: el.query,
+                    })
+                ),
+                type: DaemonMetadataContentType[metadata?.content?.type],
+                wasmModule: metadata?.content?.wasmModule,
+            },
+            createdAt: metadata.createdAt || null,
+        }
     }
 
     private getDecoder(name = 'TxMsgData') {

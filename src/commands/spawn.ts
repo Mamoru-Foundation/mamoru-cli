@@ -37,10 +37,7 @@ export default async function spawn(program: Command, options: SpawnOptions) {
     if (!metadata) {
         throw new Error('Metadata not found')
     }
-    if (
-        (DaemonMetadataType[metadata.type] as unknown as DaemonMetadataType) !==
-        DaemonMetadataType.SUBCRIBABLE
-    ) {
+    if (metadata.type !== DaemonMetadataType.SUBCRIBABLE) {
         throw new Error('Metadata is not subscribable')
     }
 

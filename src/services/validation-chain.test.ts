@@ -16,7 +16,7 @@ describe('ValidationChain', () => {
             expect(() =>
                 vc.getChainType({ chain: 'notsupported' } as Manifest)
             ).toThrowError(
-                'Chain type "notsupported" not supported, supported values are: SUI_DEVNET, SUI_TESTNET, BSC_TESTNET, BSC_MAINNET, ETH_TESTNET, ETH_MAINNET, APTOS_TESTNET, APTOS_MAINNET'
+                'Chain type "notsupported" not supported, supported values are: SUI_TESTNET, BSC_TESTNET, BSC_MAINNET, ETH_TESTNET, ETH_MAINNET, APTOS_TESTNET, APTOS_MAINNET'
             )
         })
         it('should return the correct chain type', () => {
