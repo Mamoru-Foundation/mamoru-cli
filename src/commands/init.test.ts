@@ -46,6 +46,7 @@ describe(colors.yellow('init'), () => {
             "SELECT 1 FROM transactions t WHERE starts_with(t.hash, '0x1_this_is_an_example_query')",
         ],
         ['UNRECOGNIZED' as keyof Chain_ChainType, 'SELECT 1 FROM transactions'],
+        ['SUI_DEVNET' as keyof Chain_ChainType, 'SELECT 1 FROM transactions'],
     ]
     it.each(cases)(
         'OK - Should create Files - type=sql, %s',
@@ -195,7 +196,7 @@ describe(colors.yellow('init'), () => {
     })
     it('FAIL - Fail if project is already in folder', () => {
         const dir = getTempFolder()
-        // console.log(colors.green('Temp Folder: ' + dir))
+
         const options: InitOptions = {
             type: 'sql',
             name: 'TEST name',

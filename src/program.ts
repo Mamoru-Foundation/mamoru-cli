@@ -5,7 +5,7 @@ import { program, InvalidArgumentError, Option } from 'commander'
 import initCommand, { InitOptions } from './commands/init'
 import compileCommand from './commands/build'
 import publishCommand, { PublishOptions } from './commands/publish'
-import spawn, { SpawnOptions } from './commands/spawn'
+import spawn from './commands/spawn'
 import { getAvailableChains } from './services/utils'
 
 function parseDirectoryPath(path: string) {
