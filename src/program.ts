@@ -161,7 +161,7 @@ program
     .description('launch daemon from subscribable metadata')
     .addOption(
         new Option(
-            '--metadataid, -m',
+            '-m, --metadataid <metadataId>',
             'Daemon MetadataId'
         ).makeOptionMandatory()
     )
@@ -179,9 +179,9 @@ program
             .makeOptionMandatory()
             .env('MAMORU_PRIVATE_KEY')
     )
-    .action((options: SpawnOptions) => {
+    .action((options: any) => {
         spawn(program, {
-            metadataId: options.metadataId,
+            metadataId: options.metadataid,
             privateKey: options.privateKey,
             gas: options.gas,
             rpc: options.rpc,
