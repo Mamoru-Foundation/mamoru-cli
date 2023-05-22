@@ -70,6 +70,8 @@ export type ValidationChainMsgs =
     | MsgCreateDaemonMetadataResponse
     | MsgRegisterDaemonResponse
 
+const ADDRESS_PREFIX = 'mamoru'
+
 class ValidationChainService {
     /**
      * ts-client types are broken, so using any for now
@@ -205,6 +207,7 @@ class ValidationChainService {
             {
                 rpcURL: this.rpcUrl,
                 apiURL: this.apiUrl,
+                prefix: ADDRESS_PREFIX,
             },
             wallet
         )
