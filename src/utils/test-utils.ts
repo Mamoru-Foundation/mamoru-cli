@@ -14,7 +14,9 @@ export const generateUser = async (): Promise<{
     address: string
     privkey: string
 }> => {
-    const wallet = await Wallet.generate(24)
+    const wallet = await Wallet.generate(24, {
+        prefix: 'mamoru',
+    })
     const accounts = await wallet.getAccounts()
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore

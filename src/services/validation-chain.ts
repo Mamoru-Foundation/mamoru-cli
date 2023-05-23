@@ -70,6 +70,8 @@ export type ValidationChainMsgs =
     | MsgCreateDaemonMetadataResponse
     | MsgRegisterDaemonResponse
 
+const ADDRESS_PREFIX = 'mamoru'
+
 class ValidationChainService {
     /**
      * ts-client types are broken, so using any for now
@@ -88,7 +90,7 @@ class ValidationChainService {
     private async getWallet() {
         if (this.wallet) return this.wallet
         const key = fromBase64(this.privateKey)
-        const wallet = await DirectSecp256k1Wallet.fromKey(key)
+        const wallet = await DirectSecp256k1Wallet.fromKey(key, ADDRESS_PREFIX)
 
         this.wallet = wallet
         return wallet
@@ -205,6 +207,7 @@ class ValidationChainService {
             {
                 rpcURL: this.rpcUrl,
                 apiURL: this.apiUrl,
+                prefix: ADDRESS_PREFIX,
             },
             wallet
         )
