@@ -90,7 +90,7 @@ class ValidationChainService {
     private async getWallet() {
         if (this.wallet) return this.wallet
         const key = fromBase64(this.privateKey)
-        const wallet = await DirectSecp256k1Wallet.fromKey(key)
+        const wallet = await DirectSecp256k1Wallet.fromKey(key, ADDRESS_PREFIX)
 
         this.wallet = wallet
         return wallet
