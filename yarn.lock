@@ -1775,6 +1775,39 @@
     axios "^0.27.2"
     long "^4.0.0"
 
+"@mamoru-ai/mamoru-aptos-sdk-as@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@mamoru-ai/mamoru-aptos-sdk-as/-/mamoru-aptos-sdk-as-0.2.0.tgz#43f9d8443a167fe3a919e2a254646dd75587e5ce"
+  integrity sha512-9M0tIGb/aQZkkngqXw6az6gtxRw34lobxsgr+OkuWoFttHjmm8NU6T4qw+P/kLfUqteESliqzOhPoy7RTn9waA==
+  dependencies:
+    "@mamoru-ai/mamoru-sdk-as" "^0.4.0"
+    "@wapc/as-msgpack" "^0.1.15"
+
+"@mamoru-ai/mamoru-evm-sdk-as@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@mamoru-ai/mamoru-evm-sdk-as/-/mamoru-evm-sdk-as-0.2.0.tgz#cd734149e33dddcd72d7ff4eeed05c6267df2200"
+  integrity sha512-thYs8w6cFpGH9ZTClMHLLn0+oNHsCCAoB6VfWreBh1hZzYS3fXjkwtNnQF66CiHLlEFOuQO2D4KRjpufOLS/ng==
+  dependencies:
+    "@mamoru-ai/mamoru-sdk-as" "^0.4.0"
+    "@wapc/as-msgpack" "^0.1.15"
+
+"@mamoru-ai/mamoru-sdk-as@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@mamoru-ai/mamoru-sdk-as/-/mamoru-sdk-as-0.4.0.tgz#8fa5a381faf792d63a2ff01520bafef890d3ad4a"
+  integrity sha512-1wjV/AwQRA0wJ4p4v6fVyITmbKsXlVKAS9OxVHhnfdOCDj+IWp4gSdktniM84/6WJ3U+wGKHuVgGIbJVVYZJVw==
+  dependencies:
+    "@wapc/as-msgpack" "^0.1.15"
+    as-bignum "^0.2.31"
+    assemblyscript-json "^1.1.0"
+
+"@mamoru-ai/mamoru-sui-sdk-as@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@mamoru-ai/mamoru-sui-sdk-as/-/mamoru-sui-sdk-as-0.2.0.tgz#b262067a886d7cd205a20d244cd34462739878d3"
+  integrity sha512-PQkEXTG8cFSyCU4hEc5DbsSxWgjuRT+7dYz2qGPxL+twkAebvT5zFAX1ThNOJmBPlyfM5y2OaSV6g9hSqUnKLA==
+  dependencies:
+    "@mamoru-ai/mamoru-sdk-as" "^0.4.0"
+    "@wapc/as-msgpack" "^0.1.15"
+
 "@mamoru-ai/validation-chain-ts-client@^0.14.0":
   version "0.14.0"
   resolved "https://registry.npmjs.org/@mamoru-ai/validation-chain-ts-client/-/validation-chain-ts-client-0.14.0.tgz"
@@ -2675,6 +2708,11 @@
     "@typescript-eslint/types" "5.40.1"
     eslint-visitor-keys "^3.3.0"
 
+"@wapc/as-msgpack@^0.1.15":
+  version "0.1.15"
+  resolved "https://registry.yarnpkg.com/@wapc/as-msgpack/-/as-msgpack-0.1.15.tgz#cdc7597da8c6c61d4cedfc9319cda5e71339d22a"
+  integrity sha512-hWxSEvG71ep/ygEmqt2ZBc0/d71wR+yJzZd9+PLDpyHV4O9EZNsS4ib/2LxvXfryncdYEezHwOU9J2VZSrVqqw==
+
 JSONStream@^1.0.4:
   version "1.3.5"
   resolved "https://registry.npmjs.org/JSONStream/-/JSONStream-1.3.5.tgz"
@@ -2926,10 +2964,20 @@ arrify@^2.0.1:
   resolved "https://registry.npmjs.org/arrify/-/arrify-2.0.1.tgz"
   integrity sha512-3duEwti880xqi4eAMN8AyR4a0ByT90zoYdLlevfrvU43vb0YZwZVfxOgxWrLXXXpyugL0hNZc9G6BiB5B3nUug==
 
+as-bignum@^0.2.31:
+  version "0.2.31"
+  resolved "https://registry.yarnpkg.com/as-bignum/-/as-bignum-0.2.31.tgz#065159d5a239efb70897d13aff409cf3b0b662f8"
+  integrity sha512-4DRQ9pHu8BCfse4xvZucg5t7mkDtiM93dBzZkXpcpAJ2fmf+p/wbYxN24nCvRVACRPavPYreea5k3ugWD1C3Fg==
+
 asap@^2.0.0:
   version "2.0.6"
   resolved "https://registry.npmjs.org/asap/-/asap-2.0.6.tgz"
   integrity sha512-BSHWgDSAiKs50o2Re8ppvp3seVHXSRM44cdSsT9FfNEUUZLOGWVCsiWaRPWM1Znn+mqZ1OfVZ3z3DWEzSp7hRA==
+
+assemblyscript-json@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/assemblyscript-json/-/assemblyscript-json-1.1.0.tgz#49d38bc21f1ac36f2887528a35de6cf7d59c17be"
+  integrity sha512-UbE8ts8csTWQgd5TnSPN7MRV9NveuHv1bVnKmDLoo/tzjqxkmsZb3lu59Uk8H7SGoqdkDSEE049alx/nHnSdFw==
 
 assemblyscript@^0.27.1:
   version "0.27.1"

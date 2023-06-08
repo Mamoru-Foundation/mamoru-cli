@@ -8,11 +8,12 @@ import colors from 'colors'
 import yaml from 'yaml'
 import { getProgramMock, getTempFolder } from '../utils/test-utils'
 import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
+import { sdkVersions } from '../sdk-dependency-versions'
 
 const programMock = getProgramMock()
 
 describe(colors.yellow('init'), () => {
-    const cases = [
+    const sqlCases = [
         [
             'SUI_MAINNET' as keyof Chain_ChainType,
             "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
@@ -48,7 +49,7 @@ describe(colors.yellow('init'), () => {
         ['UNRECOGNIZED' as keyof Chain_ChainType, 'SELECT 1 FROM transactions'],
         ['SUI_DEVNET' as keyof Chain_ChainType, 'SELECT 1 FROM transactions'],
     ]
-    it.each(cases)(
+    it.each(sqlCases)(
         'OK - Should create Files - type=sql, %s',
         (chain, query) => {
             const dir = getTempFolder()
@@ -125,75 +126,133 @@ describe(colors.yellow('init'), () => {
             })
         }
     )
-    it('OK - Should create Files - type=wasm', async () => {
-        const dir = getTempFolder()
-        // console.log(colors.green('Temp Folder: ' + dir))
-        const options: InitOptions = {
-            type: 'wasm',
-            name: 'TEST name',
-            tags: 'test,cli',
-            description: 'TEST_DESCRIPTION',
-            chain: 'sui',
-            logo: 'https://test.com/logo.png',
-            subscribable: false,
-        }
 
-        init.init(programMock, dir, options)
+    const wasmCases = [
+        [
+            'SUI_MAINNET' as keyof Chain_ChainType,
+            '@mamoru-ai/mamoru-sui-sdk-as',
+            sdkVersions.sui,
+            'import { SuiCtx } from "@mamoru-ai/mamoru-sui-sdk-as/assembly"',
+        ],
+        [
+            'SUI_TESTNET' as keyof Chain_ChainType,
+            '@mamoru-ai/mamoru-sui-sdk-as',
+            sdkVersions.sui,
+            'import { SuiCtx } from "@mamoru-ai/mamoru-sui-sdk-as/assembly"',
+        ],
+        [
+            'BSC_TESTNET' as keyof Chain_ChainType,
+            '@mamoru-ai/mamoru-evm-sdk-as',
+            sdkVersions.evm,
+            'import { EvmCtx } from "@mamoru-ai/mamoru-evm-sdk-as/assembly"',
+        ],
+        [
+            'BSC_MAINNET' as keyof Chain_ChainType,
+            '@mamoru-ai/mamoru-evm-sdk-as',
+            sdkVersions.evm,
+            'import { EvmCtx } from "@mamoru-ai/mamoru-evm-sdk-as/assembly"',
+        ],
+        [
+            'ETH_TESTNET' as keyof Chain_ChainType,
+            '@mamoru-ai/mamoru-evm-sdk-as',
+            sdkVersions.evm,
+            'import { EvmCtx } from "@mamoru-ai/mamoru-evm-sdk-as/assembly"',
+        ],
+        [
+            'APTOS_TESTNET' as keyof Chain_ChainType,
+            '@mamoru-ai/mamoru-aptos-sdk-as',
+            sdkVersions.aptos,
+            'import { AptosCtx } from "@mamoru-ai/mamoru-aptos-sdk-as/assembly"',
+        ],
+        [
+            'APTOS_MAINNET' as keyof Chain_ChainType,
+            '@mamoru-ai/mamoru-aptos-sdk-as',
+            sdkVersions.aptos,
+            'import { AptosCtx } from "@mamoru-ai/mamoru-aptos-sdk-as/assembly"',
+        ],
+    ]
+    it.only.each(wasmCases)(
+        'OK - Should create Files - type=wasm, %s',
+        async (chain, customSdk, version, importName) => {
+            const dir = getTempFolder()
+            // console.log(colors.green('Temp Folder: ' + dir))
+            const options: InitOptions = {
+                type: 'wasm',
+                name: 'TEST name',
+                tags: 'test,cli',
+                description: 'TEST_DESCRIPTION',
+                chain: chain,
+                logo: 'https://test.com/logo.png',
+                subscribable: false,
+            }
 
-        const files = fs.readdirSync(dir)
-        assert.strictEqual(files.length, 6)
+            init.init(programMock, dir, options)
 
-        assert.strictEqual(files.includes('readme.md'), true)
-        assert.strictEqual(files.includes('package.json'), true)
-        assert.strictEqual(files.includes('manifest.yml'), true)
-        assert.strictEqual(files.includes('.gitignore'), true)
-        assert.strictEqual(files.includes('src'), true)
-        assert.strictEqual(files.includes('test'), true)
+            const files = fs.readdirSync(dir)
+            assert.strictEqual(files.length, 6)
 
-        const srcFiles = fs.readdirSync(path.join(dir, 'src'))
-        assert.strictEqual(srcFiles.length, 1)
-        assert.strictEqual(srcFiles.includes('index.ts'), true)
+            assert.strictEqual(files.includes('readme.md'), true)
+            assert.strictEqual(files.includes('package.json'), true)
+            assert.strictEqual(files.includes('manifest.yml'), true)
+            assert.strictEqual(files.includes('.gitignore'), true)
+            assert.strictEqual(files.includes('src'), true)
+            assert.strictEqual(files.includes('test'), true)
 
-        const testFiles = fs.readdirSync(path.join(dir, 'test'))
-        assert.strictEqual(testFiles.length, 1)
-        assert.strictEqual(testFiles.includes('index.spec.ts'), true)
+            const srcFiles = fs.readdirSync(path.join(dir, 'src'))
+            assert.strictEqual(srcFiles.length, 1)
+            assert.strictEqual(srcFiles.includes('index.ts'), true)
 
-        const packageJson = fs.readFileSync(
-            path.join(dir, 'package.json'),
-            'utf-8'
-        )
+            const testFiles = fs.readdirSync(path.join(dir, 'test'))
+            assert.strictEqual(testFiles.length, 1)
+            assert.strictEqual(testFiles.includes('index.spec.ts'), true)
 
-        const parsedPackage = JSON.parse(packageJson)
+            const packageJson = fs.readFileSync(
+                path.join(dir, 'package.json'),
+                'utf-8'
+            )
 
-        assert.deepEqual(parsedPackage, {
-            dependencies: { '@mamoru-ai/mamoru-sdk-as': '^0.2.1' },
-            description: 'TEST_DESCRIPTION',
-            devDependencies: { assemblyscript: '^0.27.1' },
-            license: 'Apache-2.0',
-            name: 'test-name',
-            scripts: {
-                build: 'asc src/index.ts --exportRuntime --outFile build/index.wasm -b build/index.wat --sourceMap --optimize --exportRuntime --runtime stub --lib',
-            },
-            tags: ['test', 'cli'],
-            version: '0.0.1',
-        })
+            const parsedPackage = JSON.parse(packageJson)
 
-        const manifest = fs.readFileSync(
-            path.join(dir, 'manifest.yml'),
-            'utf-8'
-        )
-        const manifestParsed = yaml.parse(manifest)
-        assert.deepEqual(manifestParsed, {
-            chain: 'sui',
-            description: 'TEST_DESCRIPTION',
-            logoUrl: 'https://test.com/logo.png',
-            name: 'test-name',
-            tags: ['test', 'cli'],
-            version: '0.0.1',
-            type: 'wasm',
-            subscribable: false,
-        })
-    })
+            assert.deepEqual(parsedPackage, {
+                dependencies: {
+                    '@mamoru-ai/mamoru-sdk-as': '^0.4.0',
+                    [customSdk]: version,
+                },
+                description: 'TEST_DESCRIPTION',
+                devDependencies: { assemblyscript: '^0.27.1' },
+                license: 'Apache-2.0',
+                name: 'test-name',
+                scripts: {
+                    build: 'asc src/index.ts --exportRuntime --outFile build/index.wasm -b build/index.wat --sourceMap --optimize --exportRuntime --runtime stub --lib',
+                },
+                tags: ['test', 'cli'],
+                version: '0.0.1',
+            })
+
+            const manifest = fs.readFileSync(
+                path.join(dir, 'manifest.yml'),
+                'utf-8'
+            )
+            const manifestParsed = yaml.parse(manifest)
+            assert.deepEqual(manifestParsed, {
+                chain: chain,
+                description: 'TEST_DESCRIPTION',
+                logoUrl: 'https://test.com/logo.png',
+                name: 'test-name',
+                tags: ['test', 'cli'],
+                version: '0.0.1',
+                type: 'wasm',
+                subscribable: false,
+            })
+            const index = fs.readFileSync(
+                path.join(dir, 'src', 'index.ts'),
+                'utf-8'
+            )
+
+            assert.match(index, new RegExp(importName))
+        },
+        1000
+    )
     it('FAIL - Fail if project is already in folder', () => {
         const dir = getTempFolder()
 

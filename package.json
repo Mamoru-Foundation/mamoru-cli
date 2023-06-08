@@ -13,6 +13,7 @@
         "src"
     ],
     "scripts": {
+        "prebuild": "echo TESTING PRE BUILD",
         "build": "tsc && cp -r src/templates dist/templates",
         "build:watch": "tsc --watch",
         "lint": "eslint ./src --fix",
@@ -43,6 +44,10 @@
         "@commitlint/config-conventional": "^17.4.4",
         "@commitlint/prompt-cli": "^17.4.4",
         "@jest/globals": "^29.5.0",
+        "@mamoru-ai/mamoru-aptos-sdk-as": "^0.2.0",
+        "@mamoru-ai/mamoru-evm-sdk-as": "^0.2.0",
+        "@mamoru-ai/mamoru-sdk-as": "^0.4.0",
+        "@mamoru-ai/mamoru-sui-sdk-as": "^0.2.0",
         "@types/dashify": "^1.0.1",
         "@types/node": "^18.7.18",
         "@types/npm": "^7.19.0",

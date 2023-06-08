@@ -6,6 +6,7 @@ import { Logger } from '../services/console'
 import dashify from 'dashify'
 import { FILES, TEMPLATES } from '../services/constants'
 import colors from 'colors'
+import { sdkVersions } from '../sdk-dependency-versions'
 
 function init(program: Command, projectPath: string, options: InitOptions) {
     const verbosity = program.opts().verbose
@@ -84,6 +85,12 @@ function getAugmentedInitOptions(options: InitOptions): AugmentedInitOptions {
         jsonTags: JSON.stringify(options.tags.split(',')),
         kebabName: dashify(options.name),
         defaultQuery: getDefaultQuery(options.chain),
+        mamoruSdkAsVersion: sdkVersions.sdk,
+        mamoruCustomSdkPackageName: getCustomSdkPackage(options.chain),
+        mamoruCustomSdkPackageVersion: getCustomSdkPackageVersion(
+            options.chain
+        ),
+        customSdkCtxName: getCustomSdkCtxName(options.chain),
     }
 }
 
@@ -107,6 +114,66 @@ function getDefaultQuery(type: string): string {
 
         default:
             return `SELECT 1 FROM transactions`
+    }
+}
+
+function getCustomSdkPackage(type: string): string {
+    switch (type) {
+        case 'SUI_MAINNET':
+        case 'SUI_TESTNET':
+            return `@mamoru-ai/mamoru-sui-sdk-as`
+        case 'BSC_TESTNET':
+        case 'BSC_MAINNET':
+            return `@mamoru-ai/mamoru-evm-sdk-as`
+
+        case 'ETH_TESTNET':
+        case 'ETH_MAINNET':
+            return `@mamoru-ai/mamoru-evm-sdk-as`
+
+        case 'APTOS_TESTNET':
+        case 'APTOS_MAINNET':
+            return `@mamoru-ai/mamoru-aptos-sdk-as`
+
+        default:
+            return `@mamoru-ai/mamoru-evm-sdk-as`
+    }
+}
+
+function getCustomSdkPackageVersion(type: string): string {
+    switch (type) {
+        case 'SUI_MAINNET':
+        case 'SUI_TESTNET':
+            return sdkVersions.sui
+        case 'BSC_TESTNET':
+        case 'BSC_MAINNET':
+        case 'ETH_TESTNET':
+        case 'ETH_MAINNET':
+            return sdkVersions.evm
+
+        case 'APTOS_TESTNET':
+        case 'APTOS_MAINNET':
+            return sdkVersions.aptos
+
+        default:
+            return sdkVersions.evm
+    }
+}
+
+function getCustomSdkCtxName(type: string): string {
+    switch (type) {
+        case 'SUI_MAINNET':
+        case 'SUI_TESTNET':
+            return `SuiCtx`
+        case 'BSC_TESTNET':
+        case 'BSC_MAINNET':
+        case 'ETH_TESTNET':
+        case 'ETH_MAINNET':
+            return `EvmCtx`
+        case 'APTOS_TESTNET':
+        case 'APTOS_MAINNET':
+            return `AptosCtx`
+        default:
+            return `EvmCtx`
     }
 }
 
@@ -170,6 +237,10 @@ interface AugmentedInitOptions extends InitOptions {
     jsonTags: string
     kebabName: string
     defaultQuery: string
+    mamoruSdkAsVersion: string
+    mamoruCustomSdkPackageVersion: string
+    mamoruCustomSdkPackageName: string
+    customSdkCtxName: string
 }
 
 export default {
