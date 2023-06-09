@@ -6,12 +6,13 @@ import { Logger } from '../services/console'
 import dashify from 'dashify'
 import { FILES, TEMPLATES } from '../services/constants'
 import colors from 'colors'
+import { deburr } from 'lodash'
 
 function init(program: Command, projectPath: string, options: InitOptions) {
     const verbosity = program.opts().verbose
     const logger = new Logger(verbosity)
     logger.verbose('Run init')
-    const augOps = getAugmentedInitOptions(options)
+    const augOps = getAugmentedInitOptions(options, projectPath)
 
     const files = getFilesToCreate(projectPath, augOps)
 
@@ -78,11 +79,21 @@ function checkFolderEmptyness(program: Command, paths: string[]): void {
     })
 }
 
-function getAugmentedInitOptions(options: InitOptions): AugmentedInitOptions {
+function getAugmentedInitOptions(
+    options: InitOptions,
+    projectPath: string
+): AugmentedInitOptions {
+    let name
+    if (!options.name && !dashify(projectPath)) {
+        name = 'Default name'
+    } else {
+        name = options.name || deburr(path.basename(projectPath))
+    }
     return {
         ...options,
+        name,
         jsonTags: JSON.stringify(options.tags.split(',')),
-        kebabName: dashify(options.name),
+        kebabName: dashify(name),
         defaultQuery: getDefaultQuery(options.chain),
     }
 }
@@ -166,7 +177,7 @@ export interface InitOptions {
     type: 'sql' | 'wasm'
 }
 
-interface AugmentedInitOptions extends InitOptions {
+export interface AugmentedInitOptions extends InitOptions {
     jsonTags: string
     kebabName: string
     defaultQuery: string
@@ -174,4 +185,5 @@ interface AugmentedInitOptions extends InitOptions {
 
 export default {
     init,
+    getAugmentedInitOptions,
 }
