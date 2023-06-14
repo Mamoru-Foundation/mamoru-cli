@@ -13,7 +13,7 @@
         "src"
     ],
     "scripts": {
-        "prebuild": "echo TESTING PRE BUILD",
+        "prebuild": "sh scripts/generate-dependency-map.sh",
         "build": "tsc && cp -r src/templates dist/templates",
         "build:watch": "tsc --watch",
         "lint": "eslint ./src --fix",
