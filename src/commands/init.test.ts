@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import assert from 'node:assert'
 import { describe, it } from '@jest/globals'
-import init, { InitOptions } from './init'
+import init, { AugmentedInitOptions, InitOptions } from './init'
 import path from 'node:path'
 import fs from 'node:fs'
 import colors from 'colors'
@@ -273,5 +273,86 @@ describe(colors.yellow('init'), () => {
         } catch (error) {
             // pass
         }
+    })
+})
+describe.only('getAugmentedInitOptions', () => {
+    it('Should return augmented options', () => {
+        const options: InitOptions = {
+            type: 'sql',
+            name: 'TEST name',
+            tags: 'test,cli',
+            description: 'TEST_DESCRIPTION',
+            chain: 'SUI_TESTNET',
+            logo: 'https://test.com/logo.png',
+            subscribable: false,
+        }
+        const augmented = init.getAugmentedInitOptions(options, '.')
+        assert.deepEqual(augmented, {
+            type: 'sql',
+            name: 'TEST name',
+            tags: 'test,cli',
+            description: 'TEST_DESCRIPTION',
+            chain: 'SUI_TESTNET',
+            logo: 'https://test.com/logo.png',
+            subscribable: false,
+            defaultQuery:
+                "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
+            jsonTags: '["test","cli"]',
+            kebabName: 'test-name',
+        })
+    })
+    it('default name', () => {
+        const options: InitOptions = {
+            type: 'sql',
+            name: '',
+            tags: 'test,cli',
+            description: 'TEST_DESCRIPTION',
+            chain: 'SUI_TESTNET',
+            logo: 'https://test.com/logo.png',
+            subscribable: false,
+        }
+        const augmented = init.getAugmentedInitOptions(options, '.')
+        assert.deepEqual(augmented, {
+            type: 'sql',
+            name: 'Default name',
+            tags: 'test,cli',
+            description: 'TEST_DESCRIPTION',
+            chain: 'SUI_TESTNET',
+            logo: 'https://test.com/logo.png',
+            subscribable: false,
+            defaultQuery:
+                "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
+            jsonTags: '["test","cli"]',
+            kebabName: 'default-name',
+        })
+    })
+
+    it('default name project-path (another/daemon_new)', () => {
+        const options: InitOptions = {
+            type: 'sql',
+            name: '',
+            tags: 'test,cli',
+            description: 'TEST_DESCRIPTION',
+            chain: 'SUI_TESTNET',
+            logo: 'https://test.com/logo.png',
+            subscribable: false,
+        }
+        const augmented = init.getAugmentedInitOptions(
+            options,
+            'another/daemon_new'
+        )
+        assert.deepEqual(augmented, {
+            type: 'sql',
+            name: 'daemon_new',
+            tags: 'test,cli',
+            description: 'TEST_DESCRIPTION',
+            chain: 'SUI_TESTNET',
+            logo: 'https://test.com/logo.png',
+            subscribable: false,
+            defaultQuery:
+                "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
+            jsonTags: '["test","cli"]',
+            kebabName: 'daemon_new',
+        })
     })
 })
