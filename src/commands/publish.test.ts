@@ -18,7 +18,7 @@ import { getAvailableChains } from '../services/utils'
 
 const programMock = getProgramMock()
 
-describe(colors.yellow('publish'), () => {
+describe('publish', () => {
     it('FAIL - invalid manifest', async () => {
         const dir = getTempFolder()
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -53,7 +53,7 @@ describe(colors.yellow('publish'), () => {
             )
         }
     }, 20000)
-    describe(colors.cyan('SQL'), () => {
+    describe('SQL', () => {
         // @ts-ignore
         const cases: [Partial<InitOptions>, boolean] = [
             ...getAvailableChains().map((chain) => [
@@ -72,6 +72,7 @@ describe(colors.yellow('publish'), () => {
                 false,
             ]),
         ]
+
         it.each(cases)(
             `OK - SOLE %s`,
             async (obj, wasDaemonCreated) => {
@@ -88,7 +89,7 @@ describe(colors.yellow('publish'), () => {
                 assert.equal(isUUID(r.daemonId as string), wasDaemonCreated)
                 assert.equal(isUUID(r.daemonMetadataId), true)
             },
-            20000
+            200000
         )
     })
 

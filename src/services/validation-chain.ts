@@ -36,8 +36,10 @@ import {
     ValidationchainDaemonMetadataContentQuery,
     ValidationchainQueryGetDaemonMetadataResponse,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/rest'
-import { AxiosResponse } from 'axios'
+import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { IncidentSeverity } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/incident'
+import { TxResponse } from '@cosmjs/tendermint-rpc'
+import type { V1Beta1GetTxResponse } from '@mamoru-ai/validation-chain-ts-client/dist/cosmos.tx.v1beta1/rest'
 
 type TxMsgData = {
     msgResponses: AnyMsg[]
@@ -77,6 +79,7 @@ class ValidationChainService {
      * ts-client types are broken, so using any for now
      */
     client: any
+    apiClient: AxiosInstance
     wallet: DirectSecp256k1Wallet
     apiUrl: string
     constructor(
@@ -124,15 +127,15 @@ class ValidationChainService {
 
         this.logger.verbose('Payload', payload)
 
-        const r = await txClient.sendMsgRegisterDaemon({
+        const result = await txClient.sendMsgRegisterDaemon({
             value,
         })
-        this.throwOnError('MsgRegisterDaemon', r)
+        this.throwOnError('MsgRegisterDaemon', result)
 
-        const data: Uint8Array = r.data as unknown as Uint8Array
+        const data = await this.getTxDataOnlyResponse(result.transactionHash)
+        const decodedArr = this.decodeTxMessages(data)
 
-        const decodeTxMessages = this.decodeTxMessages(data)
-        return decodeTxMessages[0] as MsgRegisterDaemonResponse
+        return decodedArr[0] as MsgRegisterDaemonResponse
     }
     async registerDaemon(
         daemonMetadataId: string,
@@ -162,15 +165,15 @@ class ValidationChainService {
 
         this.logger.verbose('Payload', payload)
 
-        const r = await txClient.sendMsgRegisterDaemon({
+        const result = await txClient.sendMsgRegisterDaemon({
             value,
         })
-        this.throwOnError('MsgRegisterDaemon', r)
+        this.throwOnError('MsgRegisterDaemon', result)
 
-        const data: Uint8Array = r.data as unknown as Uint8Array
+        const data = await this.getTxDataOnlyResponse(result.transactionHash)
+        const decodedArr = this.decodeTxMessages(data)
 
-        const decodeTxMessages = this.decodeTxMessages(data)
-        return decodeTxMessages[0] as MsgRegisterDaemonResponse
+        return decodedArr[0] as MsgRegisterDaemonResponse
     }
 
     async registerSniffer(address: string, chain: Chain_ChainType) {
@@ -192,7 +195,8 @@ class ValidationChainService {
 
         this.throwOnError('MsgRegisterSniffer', result)
 
-        const data: Uint8Array = result.data as unknown as Uint8Array
+        const data = await this.getTxDataOnlyResponse(result.transactionHash)
+        const decodedArr = this.decodeTxMessages(data)
 
         const decodeTxMessages = this.decodeTxMessages(data)
         return decodeTxMessages[0] as MsgRegisterSnifferResponse
@@ -213,6 +217,14 @@ class ValidationChainService {
         )
 
         return this.client
+    }
+
+    private getApiClient(): AxiosInstance {
+        if (this.apiClient) return this.apiClient
+        this.apiClient = axios.create({
+            baseURL: this.apiUrl,
+        })
+        return this.apiClient
     }
 
     private async getTxClient(): Promise<ReturnType<typeof txClient>> {
@@ -243,8 +255,10 @@ class ValidationChainService {
     ): Promise<MsgCreateDaemonMetadataResponse> {
         this.logger.verbose('Registering daemon metadata')
         const txClient = await this.getTxClient()
+        const vcClient = await this.getVcClient()
+        const queryClient = await this.getQueryClient()
         const address = await this.getAddress()
-
+        // @ts-ignore
         const payload: CreateDaemonMetadataCommandRequestDTO = {
             logoUrl: manifest.logoUrl,
             metadataType: getSubcribableType(manifest),
@@ -252,7 +266,7 @@ class ValidationChainService {
             description: manifest.description,
             tags: manifest.tags,
             supportedChains: [{ chainType: this.getChainType(manifest) }],
-            parameters: manifest.parameters,
+            // parameters: manifest.parameters,
             content: getDaemonContent(manifest, queries, wasmModule),
         }
 
@@ -263,26 +277,27 @@ class ValidationChainService {
 
         this.logger.verbose('message', message)
 
-        const r = await txClient.sendMsgCreateDaemonMetadata({
+        const result = await txClient.sendMsgCreateDaemonMetadata({
             value: message,
             fee: {
                 amount: [],
                 gas: gas || '200000',
             },
         })
-        this.throwOnError('MsgCreateDaemonMetadata', r)
+        this.throwOnError('MsgCreateDaemonMetadata', result)
 
-        if (r.code) {
+        if (result.code) {
             throw new Error()
         }
 
-        // @WARNING: this data only comes after hack the installed ts-client!!!
-        const data: Uint8Array = r.data as unknown as Uint8Array
-        if (data === undefined) {
-            throw new Error('registerDaemonMetadata data is empty')
-        }
-        const decodeTxMessages = this.decodeTxMessages(data)
-        const msg = decodeTxMessages[0] as MsgCreateDaemonMetadataResponse
+        const data = await this.getTxDataOnlyResponse(result.transactionHash)
+        const decodedArr = this.decodeTxMessages(data)
+
+        // this doesnt work as data is returned in an array of message.
+        // @todo: fix it so this.decodeTxMessages can be deprecated and removed
+        // const decoded = MsgCreateDaemonMetadataResponse.decode(data)
+
+        const msg = decodedArr[0] as MsgCreateDaemonMetadataResponse
 
         return msg
     }
@@ -442,6 +457,29 @@ class ValidationChainService {
         // inspect(getData(Buffer.from()), false, 100, true)
         // console.log('----------------------------')
     }
+
+    private async getTxData(txHexHash: string): Promise<V1Beta1GetTxResponse> {
+        const apiClient = this.getApiClient()
+
+        const txByHashUrl = `/cosmos/tx/v1beta1/txs/${txHexHash}`
+
+        const response = await apiClient.get(txByHashUrl)
+
+        return response.data
+    }
+
+    private async getTxDataOnlyResponse(
+        txHexHash: string
+    ): Promise<Uint8Array> {
+        const txData = await this.getTxData(txHexHash)
+
+        // hex data
+        const data: string = txData.tx_response.data
+
+        const dataBytes = hexToBytes(data)
+
+        return dataBytes
+    }
 }
 
 export default ValidationChainService
@@ -465,10 +503,10 @@ function getDaemonContent(
             query: [],
         }
     }
+    // @ts-ignore as wasmModule is not defined for non wasm type
     return {
         type: 0,
         query: queries,
-        wasmModule: '',
     }
 }
 
@@ -506,4 +544,8 @@ function getApiURl(rpcUrl: string): string {
         return rpcUrl.replace(':26657', ':1317')
     }
     return 'http://localhost:1317'
+}
+
+function hexToBytes(hex: string): Uint8Array {
+    return Uint8Array.from(Buffer.from(hex, 'hex'))
 }
