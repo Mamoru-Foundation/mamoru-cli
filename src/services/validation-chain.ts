@@ -503,7 +503,7 @@ function getDaemonContent(
             query: [],
         }
     }
-    // @ts-`ignore`
+    // @ts-ignore as wasmModule is not defined for non wasm type
     return {
         type: 0,
         query: queries,
