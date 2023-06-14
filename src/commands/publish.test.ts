@@ -114,7 +114,7 @@ describe('publish', () => {
                     )
                 })
         }, 20000)
-        it('FAIL - SOLE -no enough gas', async () => {
+        it('FAIL - SOLE - no enough gas', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({ type: 'wasm' })
             console.log(colors.green('dir '), dir)
@@ -127,7 +127,7 @@ describe('publish', () => {
                 .publish(programMock, dir, {
                     privateKey: privkey,
                     rpc: 'http://0.0.0.0:26657',
-                    gas: (500000).toString(),
+                    gas: (100).toString(),
                 })
                 .then(() => {
                     throw new Error('An error should have been thrown')
@@ -135,7 +135,7 @@ describe('publish', () => {
                 .catch((error) => {
                     assert.match(
                         error.message,
-                        /Error sending "MsgCreateDaemonMetadata"/
+                        /TxClient:sendMsgCreateDaemonMetadata/
                     )
                     assert.match(error.message, /out of gas/)
                 })

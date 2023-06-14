@@ -1,28 +1,7 @@
-import { http, HttpMethod, report, IncidentSeverity, query } from '@mamoru-ai/mamoru-sdk-as/assembly';
+import { {{{customSdkCtxName}}} } from "{{{mamoruCustomSdkPackageName}}}/assembly"
 
 export function main(): void {
-    const response = http(
-        HttpMethod.GET,
-        'https://example.com',
-        );
-
-    const error = response.error();
-
-    if (error != null) {
-        // Handle the error
-    } else {
-        const body = response.body();
-        if (body) {
-            // Do something with the response body
-            report(IncidentSeverity.Info, "Response body received");
-        }
-    }
-
-    query('SELECT 1 FROM transactions').forEach((tx) => {
-        const hash = tx.getString!("hash")!.valueOf();
-
-        if (hash == "0x0") {
-           report(IncidentSeverity.Info, "Hash is 0x0");
-        }
-    });
+  const ctx = {{{customSdkCtxName}}}.load();
+  
+  // TODO: write the code
 }
