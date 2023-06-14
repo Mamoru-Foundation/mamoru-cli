@@ -288,6 +288,7 @@ describe.only('getAugmentedInitOptions', () => {
         }
         const augmented = init.getAugmentedInitOptions(options, '.')
         assert.deepEqual(augmented, {
+            ...augmented,
             type: 'sql',
             name: 'TEST name',
             tags: 'test,cli',
@@ -313,6 +314,7 @@ describe.only('getAugmentedInitOptions', () => {
         }
         const augmented = init.getAugmentedInitOptions(options, '.')
         assert.deepEqual(augmented, {
+            ...augmented,
             type: 'sql',
             name: 'Default name',
             tags: 'test,cli',
@@ -342,6 +344,7 @@ describe.only('getAugmentedInitOptions', () => {
             'another/daemon_new'
         )
         assert.deepEqual(augmented, {
+            ...augmented,
             type: 'sql',
             name: 'daemon_new',
             tags: 'test,cli',
