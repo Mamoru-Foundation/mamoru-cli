@@ -7,7 +7,7 @@
 # forking would require us to maintain the forked repo and update it every time the original repo is updated.
 
 set -e
-export client_path='node_modules/@cosmjs/stargate/build/stargateclient.js'
+export client_path='node_modules/@cosmjs/stargate/build/signingstargateclient.js'
 
 
 # Path: check if line " tx: result.tx," exist
@@ -34,7 +34,7 @@ function sed_i_wrapper(){
 
 # Path: if line not exist, add it
 if [ $line_exist -eq 0 ]; then
-    sed_i_wrapper -i  's/gasWanted: result.gasWanted,/gasWanted: result.gasWanted, data: result.data,/' "$client_path";
-    sed_i_wrapper -i  's/gasWanted: tx.result.gasWanted,/gasWanted: tx.result.gasWanted, data: tx.result.data,/' "$client_path";
+    sed_i_wrapper -i  's/const tmClient = await tendermint_rpc_1.Tendermint34Client.connect(endpoint);/const tmClient = await tendermint_rpc_1.Tendermint37Client.connect(endpoint);/' "$client_path";
+    # sed_i_wrapper -i  's/gasWanted: tx.result.gasWanted,/gasWanted: tx.result.gasWanted, data: tx.result.data,/' "$client_path";
 fi
 
