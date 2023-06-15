@@ -2,11 +2,11 @@ import joi from 'joi'
 import * as fs from 'fs'
 import * as path from 'path'
 import yaml from 'yaml'
-import { IncidentSeverity } from '../types'
 import { formatJoiError } from './utils'
 import { FILES } from './constants'
 import { Logger } from './console'
 import { DaemonMetadataContentQuery } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_utils'
+import { IncidentSeverity } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/incident'
 
 class QueryManifestService {
     private getFile(logger: Logger, projectPath: string) {
