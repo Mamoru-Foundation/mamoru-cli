@@ -188,6 +188,11 @@ program
         })
     })
 
+program.version(
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    `Mamoru CLI ${require('../package.json').version}`,
+    '--version'
+)
 program.configureOutput({
     // Visibly override write routines as example!
     writeOut: (str: string) => process.stdout.write(`[OUT] ${str}`),
