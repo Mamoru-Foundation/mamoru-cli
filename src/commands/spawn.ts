@@ -77,7 +77,7 @@ export default async function spawn(program: Command, options: SpawnOptions) {
     ℹ️  Explorer Url for parent DaemonMetadata:
 
         ${colors.underline.blue(
-            `${MAMORU_EXPLORER_URL}/explorer/${metadataId}`
+            `${MAMORU_EXPLORER_URL}/explorer/daemons/${metadataId}`
         )}`
     )
     return result
