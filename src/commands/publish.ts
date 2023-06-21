@@ -9,9 +9,6 @@ import ValidationChainService from '../services/validation-chain'
 import { prepareBinaryFile } from '../services/assemblyscript'
 import { Manifest } from '../types'
 import colors from 'colors'
-import short from 'short-uuid'
-
-const translator = short()
 
 export interface PublishOptions {
     rpc?: string
@@ -68,18 +65,10 @@ async function publish(
 
         logger.log(
             `Daemon registered successfully 🎉
-
-    ℹ️  Metadata ShortUUID: 
-
-        ${colors.magenta(translator.fromUUID(daemonMetadataId))}
     
     ℹ️  Metadata UUID: 
 
         ${colors.magenta(daemonMetadataId)}
-
-    ℹ️  Daemon ShortUUID: 
-
-        ${colors.magenta(translator.fromUUID(r.daemonId))}
 
     ℹ️  Daemon UUID: 
 
@@ -99,10 +88,6 @@ async function publish(
     } else {
         logger.log(
             `DaemonMetadata registered successfully 🎉
-
-    ℹ️  DaemonMetadata (template) ShortUUID: 
-
-        ${colors.magenta(translator.fromUUID(daemonMetadataId))}
 
     ℹ️  DaemonMetadata (template) UUID: 
 

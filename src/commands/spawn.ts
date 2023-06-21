@@ -10,12 +10,9 @@ export interface SpawnOptions {
     chain?: string
 }
 import colors from 'colors'
-import short from 'short-uuid'
 import { MAMORU_EXPLORER_URL } from '../services/constants'
 import { MsgRegisterDaemonResponse } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/tx'
 import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
-
-const translator = short()
 
 export default async function spawn(program: Command, options: SpawnOptions) {
     const { metadataId } = options
@@ -65,10 +62,6 @@ export default async function spawn(program: Command, options: SpawnOptions) {
     }
     logger.log(
         `Daemon registered successfully 🎉
-
-    ℹ️  Daemon ShortUUID: 
-
-        ${colors.magenta(translator.fromUUID(result.daemonId))}
 
     ℹ️  Daemon UUID: 
 
