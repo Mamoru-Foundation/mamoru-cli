@@ -66,11 +66,11 @@ async function publish(
         logger.log(
             `Daemon registered successfully 🎉
     
-    ℹ️  Metadata UUID: 
+    ℹ️  Metadata Hash(ID): 
 
         ${colors.magenta(daemonMetadataId)}
 
-    ℹ️  Daemon UUID: 
+    ℹ️  Daemon Hash(ID): 
 
         ${colors.magenta(r.daemonId)}
 
@@ -89,7 +89,7 @@ async function publish(
         logger.log(
             `DaemonMetadata registered successfully 🎉
 
-    ℹ️  DaemonMetadata (template) UUID: 
+    ℹ️  DaemonMetadata (template) Hash(ID): 
 
         ${colors.magenta(daemonMetadataId)}
 
