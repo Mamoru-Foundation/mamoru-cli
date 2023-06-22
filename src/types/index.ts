@@ -11,10 +11,3 @@ export class Manifest {
     subscribable: boolean
     description: string
 }
-
-export enum IncidentSeverity {
-    INFO = 'INFO',
-    WARNING = 'WARNING',
-    ERROR = 'ERROR',
-    ALERT = 'ALERT',
-}
