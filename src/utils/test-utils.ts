@@ -57,6 +57,10 @@ export const isUUID = (str: string): boolean => {
     )
 }
 
+export const isTruthyStr = (str: string): boolean => {
+    return !!str
+}
+
 export const getProgramMock = (): Command => {
     const programMock: Command = {
         opts: () => {

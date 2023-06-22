@@ -63,7 +63,7 @@ export default async function spawn(program: Command, options: SpawnOptions) {
     logger.log(
         `Daemon registered successfully 🎉
 
-    ℹ️  Daemon UUID: 
+    ℹ️  Daemon Hash(ID): 
 
         ${colors.magenta(result.daemonId)}
 
