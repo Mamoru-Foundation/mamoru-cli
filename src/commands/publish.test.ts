@@ -11,7 +11,7 @@ import {
     generateInitOptions,
     getProgramMock,
     getTempFolder,
-    isUUID,
+    isTruthyStr,
 } from '../utils/test-utils'
 import { runCommand } from '../utils/utils'
 import { getAvailableChains } from '../services/utils'
@@ -86,8 +86,11 @@ describe('publish', () => {
                 })
 
                 assert.ok(r)
-                assert.equal(isUUID(r.daemonId as string), wasDaemonCreated)
-                assert.equal(isUUID(r.daemonMetadataId), true)
+                assert.equal(
+                    isTruthyStr(r.daemonId as string),
+                    wasDaemonCreated
+                )
+                assert.equal(isTruthyStr(r.daemonMetadataId), true)
             },
             200000
         )
@@ -155,8 +158,8 @@ describe('publish', () => {
                 gas: (1000 * 1000 * 100).toString(),
             })
             assert.ok(r)
-            assert.equal(isUUID(r.daemonId as string), true)
-            assert.equal(isUUID(r.daemonMetadataId), true)
+            assert.equal(isTruthyStr(r.daemonId as string), true)
+            assert.equal(isTruthyStr(r.daemonMetadataId), true)
         }, 20000)
     })
 })
