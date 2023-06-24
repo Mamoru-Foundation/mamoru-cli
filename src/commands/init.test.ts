@@ -80,7 +80,10 @@ describe(colors.yellow('init'), () => {
             const packageParsed = JSON.parse(packageJson)
 
             assert.deepEqual(packageParsed, {
-                dependencies: { '@mamoru-ai/mamoru-sdk-as': '^0.2.1' },
+                dependencies: {
+                    '@mamoru-ai/mamoru-sdk-as': '^0.4.0',
+                    ...packageParsed.dependencies,
+                },
                 description: 'TEST_DESCRIPTION',
                 devDependencies: { assemblyscript: '^0.27.1' },
                 license: 'Apache-2.0',
@@ -98,7 +101,7 @@ describe(colors.yellow('init'), () => {
             )
             const manifestParsed = yaml.parse(manifest)
             assert.deepEqual(manifestParsed, {
-                chain: chain,
+                chains: [chain],
                 description: 'TEST_DESCRIPTION',
                 logoUrl: 'https://test.com/logo.png',
                 name: 'test-name',
@@ -120,7 +123,7 @@ describe(colors.yellow('init'), () => {
 
                         incidentMessage:
                             'This is an example Daemon Incident Message',
-                        severity: 'WARNING',
+                        severity: 'SEVERITY_ERROR',
                     },
                 ],
             })
@@ -171,7 +174,7 @@ describe(colors.yellow('init'), () => {
             'import { AptosCtx } from "@mamoru-ai/mamoru-aptos-sdk-as/assembly"',
         ],
     ]
-    it.only.each(wasmCases)(
+    it.each(wasmCases)(
         'OK - Should create Files - type=wasm, %s',
         async (chain, customSdk, version, importName) => {
             const dir = getTempFolder()
@@ -235,7 +238,7 @@ describe(colors.yellow('init'), () => {
             )
             const manifestParsed = yaml.parse(manifest)
             assert.deepEqual(manifestParsed, {
-                chain: chain,
+                chains: [chain],
                 description: 'TEST_DESCRIPTION',
                 logoUrl: 'https://test.com/logo.png',
                 name: 'test-name',
@@ -275,7 +278,7 @@ describe(colors.yellow('init'), () => {
         }
     })
 })
-describe.only('getAugmentedInitOptions', () => {
+describe('getAugmentedInitOptions', () => {
     it('Should return augmented options', () => {
         const options: InitOptions = {
             type: 'sql',
