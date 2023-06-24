@@ -13,6 +13,7 @@ function init(program: Command, projectPath: string, options: InitOptions) {
     const verbosity = program.opts().verbose
     const logger = new Logger(verbosity)
     logger.verbose('Run init')
+    logger.verbose('options', options)
     const augOps = getAugmentedInitOptions(options, projectPath)
 
     const files = getFilesToCreate(projectPath, augOps)

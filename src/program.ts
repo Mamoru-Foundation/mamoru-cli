@@ -69,7 +69,7 @@ program
             .default('wasm')
     )
     .addOption(
-        new Option('-c, --chain <chain>', 'Chain where the daemon runs')
+        new Option('-c, --chain <chain...>', 'Chain where the daemon runs')
             .choices(getAvailableChains() as unknown as string[])
             .makeOptionMandatory()
     )
