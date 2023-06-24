@@ -53,7 +53,6 @@ describe(colors.yellow('init'), () => {
         'OK - Should create Files - type=sql, %s',
         (chain, query) => {
             const dir = getTempFolder()
-            console.log(colors.green('Temp Folder: ' + dir))
             const options: InitOptions = {
                 type: 'sql',
                 name: 'TEST name',
@@ -178,7 +177,6 @@ describe(colors.yellow('init'), () => {
         'OK - Should create Files - type=wasm, %s',
         async (chain, customSdk, version, importName) => {
             const dir = getTempFolder()
-            // console.log(colors.green('Temp Folder: ' + dir))
             const options: InitOptions = {
                 type: 'wasm',
                 name: 'TEST name',

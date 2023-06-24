@@ -49,7 +49,9 @@ export default async function spawn(program: Command, options: SpawnOptions) {
         )
         result = await vcService.registerDaemon(
             metadataId,
-            metadata.supportedChains[0].chainType
+            Chain_ChainType[
+                metadata.supportedChains[0].chainType
+            ] as unknown as Chain_ChainType
         )
     }
     if (metadata.supportedChains.length === 1 && options.chain) {

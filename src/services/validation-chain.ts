@@ -293,11 +293,8 @@ class ValidationChainService {
                 gas: gas || '200000',
             },
         })
-        this.throwOnError('MsgCreateDaemonMetadata', result)
 
-        if (result.code) {
-            throw new Error()
-        }
+        this.throwOnError('MsgCreateDaemonMetadata', result)
 
         const data = await this.getTxDataOnlyResponse(result.transactionHash)
         const decodedArr = this.decodeTxMessages(data)
