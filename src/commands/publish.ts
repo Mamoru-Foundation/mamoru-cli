@@ -57,27 +57,27 @@ async function publish(
     }
 
     if (!manifest.subscribable) {
-        //     logger.ok('Registering Daemon to Validation chain')
-        //     const r = await vcService.registerDaemonFromManifest(
-        //         manifest,
-        //         daemonMetadataId,
-        //         manifest.chains[0] // @TODO: pick
-        //     )
-        //     logger.log(
-        //         `Daemon registered successfully 🎉
-        // ℹ️  Metadata Hash(ID):
-        //     ${colors.magenta(daemonMetadataId)}
-        // ℹ️  Daemon Hash(ID):
-        //     ${colors.magenta(r.daemonId)}
-        // ℹ️  Explorer Url (it may take a few seconds to become available):
-        //     ${colors.underline.blue(
-        //             `${MAMORU_EXPLORER_URL}/explorer/daemons/${daemonMetadataId}`
-        //         )}`
-        //     )
-        //     return {
-        //         daemonMetadataId,
-        //         daemonId: r.daemonId,
-        //     }
+        logger.ok('Registering Daemon to Validation chain')
+        const r = await vcService.registerDaemonFromManifest(
+            manifest,
+            daemonMetadataId,
+            manifest.chains[0] // @TODO: pick
+        )
+        logger.log(
+            `Daemon registered successfully 🎉
+        ℹ️  Metadata Hash(ID):
+            ${colors.magenta(daemonMetadataId)}
+        ℹ️  Daemon Hash(ID):
+            ${colors.magenta(r.daemonId)}
+        ℹ️  Explorer Url (it may take a few seconds to become available):
+            ${colors.underline.blue(
+                `${MAMORU_EXPLORER_URL}/explorer/daemons/${daemonMetadataId}`
+            )}`
+        )
+        return {
+            daemonMetadataId,
+            daemonId: r.daemonId,
+        }
     } else {
         logger.log(
             `DaemonMetadata registered successfully 🎉
