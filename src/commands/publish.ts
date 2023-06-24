@@ -60,7 +60,8 @@ async function publish(
         logger.ok('Registering Daemon to Validation chain')
         const r = await vcService.registerDaemonFromManifest(
             manifest,
-            daemonMetadataId
+            daemonMetadataId,
+            manifest.chains[0] // @TODO: pick
         )
 
         logger.log(

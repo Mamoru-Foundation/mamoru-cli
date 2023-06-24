@@ -101,14 +101,17 @@ class ValidationChainService {
 
     async registerDaemonFromManifest(
         manifest: Manifest,
-        daemonMetadataId: string
+        daemonMetadataId: string,
+        chain: Chain_ChainType
     ): Promise<MsgRegisterDaemonResponse> {
         this.logger.verbose('Registering daemon')
         const txClient = await this.getTxClient()
         const address = await this.getAddress()
 
         const payload: DaemonRegisterCommandRequestDTO = {
-            chain: { chainType: this.getChainType(manifest) },
+            chain: {
+                chainType: Chain_ChainType[chain] as unknown as Chain_ChainType,
+            },
             daemonMetadataId,
             // @TODO: add parameters
             parameters: [],
@@ -146,7 +149,11 @@ class ValidationChainService {
         const address = await this.getAddress()
 
         const payload: DaemonRegisterCommandRequestDTO = {
-            chain: { chainType: chainType },
+            chain: {
+                chainType: Chain_ChainType[
+                    chainType
+                ] as unknown as Chain_ChainType,
+            },
             daemonMetadataId,
             // @TODO: add parameters
             parameters: [],
@@ -265,7 +272,9 @@ class ValidationChainService {
             title: manifest.name,
             description: manifest.description,
             tags: manifest.tags,
-            supportedChains: [{ chainType: this.getChainType(manifest) }],
+            supportedChains: this.getChainTypes(manifest).map((chain) => ({
+                chainType: chain,
+            })),
             // parameters: manifest.parameters,
             content: getDaemonContent(manifest, queries, wasmModule),
         }
@@ -275,7 +284,7 @@ class ValidationChainService {
             daemonMetadata: payload,
         }
 
-        this.logger.verbose('message', message)
+        this.logger.verbose('message', JSON.stringify(message, null, 2))
 
         const result = await txClient.sendMsgCreateDaemonMetadata({
             value: message,
@@ -419,28 +428,14 @@ class ValidationChainService {
     /**
      * Get the chain type from the manifest.
      * Exported just for testing purposes
-     * @returns
      */
-    public getChainType(manifest: Manifest): Chain_ChainType {
-        if (!manifest.chain) {
-            throw new Error('Chain type not defined in manifest')
-        }
-        if (
-            !getAvailableChains().includes(
-                manifest.chain as unknown as Chain_ChainType
-            )
-        ) {
-            throw new Error(
-                `Chain type "${
-                    manifest.chain
-                }" not supported, supported values are: ${getAvailableChains().join(
-                    ', '
-                )}`
-            )
-        }
-        return Chain_ChainType[
-            manifest.chain as unknown as number
-        ] as unknown as Chain_ChainType
+    public getChainTypes(manifest: Manifest): Chain_ChainType[] {
+        const chains = manifest.chains
+        if (!chains) throw new Error('Chain type not defined in manifest')
+
+        return chains.map(
+            (chain) => Chain_ChainType[chain] as unknown as Chain_ChainType
+        )
     }
 
     /**
