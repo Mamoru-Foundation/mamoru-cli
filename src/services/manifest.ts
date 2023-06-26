@@ -19,7 +19,7 @@ export const validateAndReadManifest = (
     logger.verbose(`Content of "${manifestPath}" is`, manifestSrc)
     const manifest = yaml.parse(manifestSrc)
 
-    validateManifestContent(logger, program, manifest)
+    validateManifestContentCLI(logger, program, manifest)
 
     return manifest
 }
@@ -58,13 +58,23 @@ function getManifest(logger: Logger, program: Command, projectPath: string) {
 const manifestParameterSchema = joi.object().keys({
     type: joi.any().valid('STRING', 'NUMBER', 'BOOLEAN').required(),
     key: joi.string().required().pattern(ONLY_ALPHA_NUMERIC),
+    title: joi.string().required(),
     description: joi.string().required(),
     defaultValue: joi.string().required(),
-    requiredFor: joi.array().items(joi.string()).optional(),
-    hiddenFor: joi.array().items(joi.string()).optional(),
+    requiredFor: joi
+        .array()
+        .items(joi.string().valid(...getAvailableChains()))
+        .optional(),
+    hiddenFor: joi
+        .array()
+        .items(joi.string().valid(...getAvailableChains()))
+        .optional(),
 })
 
-const manifestSchema = joi.object().keys({
+/**
+ * export for testing
+ */
+export const manifestSchema = joi.object().keys({
     version: joi.any().valid('0.0.1').required(),
     type: joi.any().valid('wasm', 'sql').required(),
     description: joi.string().optional(),
@@ -82,7 +92,7 @@ const manifestSchema = joi.object().keys({
     parameters: joi.array().items(manifestParameterSchema).optional(),
 })
 
-function validateManifestContent(
+function validateManifestContentCLI(
     logger: Logger,
     program: Command,
     manifest: Record<string, any>
