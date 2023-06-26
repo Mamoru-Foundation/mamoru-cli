@@ -5,7 +5,11 @@ import { Command } from 'commander'
 import { InitOptions } from '../commands/init'
 import { DirectSecp256k1HdWallet as Wallet } from '@cosmjs/proto-signing'
 import axios from 'axios'
-import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
+import {
+    Chain_ChainType,
+    chain_ChainTypeToJSON,
+} from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
+import { DaemonMetadataParameter, Manifest, ManifestParameter } from '../types'
 /**
  * Generates a user with a mnemonic, address and private key from wallet
  */
@@ -99,3 +103,37 @@ export const generateInitOptions = (
         ...obj,
     }
 }
+
+export const generateManifest = (obj: Partial<Manifest> = {}): Manifest => ({
+    version: '0.0.1',
+    type: 'wasm',
+    name: 'test',
+    chains: [chain_ChainTypeToJSON(Chain_ChainType.SUI_TESTNET)],
+    description: 'test_description',
+    parameters: [],
+    logoUrl: 'https://test.com/hello.png',
+    tags: ['test'],
+    subscribable: true,
+    ...obj,
+})
+
+export const generateManifestSQL = (obj: Partial<Manifest> = {}): Manifest => ({
+    ...generateManifest(obj),
+    type: 'sql',
+})
+
+export const generateWasmContent = (): string =>
+    'AGFzbQEAAAABGgVgAABgBH9/f38AYAJ/fwF/YAF/AX9gAX8AAg0BA2VudgVhYm9ydAABAwcGAgADBAAABQMBAAEGDAJ/AUEAC38AQbAKCwdFBwRtYWluAAIFX19uZXcAAQVfX3BpbgADB19fdW5waW4ABAlfX2NvbGxlY3QABQtfX3J0dGlfYmFzZQMBBm1lbW9yeQIACAEGDAERCrECBsgBAQZ/IABB7P///wNLBEBBwAlBgApB1gBBHhAAAAsgAEEQaiIEQfz///8DSwRAQcAJQYAKQSFBHRAAAAsjACIDQQRqIgIgBEETakFwcUEEayIEaiIFPwAiBkEQdEEPakFwcSIHSwRAIAYgBSAHa0H//wNqQYCAfHFBEHYiByAGIAdKG0AAQQBIBEAgB0AAQQBIBEAACwsLIAUkACADIAQ2AgAgAkEEayIDQQA2AgQgA0EANgIIIAMgATYCDCADIAA2AhAgAkEQagtQAQF/QRRBBBABIgBBADYCACAAQQA2AgQgAEEANgIIIABBADYCDCAAQQA2AhAgAEEANgIAIABBADYCBCAAQQA2AgggAEEANgIMIABBADYCEAsEACAACwMAAQsDAAELBwBB/AokAAsLogIRAEGMCAsBHABBmAgLCQIAAAACAAAAYgBBrAgLARwAQbgICw0CAAAABgAAAHUANgA0AEHMCAsBHABB2AgLCQIAAAACAAAAcwBB7AgLARwAQfgICwkCAAAAAgAAAGwAQYwJCwEcAEGYCQsLAgAAAAQAAABzAHQAQawJCwE8AEG4CQsvAgAAACgAAABBAGwAbABvAGMAYQB0AGkAbwBuACAAdABvAG8AIABsAGEAcgBnAGUAQewJCwE8AEH4CQslAgAAAB4AAAB+AGwAaQBiAC8AcgB0AC8AcwB0AHUAYgAuAHQAcwBBsAoLDRIAAAAgAAAAIAAAACAAQdAKCwZBAAAAAkEAQeAKCxoCQQAAAkEAAAJBAAAAAAAAAkEAAAAAAAACQQAiEHNvdXJjZU1hcHBpbmdVUkwQLi9pbmRleC53YXNtLm1hcA=='
+
+export const generateParameter = (
+    obj: Partial<ManifestParameter> = {}
+): ManifestParameter => ({
+    type: 'STRING',
+    title: 'test',
+    key: 'test',
+    description: 'test',
+    defaultValue: 'default',
+    requiredFor: [chain_ChainTypeToJSON(Chain_ChainType.SUI_TESTNET)],
+    hiddenFor: [chain_ChainTypeToJSON(Chain_ChainType.SUI_TESTNET)],
+    ...obj,
+})
