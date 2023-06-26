@@ -432,9 +432,7 @@ class ValidationChainService {
         const chains = manifest.chains
         if (!chains) throw new Error('Chain type not defined in manifest')
 
-        return chains.map(
-            (chain) => Chain_ChainType[chain] as unknown as Chain_ChainType
-        )
+        return chains.map((chain) => chain_ChainTypeFromJSON(chain))
     }
 
     /**
