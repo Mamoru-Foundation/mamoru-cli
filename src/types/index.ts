@@ -23,3 +23,8 @@ export class Manifest {
     subscribable: boolean
     description: string
 }
+
+export type DaemonParameterMap = Record<
+    string,
+    string | number | null | boolean
+>

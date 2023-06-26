@@ -137,6 +137,12 @@ program
             .makeOptionMandatory()
             .env('MAMORU_PRIVATE_KEY')
     )
+    .addOption(
+        new Option(
+            '--parameters <parameters>',
+            'JSON stringified parameter map ie: {"key": "value"}'
+        )
+    )
     .description('publish project')
     .action((path: string, options: PublishOptions) => {
         publishCommand.publish(program, path, options)
@@ -168,6 +174,12 @@ program
     .addOption(
         new Option('-c, --chain <chain>', 'Chain to deploy').choices(
             getAvailableChains() as unknown as string[]
+        )
+    )
+    .addOption(
+        new Option(
+            '--parameters <parameters>',
+            'JSON stringified parameter map ie: {"key": "value"}'
         )
     )
     .action((options: any) => {
