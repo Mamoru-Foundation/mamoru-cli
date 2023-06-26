@@ -160,7 +160,6 @@ class ValidationChainService {
                 chainType: chain_ChainTypeFromJSON(chainType),
             },
             daemonMetadataId,
-            // @TODO: add parameters
             parameters:
                 getDaemonParametersFromDaemonParameterMap(parameterValues),
             // @TODO: add relay
