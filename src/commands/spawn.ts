@@ -45,7 +45,13 @@ export default async function spawn(program: Command, options: SpawnOptions) {
         throw new Error('Metadata does not support any chain')
     }
     let result: MsgRegisterDaemonResponse
-    if (metadata.supportedChains.length === 1 && !options.chain) {
+    if (options.chain) {
+        result = await vcService.registerDaemon(
+            metadataId,
+            options.chain,
+            parameterValues
+        )
+    } else if (metadata.supportedChains.length === 1 && !options.chain) {
         logger.ok(
             'Registering daemon for default chain ' +
                 metadata.supportedChains[0].chainType
@@ -55,14 +61,12 @@ export default async function spawn(program: Command, options: SpawnOptions) {
             chain_ChainTypeToJSON(metadata.supportedChains[0].chainType),
             parameterValues
         )
-    }
-    if (metadata.supportedChains.length === 1 && options.chain) {
-        result = await vcService.registerDaemon(
-            metadataId,
-            options.chain,
-            parameterValues
+    } else if (metadata.supportedChains.length > 1 && !options.chain) {
+        throw new Error(
+            'Daemon supports multiple chains, please specify one with --chain'
         )
     }
+
     logger.log(
         `Daemon registered successfully 🎉
 
