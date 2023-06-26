@@ -268,7 +268,7 @@ class ValidationChainService {
         // @ts-ignore
         const payload: CreateDaemonMetadataCommandRequestDTO = {
             logoUrl: manifest.logoUrl,
-            metadataType: getSubcribableType(manifest),
+            metadataType: getSubscribableType(manifest),
             title: manifest.name,
             description: manifest.description,
             tags: manifest.tags,
@@ -476,7 +476,7 @@ class ValidationChainService {
 
 export default ValidationChainService
 
-function getSubcribableType(manifest: Manifest): DaemonMetadataType {
+function getSubscribableType(manifest: Manifest): DaemonMetadataType {
     if (manifest.subscribable) {
         return 2
     }
