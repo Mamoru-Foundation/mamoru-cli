@@ -165,12 +165,18 @@ program
             .makeOptionMandatory()
             .env('MAMORU_PRIVATE_KEY')
     )
+    .addOption(
+        new Option('-c, --chain <chain>', 'Chain to deploy').choices(
+            getAvailableChains() as unknown as string[]
+        )
+    )
     .action((options: any) => {
         spawn(program, {
             metadataId: options.metadataid,
             privateKey: options.privateKey,
             gas: options.gas,
             rpc: options.rpc,
+            chain: options.chain,
         })
     })
 
