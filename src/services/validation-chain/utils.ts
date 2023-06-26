@@ -1,6 +1,11 @@
 import { daemonMetadataParemeter_DaemonParemeterTypeFromJSON } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_utils'
-import { DaemonMetadataParameter, Manifest } from '../../types'
+import {
+    DaemonMetadataParameter,
+    DaemonParameterMap,
+    Manifest,
+} from '../../types'
 import { chain_ChainTypeFromJSON } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
+import { DaemonParameter } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon'
 
 export const getMetadataParametersFromManifest = (
     manifest: Manifest
@@ -21,4 +26,13 @@ export const getMetadataParametersFromManifest = (
     }))
 
     return parameters
+}
+
+export const getDaemonParametersFromDaemonParameterMap = (
+    obj: DaemonParameterMap
+): DaemonParameter[] => {
+    return Object.entries(obj).map(([key, value]) => ({
+        key,
+        value: value.toString(),
+    }))
 }

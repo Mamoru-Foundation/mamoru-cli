@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Manifest } from '../../types'
+import { DaemonParameterMap, Manifest } from '../../types'
 /* @ts-ignore */
 import { Client } from '@mamoru-ai/validation-chain-ts-client'
 import { DirectSecp256k1Wallet } from '@cosmjs/proto-signing'
@@ -33,7 +33,6 @@ import {
     chain_ChainTypeFromJSON,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import { SnifferRegisterCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/sniffer_register_command_request_dto'
-import { getAvailableChains } from '../utils'
 import { DaemonMetadata } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata'
 import {
     ValidationchainDaemonMetadataContentQuery,
@@ -41,9 +40,11 @@ import {
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/rest'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
 import { IncidentSeverity } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/incident'
-import { TxResponse } from '@cosmjs/tendermint-rpc'
 import type { V1Beta1GetTxResponse } from '@mamoru-ai/validation-chain-ts-client/dist/cosmos.tx.v1beta1/rest'
-import { getMetadataParametersFromManifest } from './utils'
+import {
+    getDaemonParametersFromDaemonParameterMap,
+    getMetadataParametersFromManifest,
+} from './utils'
 
 type TxMsgData = {
     msgResponses: AnyMsg[]
@@ -106,7 +107,8 @@ class ValidationChainService {
     async registerDaemonFromManifest(
         manifest: Manifest,
         daemonMetadataId: string,
-        chain: string
+        chain: string,
+        parameterValues: DaemonParameterMap
     ): Promise<MsgRegisterDaemonResponse> {
         this.logger.verbose('Registering daemon')
         const txClient = await this.getTxClient()
@@ -117,8 +119,8 @@ class ValidationChainService {
                 chainType: chain_ChainTypeFromJSON(chain),
             },
             daemonMetadataId,
-            // @TODO: add parameters
-            parameters: [],
+            parameters:
+                getDaemonParametersFromDaemonParameterMap(parameterValues),
             // @TODO: add relay
             relay: {
                 type: 0,
@@ -146,7 +148,8 @@ class ValidationChainService {
     }
     async registerDaemon(
         daemonMetadataId: string,
-        chainType: Chain_ChainType
+        chainType: string,
+        parameterValues: DaemonParameterMap
     ): Promise<MsgRegisterDaemonResponse> {
         this.logger.verbose('Registering daemon')
         const txClient = await this.getTxClient()
@@ -154,13 +157,12 @@ class ValidationChainService {
 
         const payload: DaemonRegisterCommandRequestDTO = {
             chain: {
-                chainType: Chain_ChainType[
-                    chainType
-                ] as unknown as Chain_ChainType,
+                chainType: chain_ChainTypeFromJSON(chainType),
             },
             daemonMetadataId,
             // @TODO: add parameters
-            parameters: [],
+            parameters:
+                getDaemonParametersFromDaemonParameterMap(parameterValues),
             // @TODO: add relay
             relay: {
                 type: 0,

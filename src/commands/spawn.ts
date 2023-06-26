@@ -8,16 +8,19 @@ export interface SpawnOptions {
     privateKey: string
     gas?: string
     chain?: string
+    parameters?: string
 }
 import colors from 'colors'
 import { MAMORU_EXPLORER_URL } from '../services/constants'
 import { MsgRegisterDaemonResponse } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/tx'
-import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
+import { chain_ChainTypeToJSON } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
+import { validateAndParseParameterFlag } from '../utils/utils'
 
 export default async function spawn(program: Command, options: SpawnOptions) {
     const { metadataId } = options
     const verbosity = program.opts().verbose
     const logger = new Logger(verbosity)
+    const parameterValues = validateAndParseParameterFlag(options.parameters)
 
     const vcService = new ValidationChainService(
         options.rpc,
@@ -49,17 +52,15 @@ export default async function spawn(program: Command, options: SpawnOptions) {
         )
         result = await vcService.registerDaemon(
             metadataId,
-            Chain_ChainType[
-                metadata.supportedChains[0].chainType
-            ] as unknown as Chain_ChainType
+            chain_ChainTypeToJSON(metadata.supportedChains[0].chainType),
+            parameterValues
         )
     }
     if (metadata.supportedChains.length === 1 && options.chain) {
         result = await vcService.registerDaemon(
             metadataId,
-            Chain_ChainType[
-                options.chain as unknown as Chain_ChainType
-            ] as unknown as Chain_ChainType
+            options.chain,
+            parameterValues
         )
     }
     logger.log(

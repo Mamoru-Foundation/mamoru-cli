@@ -9,11 +9,13 @@ import ValidationChainService from '../services/validation-chain'
 import { prepareBinaryFile } from '../services/assemblyscript'
 import { Manifest } from '../types'
 import colors from 'colors'
+import { validateAndParseParameterFlag } from '../utils/utils'
 
 export interface PublishOptions {
     rpc?: string
     privateKey: string
     gas?: string
+    parameters?: string
 }
 
 async function publish(
@@ -23,10 +25,10 @@ async function publish(
 ) {
     const verbosity = program.opts().verbose
     const logger = new Logger(verbosity)
-
     const buildPath = path.join(projectPath, OUT_DIR)
-
+    const parameterValues = validateAndParseParameterFlag(options.parameters)
     logger.ok('Validating Query manifest')
+
     const manifest = validateAndReadManifest(logger, program, projectPath)
     validateBuildPath(program, buildPath, manifest)
 
@@ -61,7 +63,8 @@ async function publish(
         const r = await vcService.registerDaemonFromManifest(
             manifest,
             daemonMetadataId,
-            manifest.chains[0] // @TODO: pick
+            manifest.chains[0],
+            parameterValues
         )
         logger.log(
             `Daemon registered successfully 🎉

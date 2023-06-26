@@ -9,7 +9,6 @@ import {
     generateParameter,
 } from '../../utils/test-utils'
 import { getMetadataParametersFromManifest } from './utils'
-import { getAvailableChains } from '../utils'
 
 describe('ValidationChain', () => {
     describe('getChainType', () => {
@@ -61,7 +60,7 @@ describe('ValidationChain', () => {
                 privkey,
                 new Logger(2)
             )
-            const daemon = await vc.registerDaemonMetadata(
+            const metadata = await vc.registerDaemonMetadata(
                 generateManifestSQL({
                     parameters: [
                         generateParameter({
@@ -77,6 +76,43 @@ describe('ValidationChain', () => {
                     },
                 ]
             )
+            expect(metadata).not.toBe(null)
+        }, 20000)
+    })
+
+    describe('registerDaemon', () => {
+        it('with parameters', async () => {
+            const { privkey } = await generateFoundedUser()
+            const vc = new ValidationChainService(
+                undefined,
+                privkey,
+                new Logger(2)
+            )
+            const metadata = await vc.registerDaemonMetadata(
+                generateManifestSQL({
+                    parameters: [
+                        generateParameter({
+                            hiddenFor: [],
+                        }),
+                    ],
+                }),
+                [
+                    {
+                        query: "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
+                        incidentMessage: 'Example incident message',
+                        severity: 1,
+                    },
+                ]
+            )
+
+            const daemon = await vc.registerDaemon(
+                metadata.daemonMetadataId,
+                'SUI_TESTNET',
+                {
+                    test: 'test_value',
+                }
+            )
+
             expect(daemon).not.toBe(null)
         }, 20000)
     })

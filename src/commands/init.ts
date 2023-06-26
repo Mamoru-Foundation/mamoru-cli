@@ -17,8 +17,7 @@ function init(program: Command, projectPath: string, options: InitOptions) {
     const augOps = getAugmentedInitOptions(options, projectPath)
 
     const files = getFilesToCreate(projectPath, augOps)
-
-    checkFolderEmptyness(program, Object.values(files))
+    checkFolderEmptiness(program, Object.values(files))
     logger.ok('Creating Mamoru project files')
 
     createFile(logger, augOps, TEMPLATES.PACKAGE_JSON, files.PACKAGE_JSON)
@@ -70,7 +69,7 @@ function init(program: Command, projectPath: string, options: InitOptions) {
     }
 }
 
-function checkFolderEmptyness(program: Command, paths: string[]): void {
+function checkFolderEmptiness(program: Command, paths: string[]): void {
     paths.forEach((p) => {
         if (fs.existsSync(p)) {
             const fileName = path.basename(p)
