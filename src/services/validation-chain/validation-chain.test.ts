@@ -54,7 +54,7 @@ describe('ValidationChain', () => {
             expect(daemon).not.toBe(null)
         }, 20000)
 
-        it.only('Should register a daemon metadata SQL - parameters', async () => {
+        it('Should register a daemon metadata SQL - parameters', async () => {
             const { privkey } = await generateFoundedUser()
             const vc = new ValidationChainService(
                 undefined,
