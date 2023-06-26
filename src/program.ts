@@ -8,16 +8,6 @@ import publishCommand, { PublishOptions } from './commands/publish'
 import spawn from './commands/spawn'
 import { getAvailableChains } from './services/utils'
 
-function parseDirectoryPath(path: string) {
-    if (fs.existsSync(path) && fs.lstatSync(path).isDirectory()) {
-        return path
-    } else {
-        throw new InvalidArgumentError(
-            'Provided path is not exist or not a folder.'
-        )
-    }
-}
-
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {
         return '.'
@@ -83,11 +73,7 @@ program
             .choices(getAvailableChains() as unknown as string[])
             .makeOptionMandatory()
     )
-    .addOption(
-        new Option('-n, --name <name>', 'Name of the project').default(
-            'Default Name'
-        )
-    )
+    .addOption(new Option('-n, --name <name>', 'Name of the project'))
     .addOption(
         new Option(
             '-d, --description <description>',

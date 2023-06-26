@@ -120,7 +120,6 @@ describe('publish', () => {
         it('FAIL - SOLE - no enough gas', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({ type: 'wasm' })
-            console.log(colors.green('dir '), dir)
             init.init(programMock, dir, options)
             await runCommand('npm install --prefix ' + dir)
             const { privkey } = await generateFoundedUser()
@@ -146,7 +145,6 @@ describe('publish', () => {
         it('OK - SOLE', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({ type: 'wasm' })
-            console.log(colors.green('dir '), dir)
             init.init(programMock, dir, options)
             await runCommand('npm install --prefix ' + dir)
             const { privkey } = await generateFoundedUser()

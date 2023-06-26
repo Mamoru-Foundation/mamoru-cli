@@ -1,3 +1,4 @@
+import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import { DaemonMetadataParemeter } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_utils'
 
 export class Manifest {
@@ -5,7 +6,7 @@ export class Manifest {
     name: string
     type: 'sql' | 'wasm'
     logoUrl: string
-    chain: string
+    chains: Chain_ChainType[]
     tags: string[]
     parameters?: DaemonMetadataParemeter[]
     subscribable: boolean
