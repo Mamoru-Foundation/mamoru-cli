@@ -24,7 +24,7 @@ describe('publish', () => {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         const options = generateInitOptions({ type: 'not-valid' })
-        init.init(programMock, dir, options)
+        await init.init(programMock, dir, options)
 
         try {
             await publish.publish(programMock, dir, {
@@ -38,7 +38,7 @@ describe('publish', () => {
     it('FAIL - invalid privateKey', async () => {
         const dir = getTempFolder()
         const options = generateInitOptions({ type: 'sql' })
-        init.init(programMock, dir, options)
+        await init.init(programMock, dir, options)
 
         try {
             await publish.publish(programMock, dir, {
@@ -78,7 +78,7 @@ describe('publish', () => {
             async (obj, wasDaemonCreated) => {
                 const dir = getTempFolder()
                 const options = generateInitOptions(obj as InitOptions)
-                init.init(programMock, dir, options)
+                await init.init(programMock, dir, options)
                 const { privkey } = await generateFoundedUser()
                 const r = await publish.publish(programMock, dir, {
                     privateKey: privkey,
@@ -100,7 +100,7 @@ describe('publish', () => {
         it('FAIL - no build ', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({ type: 'wasm' })
-            init.init(programMock, dir, options)
+            await init.init(programMock, dir, options)
             const { privkey } = await generateFoundedUser()
             await publish
                 .publish(programMock, dir, {
@@ -120,7 +120,7 @@ describe('publish', () => {
         it('FAIL - SOLE - no enough gas', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({ type: 'wasm' })
-            init.init(programMock, dir, options)
+            await init.init(programMock, dir, options)
             await runCommand('npm install --prefix ' + dir)
             const { privkey } = await generateFoundedUser()
 
@@ -148,7 +148,7 @@ describe('publish', () => {
                 type: 'wasm',
                 chain: ['SUI_TESTNET', 'SUI_MAINNET'],
             })
-            init.init(programMock, dir, options)
+            await init.init(programMock, dir, options)
             await runCommand('npm install --prefix ' + dir)
             const { privkey } = await generateFoundedUser()
 
@@ -175,7 +175,7 @@ describe('publish', () => {
                 type: 'wasm',
                 chain: ['SUI_TESTNET', 'SUI_MAINNET'],
             })
-            init.init(programMock, dir, options)
+            await init.init(programMock, dir, options)
             await runCommand('npm install --prefix ' + dir)
             const { privkey } = await generateFoundedUser()
 
@@ -203,7 +203,7 @@ describe('publish', () => {
                 type: 'wasm',
                 chain: ['SUI_TESTNET', 'SUI_MAINNET'],
             })
-            init.init(programMock, dir, options)
+            await init.init(programMock, dir, options)
             await runCommand('npm install --prefix ' + dir)
             const { privkey } = await generateFoundedUser()
 
@@ -218,7 +218,7 @@ describe('publish', () => {
         it('OK - SOLE', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({ type: 'wasm' })
-            init.init(programMock, dir, options)
+            await init.init(programMock, dir, options)
             await runCommand('npm install --prefix ' + dir)
             const { privkey } = await generateFoundedUser()
 

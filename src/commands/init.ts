@@ -21,11 +21,10 @@ async function init(
     logger.verbose('Run init')
     logger.verbose('options', options)
     const augOps = await getAugmentedInitOptions(options, projectPath)
-
     const files = getFilesToCreate(projectPath, augOps)
+
     checkFolderEmptiness(program, Object.values(files))
     logger.ok('Creating Mamoru project files')
-
     createFile(logger, augOps, TEMPLATES.PACKAGE_JSON, files.PACKAGE_JSON)
     createFile(logger, augOps, TEMPLATES.MANIFEST, files.MANIFEST)
     createFile(logger, augOps, TEMPLATES.README, files.README)
@@ -79,8 +78,8 @@ function checkFolderEmptiness(program: Command, paths: string[]): void {
     paths.forEach((p) => {
         if (fs.existsSync(p)) {
             const fileName = path.basename(p)
-            program.error(
-                `Directory  already contains  a file named "${fileName}", stopping...`
+            throw Error(
+                `Directory already contains  a file named "${p}", stopping...`
             )
         }
     })
@@ -241,6 +240,8 @@ function createFile(
     const targetFileName = path.basename(targetPath)
     logger.verbose(`Creating "${targetFileName}"`)
     const absoluteTemplatePath = path.join(__dirname, templatePath)
+
+    logger.verbose('CREATING FILE', absoluteTemplatePath)
     const templateSrc = fs.readFileSync(absoluteTemplatePath).toString('utf-8')
     const template = Handlebars.compile(templateSrc)
     const result = template(ops)
