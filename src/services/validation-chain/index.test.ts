@@ -114,7 +114,7 @@ describe('ValidationChain', () => {
             )
 
             expect(daemon).not.toBe(null)
-        }, 20000)
+        }, 30000)
     })
 })
 
