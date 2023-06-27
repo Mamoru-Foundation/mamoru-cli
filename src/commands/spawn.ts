@@ -2,6 +2,8 @@ import { Command } from 'commander'
 import { Logger } from '../services/console'
 import ValidationChainService from '../services/validation-chain'
 import { DaemonMetadataType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_utils'
+import { select } from '@inquirer/prompts'
+
 export interface SpawnOptions {
     metadataId: string
     rpc?: string
@@ -15,6 +17,7 @@ import { MAMORU_EXPLORER_URL } from '../services/constants'
 import { MsgRegisterDaemonResponse } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/tx'
 import { chain_ChainTypeToJSON } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import { validateAndParseParameterFlag } from '../utils/utils'
+import { DaemonMetadata } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata'
 
 export default async function spawn(program: Command, options: SpawnOptions) {
     const { metadataId } = options
@@ -62,8 +65,11 @@ export default async function spawn(program: Command, options: SpawnOptions) {
             parameterValues
         )
     } else if (metadata.supportedChains.length > 1 && !options.chain) {
-        throw new Error(
-            'Daemon supports multiple chains, please specify one with --chain'
+        const chain = await queryChain(metadata)
+        result = await vcService.registerDaemon(
+            metadataId,
+            chain,
+            parameterValues
         )
     }
 
@@ -81,4 +87,15 @@ export default async function spawn(program: Command, options: SpawnOptions) {
         )}`
     )
     return result
+}
+
+async function queryChain(metadata: DaemonMetadata): Promise<string> {
+    const chain = await select({
+        message: 'To what chain do you want to register the daemon?',
+        choices: metadata.supportedChains.map((chain) => ({
+            value: chain_ChainTypeToJSON(chain.chainType),
+        })),
+    })
+
+    return chain
 }
