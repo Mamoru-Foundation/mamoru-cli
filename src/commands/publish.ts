@@ -16,6 +16,7 @@ export interface PublishOptions {
     privateKey: string
     gas?: string
     parameters?: string
+    chain?: string
 }
 
 async function publish(
@@ -33,6 +34,18 @@ async function publish(
     validateBuildPath(program, buildPath, manifest)
 
     logger.ok('Publishing to Validation chain')
+
+    if (manifest.chains.length > 1 && !options.chain) {
+        throw new Error(
+            `This DaemonMetadata supports multiple chains, please specify a chain with the --chain flag`
+        )
+    }
+    if (options.chain && !manifest.chains.includes(options.chain)) {
+        throw new Error(
+            `This DaemonMetadata does not support the chain ${options.chain}`
+        )
+    }
+
     const vcService = new ValidationChainService(
         options.rpc,
         options.privateKey,
@@ -63,7 +76,7 @@ async function publish(
         const r = await vcService.registerDaemonFromManifest(
             manifest,
             daemonMetadataId,
-            manifest.chains[0],
+            options.chain || manifest.chains[0],
             parameterValues
         )
         logger.log(

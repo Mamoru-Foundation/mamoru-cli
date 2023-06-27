@@ -70,7 +70,7 @@ describe(colors.yellow('spawn'), () => {
     it.todo(
         'FAIL - supportedChains have more than 1 element, chain in command options is not supported'
     )
-    it.only('OK - supportedChains have 1 element, no chain in command options', async () => {
+    it('OK - supportedChains have 1 element, no chain in command options', async () => {
         const dir = getTempFolder()
         const obj = {
             type: 'sql',

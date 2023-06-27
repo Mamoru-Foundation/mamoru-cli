@@ -97,7 +97,7 @@ export const generateInitOptions = (
         name: 'TEST name',
         tags: 'test,cli',
         description: 'TEST_DESCRIPTION',
-        chain: 'SUI_TESTNET' as keyof Chain_ChainType,
+        chain: ['SUI_TESTNET'],
         logo: 'https://mamoru.ai/default-mamoru-logo.png',
         subscribable: false,
         ...obj,

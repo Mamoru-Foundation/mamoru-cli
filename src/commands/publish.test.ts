@@ -142,6 +142,79 @@ describe('publish', () => {
                     assert.match(error.message, /out of gas/)
                 })
         }, 20000)
+        it('FAIL - multiple chains, no chain', async () => {
+            const dir = getTempFolder()
+            const options = generateInitOptions({
+                type: 'wasm',
+                chain: ['SUI_TESTNET', 'SUI_MAINNET'],
+            })
+            init.init(programMock, dir, options)
+            await runCommand('npm install --prefix ' + dir)
+            const { privkey } = await generateFoundedUser()
+
+            await build.build(programMock, dir)
+            const r = await publish
+                .publish(programMock, dir, {
+                    privateKey: privkey,
+                    rpc: 'http://0.0.0.0:26657',
+                    gas: (100).toString(),
+                })
+                .then(() => {
+                    throw new Error('An error should have been thrown')
+                })
+                .catch((error) => {
+                    assert.match(
+                        error.message,
+                        /This DaemonMetadata supports multiple chains/
+                    )
+                })
+        }, 20000)
+        it('FAIL - multiple chains, wrong chain', async () => {
+            const dir = getTempFolder()
+            const options = generateInitOptions({
+                type: 'wasm',
+                chain: ['SUI_TESTNET', 'SUI_MAINNET'],
+            })
+            init.init(programMock, dir, options)
+            await runCommand('npm install --prefix ' + dir)
+            const { privkey } = await generateFoundedUser()
+
+            await build.build(programMock, dir)
+            const r = await publish
+                .publish(programMock, dir, {
+                    privateKey: privkey,
+                    rpc: 'http://0.0.0.0:26657',
+                    gas: (100).toString(),
+                    chain: 'XXX',
+                })
+                .then(() => {
+                    throw new Error('An error should have been thrown')
+                })
+                .catch((error) => {
+                    assert.match(
+                        error.message,
+                        /This DaemonMetadata does not support the chain/
+                    )
+                })
+        }, 20000)
+        it('OK - multiple chains, chain', async () => {
+            const dir = getTempFolder()
+            const options = generateInitOptions({
+                type: 'wasm',
+                chain: ['SUI_TESTNET', 'SUI_MAINNET'],
+            })
+            init.init(programMock, dir, options)
+            await runCommand('npm install --prefix ' + dir)
+            const { privkey } = await generateFoundedUser()
+
+            await build.build(programMock, dir)
+            const r = await publish.publish(programMock, dir, {
+                privateKey: privkey,
+                rpc: 'http://0.0.0.0:26657',
+                gas: '100000',
+                chain: 'SUI_TESTNET',
+            })
+        }, 20000)
         it('OK - SOLE', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({ type: 'wasm' })
