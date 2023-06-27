@@ -97,5 +97,5 @@ async function queryChain(metadata: DaemonMetadata): Promise<string> {
         })),
     })
 
-    return chain
+    return chain as string
 }
