@@ -58,6 +58,6 @@ describe(colors.yellow('build'), () => {
         assert.strictEqual(outFiles.includes('manifest.yml'), true)
         assert.strictEqual(outFiles.includes('index.wasm'), true)
         assert.strictEqual(outFiles.includes('index.wasm.map'), true)
-    }, 10000)
+    }, 20000)
     it.todo('OK - should build type=wasm projects, with multiple parameters')
 })

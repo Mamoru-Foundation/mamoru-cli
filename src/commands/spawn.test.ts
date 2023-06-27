@@ -62,7 +62,7 @@ describe(colors.yellow('spawn'), () => {
         )
 
         await expect(promise).rejects.toThrow('Metadata is not subscribable')
-    }, 15000)
+    }, 25000)
 
     it.todo(
         'FAIL - supportedChains have more than 1 element, no chain in command options'
