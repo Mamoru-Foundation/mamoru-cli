@@ -21,7 +21,7 @@ describe(colors.yellow('build'), () => {
         const dir = getTempFolder()
         console.log(colors.green('Temp Folder: ' + dir))
         const options = generateInitOptions({ type: 'sql' })
-        init.init(programMock, dir, options)
+        await init.init(programMock, dir, options)
         await build
             .build(programMock, dir)
             .then(() => {
@@ -39,7 +39,7 @@ describe(colors.yellow('build'), () => {
         const dir = getTempFolder()
         console.log(colors.green('Temp Folder: ' + dir))
         const options = generateInitOptions({ type: 'wasm' })
-        init.init(programMock, dir, options)
+        await init.init(programMock, dir, options)
         await runCommand('npm install --prefix ' + dir)
         await build.build(programMock, dir)
 
@@ -58,6 +58,6 @@ describe(colors.yellow('build'), () => {
         assert.strictEqual(outFiles.includes('manifest.yml'), true)
         assert.strictEqual(outFiles.includes('index.wasm'), true)
         assert.strictEqual(outFiles.includes('index.wasm.map'), true)
-    }, 10000)
+    }, 20000)
     it.todo('OK - should build type=wasm projects, with multiple parameters')
 })

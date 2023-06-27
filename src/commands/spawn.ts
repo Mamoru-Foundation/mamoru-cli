@@ -2,6 +2,8 @@ import { Command } from 'commander'
 import { Logger } from '../services/console'
 import ValidationChainService from '../services/validation-chain'
 import { DaemonMetadataType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_utils'
+import { select, input } from '@inquirer/prompts'
+
 export interface SpawnOptions {
     metadataId: string
     rpc?: string
@@ -13,14 +15,21 @@ export interface SpawnOptions {
 import colors from 'colors'
 import { MAMORU_EXPLORER_URL } from '../services/constants'
 import { MsgRegisterDaemonResponse } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/tx'
-import { chain_ChainTypeToJSON } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
-import { validateAndParseParameterFlag } from '../utils/utils'
+import {
+    chain_ChainTypeFromJSON,
+    chain_ChainTypeToJSON,
+} from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
+import {
+    queryDaemonParameters,
+    validateAndParseParameterFlag,
+} from '../utils/utils'
+import { DaemonMetadata } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata'
 
 export default async function spawn(program: Command, options: SpawnOptions) {
     const { metadataId } = options
     const verbosity = program.opts().verbose
     const logger = new Logger(verbosity)
-    const parameterValues = validateAndParseParameterFlag(options.parameters)
+    validateAndParseParameterFlag(options.parameters)
 
     const vcService = new ValidationChainService(
         options.rpc,
@@ -44,28 +53,30 @@ export default async function spawn(program: Command, options: SpawnOptions) {
     if (metadata.supportedChains.length === 0) {
         throw new Error('Metadata does not support any chain')
     }
-    let result: MsgRegisterDaemonResponse
-    if (options.chain) {
-        result = await vcService.registerDaemon(
-            metadataId,
-            options.chain,
-            parameterValues
-        )
-    } else if (metadata.supportedChains.length === 1 && !options.chain) {
-        logger.ok(
-            'Registering daemon for default chain ' +
-                metadata.supportedChains[0].chainType
-        )
-        result = await vcService.registerDaemon(
-            metadataId,
-            chain_ChainTypeToJSON(metadata.supportedChains[0].chainType),
-            parameterValues
-        )
-    } else if (metadata.supportedChains.length > 1 && !options.chain) {
-        throw new Error(
-            'Daemon supports multiple chains, please specify one with --chain'
-        )
-    }
+
+    const finalChain = await queryChain(metadata, options)
+
+    logger.verbose(`Chain selected: ${finalChain}`)
+
+    const finalParameterValues = await queryDaemonParameters(
+        metadata,
+        options,
+        finalChain
+    )
+
+    logger.verbose(
+        `Registering daemon with parameters: ${JSON.stringify(
+            finalParameterValues,
+            null,
+            2
+        )}`
+    )
+
+    const result = await vcService.registerDaemon(
+        metadataId,
+        finalChain,
+        finalParameterValues
+    )
 
     logger.log(
         `Daemon registered successfully 🎉
@@ -81,4 +92,22 @@ export default async function spawn(program: Command, options: SpawnOptions) {
         )}`
     )
     return result
+}
+
+async function queryChain(
+    metadata: DaemonMetadata,
+    options: SpawnOptions
+): Promise<string> {
+    if (options.chain) return options.chain
+    if (metadata.supportedChains.length === 1)
+        return chain_ChainTypeToJSON(metadata.supportedChains[0].chainType)
+
+    const chain = await select({
+        message: 'To what chain do you want to register the daemon?',
+        choices: metadata.supportedChains.map((chain) => ({
+            value: chain_ChainTypeToJSON(chain.chainType),
+        })),
+    })
+
+    return chain as string
 }

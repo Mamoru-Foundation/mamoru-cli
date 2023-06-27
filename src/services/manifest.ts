@@ -59,8 +59,8 @@ const manifestParameterSchema = joi.object().keys({
     type: joi.any().valid('STRING', 'NUMBER', 'BOOLEAN').required(),
     key: joi.string().required().pattern(ONLY_ALPHA_NUMERIC),
     title: joi.string().required(),
-    description: joi.string().required(),
-    defaultValue: joi.string().required(),
+    description: joi.string().optional(),
+    defaultValue: joi.string().optional(),
     requiredFor: joi
         .array()
         .items(joi.string().valid(...getAvailableChains()))

@@ -8,18 +8,23 @@ import { FILES, TEMPLATES } from '../services/constants'
 import colors from 'colors'
 import { sdkVersions } from '../sdk-dependency-versions'
 import { deburr } from 'lodash'
+import { checkbox } from '@inquirer/prompts'
+import { getAvailableChains } from '../services/utils'
 
-function init(program: Command, projectPath: string, options: InitOptions) {
+async function init(
+    program: Command,
+    projectPath: string,
+    options: InitOptions
+) {
     const verbosity = program.opts().verbose
     const logger = new Logger(verbosity)
     logger.verbose('Run init')
     logger.verbose('options', options)
-    const augOps = getAugmentedInitOptions(options, projectPath)
-
+    const augOps = await getAugmentedInitOptions(options, projectPath)
     const files = getFilesToCreate(projectPath, augOps)
+
     checkFolderEmptiness(program, Object.values(files))
     logger.ok('Creating Mamoru project files')
-
     createFile(logger, augOps, TEMPLATES.PACKAGE_JSON, files.PACKAGE_JSON)
     createFile(logger, augOps, TEMPLATES.MANIFEST, files.MANIFEST)
     createFile(logger, augOps, TEMPLATES.README, files.README)
@@ -73,36 +78,51 @@ function checkFolderEmptiness(program: Command, paths: string[]): void {
     paths.forEach((p) => {
         if (fs.existsSync(p)) {
             const fileName = path.basename(p)
-            program.error(
-                `Directory  already contains  a file named "${fileName}", stopping...`
+            throw Error(
+                `Directory already contains  a file named "${p}", stopping...`
             )
         }
     })
 }
 
-function getAugmentedInitOptions(
+async function getAugmentedInitOptions(
     options: InitOptions,
     projectPath: string
-): AugmentedInitOptions {
+): Promise<AugmentedInitOptions> {
     let name
     if (!options.name && !dashify(projectPath)) {
         name = 'Default name'
     } else {
         name = options.name || deburr(path.basename(projectPath))
     }
+    const chain = await queryChains(options)
     return {
         ...options,
         name,
         jsonTags: JSON.stringify(options.tags.split(',')),
         kebabName: dashify(name),
-        defaultQuery: getDefaultQuery(options.chain[0]),
+        defaultQuery: getDefaultQuery(chain[0]),
         mamoruSdkAsVersion: sdkVersions.sdk,
-        mamoruCustomSdkPackageName: getCustomSdkPackage(options.chain[0]),
-        mamoruCustomSdkPackageVersion: getCustomSdkPackageVersion(
-            options.chain[0]
-        ),
-        customSdkCtxName: getCustomSdkCtxName(options.chain[0]),
+        mamoruCustomSdkPackageName: getCustomSdkPackage(chain[0]),
+        mamoruCustomSdkPackageVersion: getCustomSdkPackageVersion(chain[0]),
+        customSdkCtxName: getCustomSdkCtxName(chain[0]),
+        chain,
     }
+}
+
+async function queryChains(options: InitOptions): Promise<string[]> {
+    if (options.chain) return options.chain
+
+    const chain = await checkbox({
+        choices: getAvailableChains().map((c) => ({
+            value: c,
+        })),
+        message: 'Select the chain you want to use',
+    })
+
+    if (!chain.length) throw new Error('Please select at least 1 chain')
+
+    return chain as unknown as string[]
 }
 
 function getDefaultQuery(type: string): string {
@@ -220,6 +240,8 @@ function createFile(
     const targetFileName = path.basename(targetPath)
     logger.verbose(`Creating "${targetFileName}"`)
     const absoluteTemplatePath = path.join(__dirname, templatePath)
+
+    logger.verbose('CREATING FILE', absoluteTemplatePath)
     const templateSrc = fs.readFileSync(absoluteTemplatePath).toString('utf-8')
     const template = Handlebars.compile(templateSrc)
     const result = template(ops)
