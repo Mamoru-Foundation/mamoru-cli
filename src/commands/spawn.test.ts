@@ -46,7 +46,7 @@ describe(colors.yellow('spawn'), () => {
             tags: 'tag1',
         } as InitOptions
         const options = generateInitOptions(obj)
-        init.init(programMock, dir, options)
+        await init.init(programMock, dir, options)
         const { privkey } = await generateFoundedUser()
         const r = await publish.publish(programMock, dir, {
             privateKey: privkey,
@@ -82,7 +82,7 @@ describe(colors.yellow('spawn'), () => {
             tags: 'tag1',
         } as InitOptions
         const options = generateInitOptions(obj)
-        init.init(programMock, dir, options)
+        await init.init(programMock, dir, options)
         const { privkey } = await generateFoundedUser()
         const r0 = await publish.publish(programMock, dir, {
             privateKey: privkey,

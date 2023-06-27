@@ -21,7 +21,7 @@ describe(colors.yellow('build'), () => {
         const dir = getTempFolder()
         console.log(colors.green('Temp Folder: ' + dir))
         const options = generateInitOptions({ type: 'sql' })
-        init.init(programMock, dir, options)
+        await init.init(programMock, dir, options)
         await build
             .build(programMock, dir)
             .then(() => {
@@ -39,7 +39,7 @@ describe(colors.yellow('build'), () => {
         const dir = getTempFolder()
         console.log(colors.green('Temp Folder: ' + dir))
         const options = generateInitOptions({ type: 'wasm' })
-        init.init(programMock, dir, options)
+        await init.init(programMock, dir, options)
         await runCommand('npm install --prefix ' + dir)
         await build.build(programMock, dir)
 

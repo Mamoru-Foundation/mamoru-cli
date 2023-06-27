@@ -51,7 +51,7 @@ describe(colors.yellow('init'), () => {
     ]
     it.each(sqlCases)(
         'OK - Should create Files - type=sql, %s',
-        (chain, query) => {
+        async (chain, query) => {
             const dir = getTempFolder()
             const options: InitOptions = {
                 type: 'sql',
@@ -63,7 +63,7 @@ describe(colors.yellow('init'), () => {
                 subscribable: false,
             }
 
-            init.init(programMock, dir, options)
+            await init.init(programMock, dir, options)
 
             const files = fs.readdirSync(dir)
             assert.strictEqual(files.length, 5)
@@ -187,7 +187,7 @@ describe(colors.yellow('init'), () => {
                 subscribable: false,
             }
 
-            init.init(programMock, dir, options)
+            await init.init(programMock, dir, options)
 
             const files = fs.readdirSync(dir)
             assert.strictEqual(files.length, 6)
@@ -254,7 +254,7 @@ describe(colors.yellow('init'), () => {
         },
         1000
     )
-    it('FAIL - Fail if project is already in folder', () => {
+    it('FAIL - Fail if project is already in folder', async () => {
         const dir = getTempFolder()
 
         const options: InitOptions = {
@@ -266,10 +266,10 @@ describe(colors.yellow('init'), () => {
             logo: 'https://test.com/logo.png',
             subscribable: false,
         }
-        init.init(programMock, dir, options)
+        await init.init(programMock, dir, options)
 
         try {
-            init.init(programMock, dir, options)
+            await init.init(programMock, dir, options)
             throw new Error('Test should fail')
         } catch (error) {
             // pass
@@ -277,7 +277,7 @@ describe(colors.yellow('init'), () => {
     })
 })
 describe('getAugmentedInitOptions', () => {
-    it('Should return augmented options', () => {
+    it('Should return augmented options', async () => {
         const options: InitOptions = {
             type: 'sql',
             name: 'TEST name',
@@ -287,7 +287,7 @@ describe('getAugmentedInitOptions', () => {
             logo: 'https://test.com/logo.png',
             subscribable: false,
         }
-        const augmented = init.getAugmentedInitOptions(options, '.')
+        const augmented = await init.getAugmentedInitOptions(options, '.')
         assert.deepEqual(augmented, {
             ...augmented,
             type: 'sql',
@@ -303,7 +303,7 @@ describe('getAugmentedInitOptions', () => {
             kebabName: 'test-name',
         } as AugmentedInitOptions)
     })
-    it('default name', () => {
+    it('default name', async () => {
         const options: InitOptions = {
             type: 'sql',
             name: '',
@@ -313,7 +313,7 @@ describe('getAugmentedInitOptions', () => {
             logo: 'https://test.com/logo.png',
             subscribable: false,
         }
-        const augmented = init.getAugmentedInitOptions(options, '.')
+        const augmented = await init.getAugmentedInitOptions(options, '.')
         assert.deepEqual(augmented, {
             ...augmented,
             type: 'sql',
@@ -330,7 +330,7 @@ describe('getAugmentedInitOptions', () => {
         })
     })
 
-    it('default name project-path (another/daemon_new)', () => {
+    it('default name project-path (another/daemon_new)', async () => {
         const options: InitOptions = {
             type: 'sql',
             name: '',
@@ -340,7 +340,7 @@ describe('getAugmentedInitOptions', () => {
             logo: 'https://test.com/logo.png',
             subscribable: false,
         }
-        const augmented = init.getAugmentedInitOptions(
+        const augmented = await init.getAugmentedInitOptions(
             options,
             'another/daemon_new'
         )
