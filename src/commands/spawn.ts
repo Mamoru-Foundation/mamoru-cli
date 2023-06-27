@@ -19,7 +19,10 @@ import {
     chain_ChainTypeFromJSON,
     chain_ChainTypeToJSON,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
-import { validateAndParseParameterFlag } from '../utils/utils'
+import {
+    queryDaemonParameters,
+    validateAndParseParameterFlag,
+} from '../utils/utils'
 import { DaemonMetadata } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata'
 
 export default async function spawn(program: Command, options: SpawnOptions) {
@@ -55,7 +58,7 @@ export default async function spawn(program: Command, options: SpawnOptions) {
 
     logger.verbose(`Chain selected: ${finalChain}`)
 
-    const finalParameterValues = await queryParameters(
+    const finalParameterValues = await queryDaemonParameters(
         metadata,
         options,
         finalChain
@@ -107,31 +110,4 @@ async function queryChain(
     })
 
     return chain as string
-}
-
-async function queryParameters(
-    metadata: DaemonMetadata,
-    options: SpawnOptions,
-    chain: string
-): Promise<Record<string, any>> {
-    if (options.parameters)
-        return validateAndParseParameterFlag(options.parameters)
-
-    const chainType = chain_ChainTypeFromJSON(chain)
-    const parameters = metadata.parameters.filter((el) => {
-        if (el.hiddenFor.map((el) => el.chainType).includes(chainType))
-            return false
-        return true
-    })
-
-    const result: Record<string, string> = {}
-    for (const parameter of parameters) {
-        const answer = await input({
-            message: `Enter value for parameter "${parameter.key}"`,
-            default: parameter.defaultValue,
-        })
-        result[parameter.key] = answer
-    }
-
-    return result
 }
