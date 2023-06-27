@@ -24,7 +24,7 @@
         "dev": "ts-node ./src/index.ts",
         "generate:docs": "ts-node src/utils/generate-docs.ts",
         "test": "NODE_ENV=test jest",
-        "test:ci": "NODE_ENV=test jest",
+        "test:ci": "NODE_ENV=test jest --forceExit",
         "test:watch": "NODE_ENV=test jest --watch",
         "postinstall": "bash fix-client.sh",
         "semantic-release": "semantic-release",
