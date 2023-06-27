@@ -95,13 +95,13 @@ function getAugmentedInitOptions(
         name,
         jsonTags: JSON.stringify(options.tags.split(',')),
         kebabName: dashify(name),
-        defaultQuery: getDefaultQuery(options.chain),
+        defaultQuery: getDefaultQuery(options.chain[0]),
         mamoruSdkAsVersion: sdkVersions.sdk,
-        mamoruCustomSdkPackageName: getCustomSdkPackage(options.chain),
+        mamoruCustomSdkPackageName: getCustomSdkPackage(options.chain[0]),
         mamoruCustomSdkPackageVersion: getCustomSdkPackageVersion(
-            options.chain
+            options.chain[0]
         ),
-        customSdkCtxName: getCustomSdkCtxName(options.chain),
+        customSdkCtxName: getCustomSdkCtxName(options.chain[0]),
     }
 }
 
@@ -240,7 +240,7 @@ export interface InitOptions {
     subscribable: boolean
     logo: string
     tags: string
-    chain: string
+    chain: string[]
     type: 'sql' | 'wasm'
 }
 

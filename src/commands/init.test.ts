@@ -58,7 +58,7 @@ describe(colors.yellow('init'), () => {
                 name: 'TEST name',
                 tags: 'test,cli',
                 description: 'TEST_DESCRIPTION',
-                chain: chain,
+                chain: [chain],
                 logo: 'https://test.com/logo.png',
                 subscribable: false,
             }
@@ -182,7 +182,7 @@ describe(colors.yellow('init'), () => {
                 name: 'TEST name',
                 tags: 'test,cli',
                 description: 'TEST_DESCRIPTION',
-                chain: chain,
+                chain: [chain],
                 logo: 'https://test.com/logo.png',
                 subscribable: false,
             }
@@ -262,7 +262,7 @@ describe(colors.yellow('init'), () => {
             name: 'TEST name',
             tags: 'test,cli',
             description: 'TEST_DESCRIPTION',
-            chain: 'sui',
+            chain: ['SUI_TESTNET'],
             logo: 'https://test.com/logo.png',
             subscribable: false,
         }
@@ -283,7 +283,7 @@ describe('getAugmentedInitOptions', () => {
             name: 'TEST name',
             tags: 'test,cli',
             description: 'TEST_DESCRIPTION',
-            chain: 'SUI_TESTNET',
+            chain: ['SUI_TESTNET'],
             logo: 'https://test.com/logo.png',
             subscribable: false,
         }
@@ -294,14 +294,14 @@ describe('getAugmentedInitOptions', () => {
             name: 'TEST name',
             tags: 'test,cli',
             description: 'TEST_DESCRIPTION',
-            chain: 'SUI_TESTNET',
+            chain: ['SUI_TESTNET'],
             logo: 'https://test.com/logo.png',
             subscribable: false,
             defaultQuery:
                 "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
             jsonTags: '["test","cli"]',
             kebabName: 'test-name',
-        })
+        } as AugmentedInitOptions)
     })
     it('default name', () => {
         const options: InitOptions = {
@@ -309,7 +309,7 @@ describe('getAugmentedInitOptions', () => {
             name: '',
             tags: 'test,cli',
             description: 'TEST_DESCRIPTION',
-            chain: 'SUI_TESTNET',
+            chain: ['SUI_TESTNET'],
             logo: 'https://test.com/logo.png',
             subscribable: false,
         }
@@ -320,7 +320,7 @@ describe('getAugmentedInitOptions', () => {
             name: 'Default name',
             tags: 'test,cli',
             description: 'TEST_DESCRIPTION',
-            chain: 'SUI_TESTNET',
+            chain: ['SUI_TESTNET'],
             logo: 'https://test.com/logo.png',
             subscribable: false,
             defaultQuery:
@@ -336,7 +336,7 @@ describe('getAugmentedInitOptions', () => {
             name: '',
             tags: 'test,cli',
             description: 'TEST_DESCRIPTION',
-            chain: 'SUI_TESTNET',
+            chain: ['SUI_TESTNET'],
             logo: 'https://test.com/logo.png',
             subscribable: false,
         }
@@ -344,19 +344,21 @@ describe('getAugmentedInitOptions', () => {
             options,
             'another/daemon_new'
         )
-        assert.deepEqual(augmented, {
+
+        const expected: AugmentedInitOptions = {
             ...augmented,
             type: 'sql',
             name: 'daemon_new',
             tags: 'test,cli',
             description: 'TEST_DESCRIPTION',
-            chain: 'SUI_TESTNET',
+            chain: ['SUI_TESTNET'],
             logo: 'https://test.com/logo.png',
             subscribable: false,
             defaultQuery:
                 "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
             jsonTags: '["test","cli"]',
             kebabName: 'daemon_new',
-        })
+        }
+        assert.deepEqual(augmented, expected)
     })
 })

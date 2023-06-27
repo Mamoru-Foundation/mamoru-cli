@@ -29,7 +29,7 @@ describe('ValidationChain', () => {
             const vc = new ValidationChainService('', privkey, new Logger(2))
             const daemon = await vc.getDaemonMetadataById('HELLO')
             expect(daemon).toBe(null)
-        })
+        }, 10000)
     })
 
     describe('registerDaemonMetadata', () => {

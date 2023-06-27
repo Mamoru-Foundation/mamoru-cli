@@ -138,6 +138,11 @@ program
             .env('MAMORU_PRIVATE_KEY')
     )
     .addOption(
+        new Option('-c, --chain <chain>', 'Chain to deploy').choices(
+            getAvailableChains() as unknown as string[]
+        )
+    )
+    .addOption(
         new Option(
             '--parameters <parameters>',
             'JSON stringified parameter map ie: {"key": "value"}'
