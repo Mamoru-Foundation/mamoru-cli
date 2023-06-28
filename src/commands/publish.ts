@@ -29,6 +29,7 @@ async function publish(
 ) {
     const verbosity = program.opts().verbose
     const logger = new Logger(verbosity)
+    logger.verbose(`PublishOptions ${JSON.stringify(options, null, 2)}`)
     const buildPath = path.join(projectPath, OUT_DIR)
     const parameterValues = validateAndParseParameterFlag(options.parameters)
     logger.ok('Validating Query manifest')

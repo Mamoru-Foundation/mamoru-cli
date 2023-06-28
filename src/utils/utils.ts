@@ -1,7 +1,7 @@
 import { exec } from 'node:child_process'
 import { DaemonParameterMap } from '../types'
 import { DaemonMetadata } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata'
-import { SpawnOptions } from '../commands/spawn'
+import { LaunchOptions } from '../commands/launch'
 import { chain_ChainTypeFromJSON } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import { input } from '@inquirer/prompts'
 import { PublishOptions } from '../commands/publish'
@@ -43,7 +43,7 @@ export function validateAndParseParameterFlag(
 
 export async function queryDaemonParameters(
     metadata: DaemonMetadata,
-    options: SpawnOptions | PublishOptions,
+    options: LaunchOptions | PublishOptions,
     chain: string
 ): Promise<Record<string, any>> {
     if (options.parameters)

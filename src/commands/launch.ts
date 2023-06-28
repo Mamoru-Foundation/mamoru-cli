@@ -4,7 +4,7 @@ import ValidationChainService from '../services/validation-chain'
 import { DaemonMetadataType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_utils'
 import { select, input } from '@inquirer/prompts'
 
-export interface SpawnOptions {
+export interface LaunchOptions {
     metadataId: string
     rpc?: string
     privateKey: string
@@ -25,10 +25,12 @@ import {
 } from '../utils/utils'
 import { DaemonMetadata } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata'
 
-export default async function spawn(program: Command, options: SpawnOptions) {
-    const { metadataId } = options
+export default async function launch(program: Command, options: LaunchOptions) {
+    const { metadataId: metadataId } = options
     const verbosity = program.opts().verbose
     const logger = new Logger(verbosity)
+    logger.verbose(`LaunchOptions ${JSON.stringify(options, null, 2)}`)
+
     validateAndParseParameterFlag(options.parameters)
 
     const vcService = new ValidationChainService(
@@ -96,7 +98,7 @@ export default async function spawn(program: Command, options: SpawnOptions) {
 
 async function queryChain(
     metadata: DaemonMetadata,
-    options: SpawnOptions
+    options: LaunchOptions
 ): Promise<string> {
     if (options.chain) return options.chain
     if (metadata.supportedChains.length === 1)

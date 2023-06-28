@@ -1,6 +1,6 @@
 import { describe, expect, it } from '@jest/globals'
 import colors from 'colors'
-import spawn, { SpawnOptions } from './spawn'
+import launch, { LaunchOptions } from './launch'
 import {
     generateFoundedUser,
     generateInitOptions,
@@ -15,8 +15,8 @@ const programMock = getProgramMock()
 
 describe(colors.yellow('spawn'), () => {
     const generateSpawnOptions = (
-        override: Partial<SpawnOptions> = {}
-    ): SpawnOptions => ({
+        override: Partial<LaunchOptions> = {}
+    ): LaunchOptions => ({
         metadataId: 'metadataId',
         privateKey: 'privKey',
         ...override,
@@ -24,7 +24,7 @@ describe(colors.yellow('spawn'), () => {
     it('FAIL - metadataId - metadata not found', async () => {
         expect.assertions(1)
         const { privkey } = await generateFoundedUser()
-        await spawn(
+        await launch(
             programMock,
             generateSpawnOptions({
                 metadataId: randomUUID(),
@@ -53,7 +53,7 @@ describe(colors.yellow('spawn'), () => {
             rpc: 'http://0.0.0.0:26657',
         })
 
-        const promise = spawn(
+        const promise = launch(
             programMock,
             generateSpawnOptions({
                 metadataId: r.daemonMetadataId,
@@ -89,7 +89,7 @@ describe(colors.yellow('spawn'), () => {
             rpc: 'http://0.0.0.0:26657',
         })
 
-        const result = await spawn(
+        const result = await launch(
             programMock,
             generateSpawnOptions({
                 metadataId: r0.daemonMetadataId,
