@@ -1906,10 +1906,10 @@
     "@mamoru-ai/mamoru-sdk-as" "^0.4.0"
     "@wapc/as-msgpack" "^0.1.15"
 
-"@mamoru-ai/validation-chain-ts-client@^0.18.1":
-  version "0.18.1"
-  resolved "https://registry.yarnpkg.com/@mamoru-ai/validation-chain-ts-client/-/validation-chain-ts-client-0.18.1.tgz#0f064c7680cb5a63d2ee6539be76d3a892b510b8"
-  integrity sha512-OFLukPpvLdz70jaASlvjO8v1oJ3jAK0txobSMwH+j3buqlaLL71OIJMy3Xj91ua5P9WZEcwv7wkNrviVCW+JfA==
+"@mamoru-ai/validation-chain-ts-client@^0.23.1":
+  version "0.23.1"
+  resolved "https://registry.yarnpkg.com/@mamoru-ai/validation-chain-ts-client/-/validation-chain-ts-client-0.23.1.tgz#9f8e9465273372f61e487928abe7998a498e61c5"
+  integrity sha512-w3dFGV+UufcGE8rJLULdnRChkV31zfVnUjPamzJPHx5gMeGUAnRXbbA3En6k48yIS6PiaS+wsTBObBViyNvdPQ==
   dependencies:
     "@cosmjs/launchpad" "^0.27.1"
     "@cosmjs/proto-signing" "^0.30.1"

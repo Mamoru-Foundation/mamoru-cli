@@ -9,7 +9,10 @@ import ValidationChainService from '../services/validation-chain'
 import { prepareBinaryFile } from '../services/assemblyscript'
 import { Manifest } from '../types'
 import colors from 'colors'
-import { validateAndParseParameterFlag } from '../utils/utils'
+import {
+    queryDaemonParameters,
+    validateAndParseParameterFlag,
+} from '../utils/utils'
 
 export interface PublishOptions {
     rpc?: string
@@ -73,11 +76,22 @@ async function publish(
 
     if (!manifest.subscribable) {
         logger.ok('Registering Daemon to Validation chain')
+        const metadata = await vcService.getDaemonMetadataById(daemonMetadataId)
+        const finalParameterValues = await queryDaemonParameters(
+            metadata,
+            options,
+            options.chain || manifest.chains[0]
+        )
+
+        logger.verbose(
+            `parameters: ${JSON.stringify(finalParameterValues, null, 2)}`
+        )
+
         const r = await vcService.registerDaemonFromManifest(
             manifest,
             daemonMetadataId,
             options.chain || manifest.chains[0],
-            parameterValues
+            finalParameterValues
         )
         logger.log(
             `Daemon registered successfully 🎉

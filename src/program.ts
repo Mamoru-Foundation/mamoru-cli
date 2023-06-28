@@ -189,13 +189,7 @@ program
         )
     )
     .action((options: any) => {
-        spawn(program, {
-            metadataId: options.metadataid,
-            privateKey: options.privateKey,
-            gas: options.gas,
-            rpc: options.rpc,
-            chain: options.chain,
-        })
+        spawn(program, options)
     })
 
 program.version(
