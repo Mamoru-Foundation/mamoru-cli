@@ -5,7 +5,7 @@ import { program, InvalidArgumentError, Option } from 'commander'
 import initCommand, { InitOptions } from './commands/init'
 import compileCommand from './commands/build'
 import publishCommand, { PublishOptions } from './commands/publish'
-import spawn from './commands/spawn'
+import launch from './commands/launch'
 import { getAvailableChains } from './services/utils'
 
 function parseOrSetCurrentDirectoryPath(path: string) {
@@ -159,7 +159,7 @@ program
     .description('launch daemon from subscribable metadata')
     .addOption(
         new Option(
-            '-m, --metadataid <metadataId>',
+            '-m, --metadataId <metadataId>',
             'Daemon MetadataId'
         ).makeOptionMandatory()
     )
@@ -189,7 +189,7 @@ program
         )
     )
     .action((options: any) => {
-        spawn(program, options)
+        launch(program, options)
     })
 
 program.version(
