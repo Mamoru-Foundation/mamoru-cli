@@ -65,6 +65,11 @@ type DeliverTxResponse = {
     data?: any
 }
 
+export type SdkVersion = {
+    version: string
+    sdk: string
+}
+
 export type Msgs =
     | MsgRegisterDaemon
     | MsgCreateDaemonMetadata
@@ -95,16 +100,118 @@ class ValidationChainService {
         this.apiUrl = getApiURl(rpcUrl)
     }
 
-    private async getWallet() {
-        if (this.wallet) return this.wallet
-        const key = fromBase64(this.privateKey)
-        const wallet = await DirectSecp256k1Wallet.fromKey(key, ADDRESS_PREFIX)
+    public async registerDaemonMetadata(
+        manifest: Manifest,
+        queries: DaemonMetadataContentQuery[],
+        wasmModule?: string,
+        gas?: string,
+        sdkVersions?: SdkVersion[]
+    ): Promise<MsgCreateDaemonMetadataResponse> {
+        this.logger.verbose('Registering daemon metadata')
+        const txClient = await this.getTxClient()
+        const address = await this.getAddress()
+        // @ts-ignore
+        const payload: CreateDaemonMetadataCommandRequestDTO = {
+            logoUrl: manifest.logoUrl,
+            metadataType: getSubscribableType(manifest),
+            title: manifest.name,
+            description: manifest.description,
+            tags: manifest.tags,
+            supportedChains: this.getChainTypes(manifest).map((chain) => ({
+                chainType: chain,
+            })),
+            parameters: getMetadataParametersFromManifest(manifest),
+            content: getDaemonContent(manifest, queries, wasmModule),
+        }
 
-        this.wallet = wallet
-        return wallet
+        const message: MsgCreateDaemonMetadata = {
+            creator: address,
+            daemonMetadata: payload,
+        }
+
+        this.logger.verbose('message', JSON.stringify(message, null, 2))
+
+        const result = await txClient.sendMsgCreateDaemonMetadata({
+            value: message,
+            fee: {
+                amount: [],
+                gas: gas || '200000',
+            },
+        })
+
+        this.throwOnError('MsgCreateDaemonMetadata', result)
+
+        const data = await this.getTxDataOnlyResponse(result.transactionHash)
+        const decodedArr = this.decodeTxMessages(data)
+
+        // this doesnt work as data is returned in an array of message.
+        // @todo: fix it so this.decodeTxMessages can be deprecated and removed
+        // const decoded = MsgCreateDaemonMetadataResponse.decode(data)
+
+        const msg = decodedArr[0] as MsgCreateDaemonMetadataResponse
+
+        return msg
     }
 
-    async registerDaemonFromManifest(
+    public async getDaemonMetadataById(id: string): Promise<DaemonMetadata> {
+        const client = await this.getQueryClient()
+        const result: AxiosResponse<ValidationchainQueryGetDaemonMetadataResponse> =
+            await client
+                .queryDaemonMetadata(id, {
+                    // client throws an issue when tries to serialize response for this call
+                    format: 'json',
+                })
+                .catch((err) => {
+                    if (err.response.status === 404) {
+                        return null
+                    }
+                    throw err
+                })
+        if (!result) return null
+        const metadata = result.data.daemonMetadata
+        return {
+            daemonMetadataId: metadata.daemonMetadataId || null,
+            logoUrl: metadata.logoUrl || null,
+            developerAddress: metadata.developerAddress || null,
+            type: DaemonMetadataType[metadata.type] || null,
+            title: metadata.title || null,
+            description: metadata.description || null,
+            tags: metadata.tags || [],
+            supportedChains:
+                metadata.supportedChains?.map((el) => ({
+                    chainType: Chain_ChainType[el.chain_type],
+                })) || [],
+            parameters:
+                metadata.parameters?.map(
+                    (el) =>
+                        ({
+                            defaultValue: el.defaultValue,
+                            description: el.description,
+                            hiddenFor: el.hiddenFor,
+                            key: el.key,
+                            requiredFor: el.requiredFor,
+                            title: el.title,
+                            type: DaemonMetadataParemeter_DaemonParemeterType[
+                                el.type
+                            ],
+                        } as DaemonMetadataParemeter)
+                ) || [],
+            content: {
+                query: metadata.content.query?.map(
+                    (el: ValidationchainDaemonMetadataContentQuery) => ({
+                        incidentMessage: el.incidentMessage,
+                        severity: IncidentSeverity[el.severity],
+                        query: el.query,
+                    })
+                ),
+                type: DaemonMetadataContentType[metadata?.content?.type],
+                wasmModule: metadata?.content?.wasmModule,
+            },
+            createdAt: metadata.createdAt || null,
+        }
+    }
+
+    public async registerDaemonFromManifest(
         manifest: Manifest,
         daemonMetadataId: string,
         chain: string,
@@ -146,7 +253,8 @@ class ValidationChainService {
 
         return decodedArr[0] as MsgRegisterDaemonResponse
     }
-    async registerDaemon(
+
+    public async registerDaemon(
         daemonMetadataId: string,
         chainType: string,
         parameterValues: DaemonParameterMap
@@ -186,6 +294,17 @@ class ValidationChainService {
         const decodedArr = this.decodeTxMessages(data)
 
         return decodedArr[0] as MsgRegisterDaemonResponse
+    }
+
+    // private methods
+
+    private async getWallet() {
+        if (this.wallet) return this.wallet
+        const key = fromBase64(this.privateKey)
+        const wallet = await DirectSecp256k1Wallet.fromKey(key, ADDRESS_PREFIX)
+
+        this.wallet = wallet
+        return wallet
     }
 
     private async registerSniffer(address: string, chain: Chain_ChainType) {
@@ -259,116 +378,6 @@ class ValidationChainService {
         return accounts[0].address
     }
 
-    async registerDaemonMetadata(
-        manifest: Manifest,
-        queries: DaemonMetadataContentQuery[],
-        wasmModule?: string,
-        gas?: string
-    ): Promise<MsgCreateDaemonMetadataResponse> {
-        this.logger.verbose('Registering daemon metadata')
-        const txClient = await this.getTxClient()
-        const address = await this.getAddress()
-        // @ts-ignore
-        const payload: CreateDaemonMetadataCommandRequestDTO = {
-            logoUrl: manifest.logoUrl,
-            metadataType: getSubscribableType(manifest),
-            title: manifest.name,
-            description: manifest.description,
-            tags: manifest.tags,
-            supportedChains: this.getChainTypes(manifest).map((chain) => ({
-                chainType: chain,
-            })),
-            parameters: getMetadataParametersFromManifest(manifest),
-            content: getDaemonContent(manifest, queries, wasmModule),
-        }
-
-        const message: MsgCreateDaemonMetadata = {
-            creator: address,
-            daemonMetadata: payload,
-        }
-
-        this.logger.verbose('message', JSON.stringify(message, null, 2))
-
-        const result = await txClient.sendMsgCreateDaemonMetadata({
-            value: message,
-            fee: {
-                amount: [],
-                gas: gas || '200000',
-            },
-        })
-
-        this.throwOnError('MsgCreateDaemonMetadata', result)
-
-        const data = await this.getTxDataOnlyResponse(result.transactionHash)
-        const decodedArr = this.decodeTxMessages(data)
-
-        // this doesnt work as data is returned in an array of message.
-        // @todo: fix it so this.decodeTxMessages can be deprecated and removed
-        // const decoded = MsgCreateDaemonMetadataResponse.decode(data)
-
-        const msg = decodedArr[0] as MsgCreateDaemonMetadataResponse
-
-        return msg
-    }
-
-    async getDaemonMetadataById(id: string): Promise<DaemonMetadata> {
-        const client = await this.getQueryClient()
-        const result: AxiosResponse<ValidationchainQueryGetDaemonMetadataResponse> =
-            await client
-                .queryDaemonMetadata(id, {
-                    // client throws an issue when tries to serialize response for this call
-                    format: 'json',
-                })
-                .catch((err) => {
-                    if (err.response.status === 404) {
-                        return null
-                    }
-                    throw err
-                })
-        if (!result) return null
-        const metadata = result.data.daemonMetadata
-        return {
-            daemonMetadataId: metadata.daemonMetadataId || null,
-            logoUrl: metadata.logoUrl || null,
-            developerAddress: metadata.developerAddress || null,
-            type: DaemonMetadataType[metadata.type] || null,
-            title: metadata.title || null,
-            description: metadata.description || null,
-            tags: metadata.tags || [],
-            supportedChains:
-                metadata.supportedChains?.map((el) => ({
-                    chainType: Chain_ChainType[el.chain_type],
-                })) || [],
-            parameters:
-                metadata.parameters?.map(
-                    (el) =>
-                        ({
-                            defaultValue: el.defaultValue,
-                            description: el.description,
-                            hiddenFor: el.hiddenFor,
-                            key: el.key,
-                            requiredFor: el.requiredFor,
-                            title: el.title,
-                            type: DaemonMetadataParemeter_DaemonParemeterType[
-                                el.type
-                            ],
-                        } as DaemonMetadataParemeter)
-                ) || [],
-            content: {
-                query: metadata.content.query?.map(
-                    (el: ValidationchainDaemonMetadataContentQuery) => ({
-                        incidentMessage: el.incidentMessage,
-                        severity: IncidentSeverity[el.severity],
-                        query: el.query,
-                    })
-                ),
-                type: DaemonMetadataContentType[metadata?.content?.type],
-                wasmModule: metadata?.content?.wasmModule,
-            },
-            createdAt: metadata.createdAt || null,
-        }
-    }
-
     private getDecoder(name = 'TxMsgData') {
         const parsedName = name.replace('/validationchain.validationchain.', '')
         /**
@@ -419,6 +428,7 @@ class ValidationChainService {
         const { code, rawLog } = error
         return `Error sending "${msgType}" code: "${code}", log: "${rawLog}" hash: "${error.transactionHash}"`
     }
+
     private throwOnError(MsgType: string, response: DeliverTxResponse) {
         if (response.code) {
             throw new Error(this.formatError(MsgType, response))

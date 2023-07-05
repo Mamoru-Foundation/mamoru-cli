@@ -5,7 +5,9 @@ import { Logger } from '../services/console'
 import { validateAndReadManifest } from '../services/manifest'
 import { MAMORU_EXPLORER_URL, OUT_DIR, WASM_INDEX } from '../services/constants'
 import queryManifest from '../services/query-manifest'
-import ValidationChainService from '../services/validation-chain'
+import ValidationChainService, {
+    SdkVersion,
+} from '../services/validation-chain'
 import { prepareBinaryFile } from '../services/assemblyscript'
 import { Manifest } from '../types'
 import colors from 'colors'
@@ -66,6 +68,8 @@ async function publish(
 
     if (manifest.type === 'wasm') {
         const wasm = prepareBinaryFile(path.join(buildPath, WASM_INDEX))
+        const packageJson = readPackageJson(logger, buildPath)
+
         const r = await vcService.registerDaemonMetadata(
             manifest,
             [],
