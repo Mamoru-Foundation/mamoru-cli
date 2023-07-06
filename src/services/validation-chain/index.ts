@@ -122,6 +122,7 @@ class ValidationChainService {
             })),
             parameters: getMetadataParametersFromManifest(manifest),
             content: getDaemonContent(manifest, queries, wasmModule),
+            sdkVersions: sdkVersions || [],
         }
 
         const message: MsgCreateDaemonMetadata = {

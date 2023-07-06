@@ -8,6 +8,7 @@ import { PublishOptions } from '../commands/publish'
 import { SdkVersion } from '../services/validation-chain'
 import path from 'node:path'
 import * as fs from 'fs'
+import { Logger } from '../services/console'
 
 export const runCommand = (cmd: string) => {
     return new Promise((resolve, reject) => {
@@ -107,7 +108,7 @@ export function extractSdkVersions(packageJson: {
     return sdkVersions
 }
 
-export function extractPureSemver(packageVersion: string): string {
+function extractPureSemver(packageVersion: string): string {
     const split = packageVersion.split('-')
     if (split.length > 1) {
         split[0] = split[0].replace(/[^0-9.]/g, '')

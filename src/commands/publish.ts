@@ -14,6 +14,7 @@ import colors from 'colors'
 import {
     queryDaemonParameters,
     validateAndParseParameterFlag,
+    getSdkVersions,
 } from '../utils/utils'
 
 export interface PublishOptions {
@@ -68,13 +69,13 @@ async function publish(
 
     if (manifest.type === 'wasm') {
         const wasm = prepareBinaryFile(path.join(buildPath, WASM_INDEX))
-        const packageJson = readPackageJson(logger, buildPath)
-
+        const sdkVersions = getSdkVersions(logger, buildPath)
         const r = await vcService.registerDaemonMetadata(
             manifest,
             [],
             wasm,
-            options.gas
+            options.gas,
+            sdkVersions
         )
         daemonMetadataId = r.daemonMetadataId
     }
