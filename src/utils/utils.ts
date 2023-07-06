@@ -5,6 +5,10 @@ import { LaunchOptions } from '../commands/launch'
 import { chain_ChainTypeFromJSON } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import { input } from '@inquirer/prompts'
 import { PublishOptions } from '../commands/publish'
+import { SdkVersion } from '../services/validation-chain'
+import path from 'node:path'
+import * as fs from 'fs'
+import { Logger } from '../services/console'
 
 export const runCommand = (cmd: string) => {
     return new Promise((resolve, reject) => {
@@ -66,4 +70,58 @@ export async function queryDaemonParameters(
     }
 
     return result
+}
+
+function readPackageJson(
+    logger: Logger,
+    buildPath: string
+): { dependencies: { [key: string]: any } } {
+    const packageJsonPath = path.join(buildPath, 'package.json')
+    if (!fs.existsSync(packageJsonPath)) {
+        throw new Error(
+            'package.json not found, please make sure you have a package.json in the root of your project'
+        )
+    }
+    const packageJson = JSON.parse(
+        fs.readFileSync(packageJsonPath, { encoding: 'utf-8' })
+    )
+    return packageJson
+}
+/**
+ * Export for testing
+ */
+export function extractSdkVersions(packageJson: {
+    dependencies?: { [key: string]: any }
+}): SdkVersion[] {
+    const depPrefix = '@mamoru-ai/'
+    const dependencies = packageJson.dependencies || {}
+    const sdkVersions: SdkVersion[] = []
+    for (const dep in dependencies) {
+        if (dep.startsWith(depPrefix)) {
+            sdkVersions.push({
+                sdk: dep,
+                version: `v${extractPureSemver(dependencies[dep])}`,
+            })
+        }
+    }
+
+    return sdkVersions
+}
+
+function extractPureSemver(packageVersion: string): string {
+    const split = packageVersion.split('-')
+    if (split.length > 1) {
+        split[0] = split[0].replace(/[^0-9.]/g, '')
+        return split.join('-')
+    }
+    const version = packageVersion.replace(/[^0-9.]/g, '')
+    return version
+}
+
+export function getSdkVersions(
+    logger: Logger,
+    buildPath: string
+): SdkVersion[] {
+    const packageJson = readPackageJson(logger, buildPath)
+    return extractSdkVersions(packageJson)
 }

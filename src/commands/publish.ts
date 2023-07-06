@@ -5,13 +5,16 @@ import { Logger } from '../services/console'
 import { validateAndReadManifest } from '../services/manifest'
 import { MAMORU_EXPLORER_URL, OUT_DIR, WASM_INDEX } from '../services/constants'
 import queryManifest from '../services/query-manifest'
-import ValidationChainService from '../services/validation-chain'
+import ValidationChainService, {
+    SdkVersion,
+} from '../services/validation-chain'
 import { prepareBinaryFile } from '../services/assemblyscript'
 import { Manifest } from '../types'
 import colors from 'colors'
 import {
     queryDaemonParameters,
     validateAndParseParameterFlag,
+    getSdkVersions,
 } from '../utils/utils'
 
 export interface PublishOptions {
@@ -66,11 +69,13 @@ async function publish(
 
     if (manifest.type === 'wasm') {
         const wasm = prepareBinaryFile(path.join(buildPath, WASM_INDEX))
+        const sdkVersions = getSdkVersions(logger, buildPath)
         const r = await vcService.registerDaemonMetadata(
             manifest,
             [],
             wasm,
-            options.gas
+            options.gas,
+            sdkVersions
         )
         daemonMetadataId = r.daemonMetadataId
     }

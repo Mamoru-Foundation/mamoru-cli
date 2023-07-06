@@ -26,6 +26,7 @@ async function build(program: Command, projectPath: string) {
     await buildAssemblyScript(logger, program, inFile, outFile, projectPath)
     // await checkAssemblyScriptBuild(logger, program, outFile)
     serializeAndSaveManifest(logger, manifest, buildPath)
+    copyPackageJson(logger, projectPath, buildPath)
 
     logger.ok('Done!')
 }
@@ -210,4 +211,14 @@ async function checkAssemblyScriptBuild(
 
 export default {
     build,
+}
+function copyPackageJson(
+    logger: Logger,
+    projectPath: string,
+    buildPath: string
+) {
+    logger.verbose('Copying package.json')
+    const packageJson = path.join(projectPath, 'package.json')
+    const packageJsonBuild = path.join(buildPath, 'package.json')
+    fs.copyFileSync(packageJson, packageJsonBuild)
 }
