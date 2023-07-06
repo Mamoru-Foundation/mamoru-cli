@@ -18,6 +18,7 @@ import {
     DaemonMetadataParemeter,
     DaemonMetadataParemeter_DaemonParemeterType,
     DaemonMetadataContentType,
+    MetadataSdkVersion,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_utils'
 import { DaemonRegisterCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_register_command_request_dto'
 import {
@@ -171,6 +172,7 @@ class ValidationChainService {
         if (!result) return null
         const metadata = result.data.daemonMetadata
         return {
+            sdkVersions: (metadata.sdkVersions || []) as MetadataSdkVersion[],
             daemonMetadataId: metadata.daemonMetadataId || null,
             logoUrl: metadata.logoUrl || null,
             developerAddress: metadata.developerAddress || null,
