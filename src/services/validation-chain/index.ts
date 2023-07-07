@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { DaemonParameterMap, Manifest } from '../../types'
+import {
+    DaemonMetadataContentQueryManifest,
+    DaemonParameterMap,
+    Manifest,
+} from '../../types'
 /* @ts-ignore */
 import { Client } from '@mamoru-ai/validation-chain-ts-client'
 import { DirectSecp256k1Wallet } from '@cosmjs/proto-signing'
@@ -40,7 +44,7 @@ import {
     ValidationchainQueryGetDaemonMetadataResponse,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/rest'
 import axios, { AxiosInstance, AxiosResponse } from 'axios'
-import { IncidentSeverity } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/incident'
+import { incidentSeverityFromJSON } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/incident'
 import type { V1Beta1GetTxResponse } from '@mamoru-ai/validation-chain-ts-client/dist/cosmos.tx.v1beta1/rest'
 import {
     getDaemonParametersFromDaemonParameterMap,
@@ -103,7 +107,7 @@ class ValidationChainService {
 
     public async registerDaemonMetadata(
         manifest: Manifest,
-        queries: DaemonMetadataContentQuery[],
+        queries: DaemonMetadataContentQueryManifest[],
         wasmModule?: string,
         gas?: string,
         sdkVersions?: SdkVersion[]
@@ -203,7 +207,7 @@ class ValidationChainService {
                 query: metadata.content.query?.map(
                     (el: ValidationchainDaemonMetadataContentQuery) => ({
                         incidentMessage: el.incidentMessage,
-                        severity: IncidentSeverity[el.severity],
+                        severity: incidentSeverityFromJSON(el.severity),
                         query: el.query,
                     })
                 ),
@@ -499,7 +503,7 @@ function getSubscribableType(manifest: Manifest): DaemonMetadataType {
 
 function getDaemonContent(
     manifest: Manifest,
-    queries: DaemonMetadataContentQuery[],
+    queries: DaemonMetadataContentQueryManifest[],
     wasmModule?: string
 ): DaemonMetadataContent {
     if (manifest.type === 'wasm') {
@@ -512,7 +516,11 @@ function getDaemonContent(
     // @ts-ignore as wasmModule is not defined for non wasm type
     return {
         type: 0,
-        query: queries,
+        query: (queries || []).map((query) => ({
+            query: query.query,
+            incidentMessage: query.incidentMessage,
+            severity: incidentSeverityFromJSON(query.severity),
+        })),
     }
 }
 

@@ -7,6 +7,7 @@ import { FILES } from './constants'
 import { Logger } from './console'
 import { DaemonMetadataContentQuery } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_utils'
 import { IncidentSeverity } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/incident'
+import { DaemonMetadataContentQueryManifest } from '../types'
 
 class QueryManifestService {
     private getFile(logger: Logger, projectPath: string) {
@@ -18,14 +19,14 @@ class QueryManifestService {
 
         return fs.readFileSync(p, 'utf-8')
     }
-    private parseFile(file: string): { queries: DaemonMetadataContentQuery[] } {
+    private parseFile(file: string): { queries: any } {
         return yaml.parse(file)
     }
 
     public getQueries(
         logger: Logger,
         projectPath: string
-    ): DaemonMetadataContentQuery[] {
+    ): DaemonMetadataContentQueryManifest[] {
         const file = this.getFile(logger, projectPath)
         const parsed = this.parseFile(file)
         this.validateFile(parsed)
@@ -48,7 +49,14 @@ class QueryManifestService {
                 query: joi.string().required(),
                 severity: joi
                     .string()
-                    .valid(...Object.values(IncidentSeverity))
+                    .valid(
+                        ...Object.values(IncidentSeverity).filter(
+                            (v) =>
+                                typeof v === 'string' &&
+                                v !== '' &&
+                                v !== 'UNRECOGNIZED'
+                        )
+                    )
                     .required(),
                 incidentMessage: joi.string().required(),
             })

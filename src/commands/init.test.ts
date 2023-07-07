@@ -80,7 +80,7 @@ describe(colors.yellow('init'), () => {
 
             assert.deepEqual(packageParsed, {
                 dependencies: {
-                    '@mamoru-ai/mamoru-sdk-as': '^0.4.0',
+                    '@mamoru-ai/mamoru-sdk-as': '^0.5.0',
                     ...packageParsed.dependencies,
                 },
                 description: 'TEST_DESCRIPTION',
@@ -216,7 +216,7 @@ describe(colors.yellow('init'), () => {
 
             assert.deepEqual(parsedPackage, {
                 dependencies: {
-                    '@mamoru-ai/mamoru-sdk-as': '^0.4.0',
+                    '@mamoru-ai/mamoru-sdk-as': '^0.5.0',
                     [customSdk]: version,
                 },
                 description: 'TEST_DESCRIPTION',
