@@ -28,3 +28,13 @@ export type DaemonParameterMap = Record<
     string,
     string | number | null | boolean
 >
+
+export type DaemonMetadataContentQueryManifest = {
+    query: string
+    incidentMessage: string
+    severity:
+        | 'SEVERITY_INFO'
+        | 'SEVERITY_WARNING'
+        | 'SEVERITY_CRITICAL'
+        | 'SEVERITY_ERROR'
+}

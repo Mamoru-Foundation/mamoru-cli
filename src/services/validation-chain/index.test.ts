@@ -46,7 +46,7 @@ describe('ValidationChain', () => {
                     {
                         query: "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
                         incidentMessage: 'Example incident message',
-                        severity: 1,
+                        severity: 'SEVERITY_INFO',
                     },
                 ]
             )
@@ -72,7 +72,7 @@ describe('ValidationChain', () => {
                     {
                         query: "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
                         incidentMessage: 'Example incident message',
-                        severity: 1,
+                        severity: 'SEVERITY_ERROR',
                     },
                 ]
             )
@@ -88,7 +88,7 @@ describe('ValidationChain', () => {
                 privkey,
                 new Logger(2)
             )
-            const metadata = await vc.registerDaemonMetadata(
+            const metadataResult = await vc.registerDaemonMetadata(
                 generateManifestSQL({
                     parameters: [
                         generateParameter({
@@ -100,13 +100,13 @@ describe('ValidationChain', () => {
                     {
                         query: "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
                         incidentMessage: 'Example incident message',
-                        severity: 1,
+                        severity: 'SEVERITY_ERROR',
                     },
                 ]
             )
 
             const daemon = await vc.registerDaemon(
-                metadata.daemonMetadataId,
+                metadataResult.daemonMetadataId,
                 'SUI_TESTNET',
                 {
                     test: 'test_value',
@@ -114,6 +114,13 @@ describe('ValidationChain', () => {
             )
 
             expect(daemon).not.toBe(null)
+
+            const daemonMetadata = await vc.getDaemonMetadataById(
+                metadataResult.daemonMetadataId
+            )
+
+            expect(daemonMetadata).not.toBe(null)
+            expect(daemonMetadata.content?.query[0].severity).toBe(2)
         }, 30000)
     })
 })
