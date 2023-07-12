@@ -33,8 +33,13 @@ export type DaemonMetadataContentQueryManifest = {
     query: string
     incidentMessage: string
     severity:
-        | 'SEVERITY_INFO'
-        | 'SEVERITY_WARNING'
-        | 'SEVERITY_CRITICAL'
-        | 'SEVERITY_ERROR'
+    | 'SEVERITY_INFO'
+    | 'SEVERITY_WARNING'
+    | 'SEVERITY_CRITICAL'
+    | 'SEVERITY_ERROR'
+}
+
+
+export type RcConfig = {
+    telemetry?: boolean
 }

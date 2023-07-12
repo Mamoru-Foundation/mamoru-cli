@@ -53,6 +53,7 @@
         "@types/lodash": "^4.14.195",
         "@types/node": "^18.7.18",
         "@types/npm": "^7.19.0",
+        "@types/rc": "^1.2.1",
         "@typescript-eslint/eslint-plugin": "^5.40.1",
         "@typescript-eslint/parser": "^5.40.1",
         "babel-jest": "^29.5.0",
@@ -86,6 +87,7 @@
         "ipfs-http-client": "56",
         "joi": "^17.6.0",
         "lodash": "^4.17.21",
+        "rc": "^1.2.8",
         "yaml": "^2.2.1"
     },
     "lint-staged": {

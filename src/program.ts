@@ -7,6 +7,7 @@ import compileCommand from './commands/build'
 import publishCommand, { PublishOptions } from './commands/publish'
 import launch from './commands/launch'
 import { getAvailableChains } from './services/utils'
+import { askForTelemetry } from './commands/ask-for-telemetry';
 
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {

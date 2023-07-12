@@ -2707,7 +2707,7 @@
   resolved "https://registry.yarnpkg.com/@types/minimatch/-/minimatch-3.0.5.tgz#1001cc5e6a3704b83c236027e77f2f58ea010f40"
   integrity sha512-Klz949h02Gz2uZCMGwDUSDS1YBlTdDDgbWHi+81l29tQALUtvz4rAYi5uoVhE5Lagoq6DeqAUlbrHvW/mXDgdQ==
 
-"@types/minimist@^1.2.0":
+"@types/minimist@*", "@types/minimist@^1.2.0":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@types/minimist/-/minimist-1.2.2.tgz#ee771e2ba4b3dc5b372935d549fd9617bf345b8c"
   integrity sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==
@@ -2738,6 +2738,13 @@
   version "2.7.3"
   resolved "https://registry.yarnpkg.com/@types/prettier/-/prettier-2.7.3.tgz#3e51a17e291d01d17d3fc61422015a933af7a08f"
   integrity sha512-+68kP9yzs4LMp7VNh8gdzMSPZFL44MLGqiHWvttYJe+6qnuVr4Ek9wSBQoveqY/r+LwjCcU29kNVkidwim+kYA==
+
+"@types/rc@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@types/rc/-/rc-1.2.1.tgz#d2d0c2778b2a54fffe018f69b5091b4936ca7263"
+  integrity sha512-+TRLFmHLnpoV0uw4O/PzqMbPT6bhQM0q2KO0l+R7M3sHYRndPpNL6kv8p7Ee9ZxgQ6noYB18/t+heQi7eijOHA==
+  dependencies:
+    "@types/minimist" "*"
 
 "@types/semver@^7.3.12":
   version "7.5.0"
