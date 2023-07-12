@@ -126,9 +126,10 @@ program
     )
     .option('--rpc <rpcUrl>', 'rpc url of the chain')
     .addOption(
-        new Option('--gas <gas>', 'gas fee of the transaction').default(
-            '200000'
-        )
+        new Option(
+            '--gas <gas>',
+            'gas fee of the transaction  (if daemon is sole, it will be used as limit for both metadata and daemon creation)'
+        ).default('200000')
     )
     .addOption(
         new Option(

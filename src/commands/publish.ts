@@ -97,7 +97,8 @@ async function publish(
             manifest,
             daemonMetadataId,
             options.chain || manifest.chains[0],
-            finalParameterValues
+            finalParameterValues,
+            options.gas
         )
         logger.log(
             `Daemon registered successfully 🎉

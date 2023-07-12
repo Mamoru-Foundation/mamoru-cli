@@ -222,7 +222,8 @@ class ValidationChainService {
         manifest: Manifest,
         daemonMetadataId: string,
         chain: string,
-        parameterValues: DaemonParameterMap
+        parameterValues: DaemonParameterMap,
+        gas?: string
     ): Promise<MsgRegisterDaemonResponse> {
         this.logger.verbose('Registering daemon')
         const txClient = await this.getTxClient()
@@ -252,6 +253,10 @@ class ValidationChainService {
 
         const result = await txClient.sendMsgRegisterDaemon({
             value,
+            fee: {
+                amount: [],
+                gas: gas || '200000',
+            },
         })
         this.throwOnError('MsgRegisterDaemon', result)
 
@@ -264,7 +269,8 @@ class ValidationChainService {
     public async registerDaemon(
         daemonMetadataId: string,
         chainType: string,
-        parameterValues: DaemonParameterMap
+        parameterValues: DaemonParameterMap,
+        gas?: string
     ): Promise<MsgRegisterDaemonResponse> {
         this.logger.verbose('Registering daemon')
         const txClient = await this.getTxClient()
@@ -294,6 +300,10 @@ class ValidationChainService {
 
         const result = await txClient.sendMsgRegisterDaemon({
             value,
+            fee: {
+                amount: [],
+                gas: gas || '200000',
+            },
         })
         this.throwOnError('MsgRegisterDaemon', result)
 
