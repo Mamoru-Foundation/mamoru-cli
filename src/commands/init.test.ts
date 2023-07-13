@@ -9,10 +9,7 @@ import yaml from 'yaml'
 import { getProgramMock, getTempFolder } from '../utils/test-utils'
 import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import { sdkVersions } from '../sdk-dependency-versions'
-import {
-    DEFAULT_MAMORU_VERSION,
-    MAMORU_VERSION_KEY,
-} from '../services/constants'
+import { DEFAULT_MAMORU_VERSION } from '../services/constants'
 
 const programMock = getProgramMock()
 
@@ -112,9 +109,6 @@ describe(colors.yellow('init'), () => {
                 version: '0.0.1',
                 type: 'sql',
                 subscribable: false,
-                sdkVersions: {
-                    [MAMORU_VERSION_KEY]: DEFAULT_MAMORU_VERSION,
-                },
             })
 
             const queries = fs.readFileSync(
@@ -123,6 +117,7 @@ describe(colors.yellow('init'), () => {
             )
             const queriesParsed = yaml.parse(queries)
             assert.deepEqual(queriesParsed, {
+                version: DEFAULT_MAMORU_VERSION,
                 queries: [
                     {
                         query: query,

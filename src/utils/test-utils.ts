@@ -9,11 +9,8 @@ import {
     Chain_ChainType,
     chain_ChainTypeToJSON,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
-import { DaemonMetadataParameter, Manifest, ManifestParameter } from '../types'
-import {
-    DEFAULT_MAMORU_VERSION,
-    MAMORU_VERSION_KEY,
-} from '../services/constants'
+import { Manifest, ManifestParameter } from '../types'
+
 /**
  * Generates a user with a mnemonic, address and private key from wallet
  */
@@ -118,13 +115,11 @@ export const generateManifest = (obj: Partial<Manifest> = {}): Manifest => ({
     logoUrl: 'https://test.com/hello.png',
     tags: ['test'],
     subscribable: true,
-    sdkVersions: undefined,
     ...obj,
 })
 
 export const generateManifestSQL = (obj: Partial<Manifest> = {}): Manifest => ({
     ...generateManifest(obj),
-    sdkVersions: new Map([[MAMORU_VERSION_KEY, DEFAULT_MAMORU_VERSION]]),
     type: 'sql',
 })
 

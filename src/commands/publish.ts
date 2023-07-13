@@ -3,7 +3,12 @@ import path from 'path'
 import fs from 'fs'
 import { Logger } from '../services/console'
 import { validateAndReadManifest } from '../services/manifest'
-import { MAMORU_EXPLORER_URL, OUT_DIR, WASM_INDEX } from '../services/constants'
+import {
+    MAMORU_EXPLORER_URL,
+    MAMORU_VERSION_KEY,
+    OUT_DIR,
+    WASM_INDEX,
+} from '../services/constants'
 import queryManifest from '../services/query-manifest'
 import ValidationChainService from '../services/validation-chain'
 import { prepareBinaryFile } from '../services/assemblyscript'
@@ -61,14 +66,18 @@ async function publish(
     let daemonMetadataId = ''
 
     if (manifest.type === 'sql') {
-        const manifestSdkVersions = sdkVersionsFromMap(manifest.sdkVersions)
-        const queries = queryManifest.getQueries(logger, projectPath)
+        const queryManifestFile = queryManifest.get(logger, projectPath)
         const r = await vcService.registerDaemonMetadata(
             manifest,
-            queries,
+            queryManifestFile.queries,
             null,
             null,
-            manifestSdkVersions
+            [
+                {
+                    sdk: MAMORU_VERSION_KEY,
+                    version: queryManifestFile.version || '0.0.0',
+                },
+            ]
         )
         daemonMetadataId = r.daemonMetadataId
     }

@@ -106,8 +106,7 @@ async function getAugmentedInitOptions(
         mamoruCustomSdkPackageName: getCustomSdkPackage(chain[0]),
         mamoruCustomSdkPackageVersion: getCustomSdkPackageVersion(chain[0]),
         customSdkCtxName: getCustomSdkCtxName(chain[0]),
-        mamoruCoreVersion:
-            options.type == 'sql' ? DEFAULT_MAMORU_VERSION : null,
+        mamoruCoreVersion: DEFAULT_MAMORU_VERSION,
         chain,
     }
 }
