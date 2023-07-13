@@ -23,19 +23,19 @@ describe('extractSdkVersions', () => {
         assert.deepStrictEqual(sdkVersions, [
             {
                 sdk: '@mamoru-ai/sdk',
-                version: 'v0.0.0',
+                version: '0.0.0',
             },
             {
                 sdk: '@mamoru-ai/sdk2',
-                version: 'v0.0.1',
+                version: '0.0.1',
             },
             {
                 sdk: '@mamoru-ai/sdk3',
-                version: 'v0.0.2',
+                version: '0.0.2',
             },
             {
                 sdk: '@mamoru-ai/sdk4',
-                version: 'v0.0.3-dev',
+                version: '0.0.3-dev',
             },
         ])
     })

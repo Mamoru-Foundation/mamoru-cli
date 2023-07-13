@@ -4,7 +4,7 @@ import { Command } from 'commander'
 import Handlebars from 'handlebars'
 import { Logger } from '../services/console'
 import dashify from 'dashify'
-import { FILES, TEMPLATES } from '../services/constants'
+import { DEFAULT_MAMORU_VERSION, FILES, TEMPLATES } from '../services/constants'
 import colors from 'colors'
 import { sdkVersions } from '../sdk-dependency-versions'
 import { deburr } from 'lodash'
@@ -106,6 +106,8 @@ async function getAugmentedInitOptions(
         mamoruCustomSdkPackageName: getCustomSdkPackage(chain[0]),
         mamoruCustomSdkPackageVersion: getCustomSdkPackageVersion(chain[0]),
         customSdkCtxName: getCustomSdkCtxName(chain[0]),
+        mamoruCoreVersion:
+            options.type == 'sql' ? DEFAULT_MAMORU_VERSION : null,
         chain,
     }
 }
@@ -274,6 +276,7 @@ export interface AugmentedInitOptions extends InitOptions {
     mamoruCustomSdkPackageVersion: string
     mamoruCustomSdkPackageName: string
     customSdkCtxName: string
+    mamoruCoreVersion: string | null
 }
 
 export default {

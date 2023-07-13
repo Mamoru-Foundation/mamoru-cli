@@ -15,7 +15,7 @@ import {
 } from '../utils/test-utils'
 import { runCommand } from '../utils/utils'
 import { getAvailableChains } from '../services/utils'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 const programMock = getProgramMock()
 
@@ -92,6 +92,10 @@ describe('publish', () => {
                     wasDaemonCreated
                 )
                 assert.equal(isTruthyStr(r.daemonMetadataId), true)
+
+                const metadata = await fetchMetadata(r.daemonMetadataId)
+
+                assert.equal(metadata.data.daemonMetadata.sdkVersions.length, 1)
             },
             200000
         )
@@ -233,9 +237,7 @@ describe('publish', () => {
             assert.equal(isTruthyStr(r.daemonId as string), true)
             assert.equal(isTruthyStr(r.daemonMetadataId), true)
 
-            const metadata = await axios.get(
-                `http://localhost:1317/validation-chain/validationchain/daemon_metadata/${r.daemonMetadataId}`
-            )
+            const metadata = await fetchMetadata(r.daemonMetadataId)
             assert.equal(
                 metadata.data.daemonMetadata.daemonMetadataId,
                 r.daemonMetadataId
@@ -244,3 +246,9 @@ describe('publish', () => {
         }, 20000)
     })
 })
+
+async function fetchMetadata(daemonMetadataId: string): Promise<AxiosResponse> {
+    return await axios.get(
+        `http://localhost:1317/validation-chain/validationchain/daemon_metadata/${daemonMetadataId}`
+    )
+}

@@ -9,6 +9,10 @@ import yaml from 'yaml'
 import { getProgramMock, getTempFolder } from '../utils/test-utils'
 import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import { sdkVersions } from '../sdk-dependency-versions'
+import {
+    DEFAULT_MAMORU_VERSION,
+    MAMORU_VERSION_KEY,
+} from '../services/constants'
 
 const programMock = getProgramMock()
 
@@ -80,7 +84,7 @@ describe(colors.yellow('init'), () => {
 
             assert.deepEqual(packageParsed, {
                 dependencies: {
-                    '@mamoru-ai/mamoru-sdk-as': '^0.5.0',
+                    '@mamoru-ai/mamoru-sdk-as': '^0.7.0',
                     ...packageParsed.dependencies,
                 },
                 description: 'TEST_DESCRIPTION',
@@ -108,6 +112,9 @@ describe(colors.yellow('init'), () => {
                 version: '0.0.1',
                 type: 'sql',
                 subscribable: false,
+                sdkVersions: {
+                    [MAMORU_VERSION_KEY]: DEFAULT_MAMORU_VERSION,
+                },
             })
 
             const queries = fs.readFileSync(
@@ -216,7 +223,7 @@ describe(colors.yellow('init'), () => {
 
             assert.deepEqual(parsedPackage, {
                 dependencies: {
-                    '@mamoru-ai/mamoru-sdk-as': '^0.5.0',
+                    '@mamoru-ai/mamoru-sdk-as': '^0.7.0',
                     [customSdk]: version,
                 },
                 description: 'TEST_DESCRIPTION',
@@ -301,6 +308,7 @@ describe('getAugmentedInitOptions', () => {
                 "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
             jsonTags: '["test","cli"]',
             kebabName: 'test-name',
+            mamoruCoreVersion: DEFAULT_MAMORU_VERSION,
         } as AugmentedInitOptions)
     })
     it('default name', async () => {
@@ -327,6 +335,7 @@ describe('getAugmentedInitOptions', () => {
                 "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
             jsonTags: '["test","cli"]',
             kebabName: 'default-name',
+            mamoruCoreVersion: DEFAULT_MAMORU_VERSION,
         })
     })
 
@@ -358,6 +367,7 @@ describe('getAugmentedInitOptions', () => {
                 "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
             jsonTags: '["test","cli"]',
             kebabName: 'daemon_new',
+            mamoruCoreVersion: DEFAULT_MAMORU_VERSION,
         }
         assert.deepEqual(augmented, expected)
     })

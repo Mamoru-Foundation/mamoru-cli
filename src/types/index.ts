@@ -22,6 +22,7 @@ export class Manifest {
     parameters?: ManifestParameter[]
     subscribable: boolean
     description: string
+    sdkVersions: object
 }
 
 export type DaemonParameterMap = Record<

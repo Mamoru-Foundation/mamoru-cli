@@ -90,6 +90,11 @@ export const manifestSchema = joi.object().keys({
         .uri({ scheme: ['http', 'https'] })
         .optional(),
     parameters: joi.array().items(manifestParameterSchema).optional(),
+    sdkVersions: joi.when('type', {
+        is: 'sql',
+        then: joi.object().pattern(joi.string(), joi.string()),
+        otherwise: joi.forbidden(),
+    }),
 })
 
 function validateManifestContentCLI(

@@ -5,16 +5,15 @@ import { Logger } from '../services/console'
 import { validateAndReadManifest } from '../services/manifest'
 import { MAMORU_EXPLORER_URL, OUT_DIR, WASM_INDEX } from '../services/constants'
 import queryManifest from '../services/query-manifest'
-import ValidationChainService, {
-    SdkVersion,
-} from '../services/validation-chain'
+import ValidationChainService from '../services/validation-chain'
 import { prepareBinaryFile } from '../services/assemblyscript'
 import { Manifest } from '../types'
 import colors from 'colors'
 import {
-    queryDaemonParameters,
-    validateAndParseParameterFlag,
     getSdkVersions,
+    queryDaemonParameters,
+    sdkVersionsFromMap,
+    validateAndParseParameterFlag,
 } from '../utils/utils'
 
 export interface PublishOptions {
@@ -62,8 +61,15 @@ async function publish(
     let daemonMetadataId = ''
 
     if (manifest.type === 'sql') {
+        const manifestSdkVersions = sdkVersionsFromMap(manifest.sdkVersions)
         const queries = queryManifest.getQueries(logger, projectPath)
-        const r = await vcService.registerDaemonMetadata(manifest, queries)
+        const r = await vcService.registerDaemonMetadata(
+            manifest,
+            queries,
+            null,
+            null,
+            manifestSdkVersions
+        )
         daemonMetadataId = r.daemonMetadataId
     }
 
