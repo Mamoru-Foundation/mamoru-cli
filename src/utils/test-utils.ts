@@ -9,7 +9,8 @@ import {
     Chain_ChainType,
     chain_ChainTypeToJSON,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
-import { DaemonMetadataParameter, Manifest, ManifestParameter } from '../types'
+import { Manifest, ManifestParameter } from '../types'
+
 /**
  * Generates a user with a mnemonic, address and private key from wallet
  */

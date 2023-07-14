@@ -29,7 +29,7 @@ export type DaemonParameterMap = Record<
     string | number | null | boolean
 >
 
-export type DaemonMetadataContentQueryManifest = {
+export type DaemonMetadataContentQuery = {
     query: string
     incidentMessage: string
     severity:
@@ -37,4 +37,9 @@ export type DaemonMetadataContentQueryManifest = {
         | 'SEVERITY_WARNING'
         | 'SEVERITY_CRITICAL'
         | 'SEVERITY_ERROR'
+}
+
+export type DaemonMetadataContentQueryManifest = {
+    version?: string
+    queries: DaemonMetadataContentQuery[]
 }

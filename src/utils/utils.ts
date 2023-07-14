@@ -87,6 +87,7 @@ function readPackageJson(
     )
     return packageJson
 }
+
 /**
  * Export for testing
  */
@@ -100,7 +101,7 @@ export function extractSdkVersions(packageJson: {
         if (dep.startsWith(depPrefix)) {
             sdkVersions.push({
                 sdk: dep,
-                version: `v${extractPureSemver(dependencies[dep])}`,
+                version: extractPureSemver(dependencies[dep]),
             })
         }
     }
@@ -124,4 +125,21 @@ export function getSdkVersions(
 ): SdkVersion[] {
     const packageJson = readPackageJson(logger, buildPath)
     return extractSdkVersions(packageJson)
+}
+
+export function sdkVersionsFromMap(sdkVersions: object): SdkVersion[] {
+    const result: SdkVersion[] = []
+
+    if (sdkVersions === undefined) {
+        return result
+    }
+
+    Object.entries(sdkVersions).forEach(([sdk, version]) => {
+        result.push({
+            sdk,
+            version,
+        })
+    })
+
+    return result
 }
