@@ -264,6 +264,7 @@ export interface InitOptions {
     tags: string
     chain: string[]
     type: 'sql' | 'wasm'
+    skipTelemetry: boolean
 }
 
 export interface AugmentedInitOptions extends InitOptions {

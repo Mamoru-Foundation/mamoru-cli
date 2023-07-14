@@ -7,7 +7,7 @@ import compileCommand from './commands/build'
 import publishCommand, { PublishOptions } from './commands/publish'
 import launch from './commands/launch'
 import { getAvailableChains } from './services/utils'
-import { askForTelemetry } from './commands/ask-for-telemetry';
+import { askForTelemetry } from './commands/ask-for-telemetry'
 
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {
@@ -100,8 +100,15 @@ program
             'If the project is subscribable, or standalone'
         ).default(false)
     )
-    .action((path: string, options: InitOptions) => {
-        initCommand.init(program, path, options)
+    .addOption(
+        new Option(
+            '--skipTelemetry',
+            'Skip telemetry question, useful for CI/CD'
+        )
+    )
+    .action(async (path: string, options: InitOptions) => {
+        await askForTelemetry(options)
+        await initCommand.init(program, path, options)
     })
 
 program
