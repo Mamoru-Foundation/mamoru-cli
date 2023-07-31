@@ -26,3 +26,6 @@ export const FILES: typeof TEMPLATES = {
 export const ONLY_ALPHA_NUMERIC = /^[a-zA-Z0-9]+$/
 
 export const MAMORU_EXPLORER_URL = 'https://mamoru.ai'
+
+export const DEFAULT_MAMORU_VERSION = '0.1.0'
+export const MAMORU_VERSION_KEY = 'mamoru'

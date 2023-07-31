@@ -29,17 +29,21 @@ export type DaemonParameterMap = Record<
     string | number | null | boolean
 >
 
-export type DaemonMetadataContentQueryManifest = {
+export type DaemonMetadataContentQuery = {
     query: string
     incidentMessage: string
     severity:
-    | 'SEVERITY_INFO'
-    | 'SEVERITY_WARNING'
-    | 'SEVERITY_CRITICAL'
-    | 'SEVERITY_ERROR'
+        | 'SEVERITY_INFO'
+        | 'SEVERITY_WARNING'
+        | 'SEVERITY_CRITICAL'
+        | 'SEVERITY_ERROR'
 }
-
 
 export type RcConfig = {
     telemetry?: boolean
+}
+
+export type DaemonMetadataContentQueryManifest = {
+    version?: string
+    queries: DaemonMetadataContentQuery[]
 }

@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
-    DaemonMetadataContentQueryManifest,
     DaemonParameterMap,
     Manifest,
+    DaemonMetadataContentQuery as MyDaemonMetadataContentQuery,
 } from '../../types'
 /* @ts-ignore */
 import { Client } from '@mamoru-ai/validation-chain-ts-client'
@@ -11,17 +11,18 @@ import { fromBase64 } from '@cosmjs/encoding'
 import { Logger } from '../console'
 import {
     MsgRegisterDaemon,
-    txClient,
     queryClient,
+    txClient,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/module'
 import { CreateDaemonMetadataCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_create_command_dto'
+
 import {
-    DaemonMetadataContentQuery,
-    DaemonMetadataType,
     DaemonMetadataContent,
+    DaemonMetadataContentQuery,
+    DaemonMetadataContentType,
     DaemonMetadataParemeter,
     DaemonMetadataParemeter_DaemonParemeterType,
-    DaemonMetadataContentType,
+    DaemonMetadataType,
     MetadataSdkVersion,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_utils'
 import { DaemonRegisterCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_register_command_request_dto'
@@ -97,6 +98,7 @@ class ValidationChainService {
     apiClient: AxiosInstance
     wallet: DirectSecp256k1Wallet
     apiUrl: string
+
     constructor(
         private readonly rpcUrl: string = 'http://0.0.0.0:26657',
         private readonly privateKey: string,
@@ -107,7 +109,7 @@ class ValidationChainService {
 
     public async registerDaemonMetadata(
         manifest: Manifest,
-        queries: DaemonMetadataContentQueryManifest[],
+        queries: MyDaemonMetadataContentQuery[],
         wasmModule?: string,
         gas?: string,
         sdkVersions?: SdkVersion[]
@@ -222,7 +224,8 @@ class ValidationChainService {
         manifest: Manifest,
         daemonMetadataId: string,
         chain: string,
-        parameterValues: DaemonParameterMap
+        parameterValues: DaemonParameterMap,
+        gas?: string
     ): Promise<MsgRegisterDaemonResponse> {
         this.logger.verbose('Registering daemon')
         const txClient = await this.getTxClient()
@@ -252,6 +255,10 @@ class ValidationChainService {
 
         const result = await txClient.sendMsgRegisterDaemon({
             value,
+            fee: {
+                amount: [],
+                gas: gas || '200000',
+            },
         })
         this.throwOnError('MsgRegisterDaemon', result)
 
@@ -264,7 +271,8 @@ class ValidationChainService {
     public async registerDaemon(
         daemonMetadataId: string,
         chainType: string,
-        parameterValues: DaemonParameterMap
+        parameterValues: DaemonParameterMap,
+        gas?: string
     ): Promise<MsgRegisterDaemonResponse> {
         this.logger.verbose('Registering daemon')
         const txClient = await this.getTxClient()
@@ -294,6 +302,10 @@ class ValidationChainService {
 
         const result = await txClient.sendMsgRegisterDaemon({
             value,
+            fee: {
+                amount: [],
+                gas: gas || '200000',
+            },
         })
         this.throwOnError('MsgRegisterDaemon', result)
 
@@ -442,6 +454,7 @@ class ValidationChainService {
         }
         return response
     }
+
     /**
      * Get the chain type from the manifest.
      * Exported just for testing purposes
@@ -503,7 +516,7 @@ function getSubscribableType(manifest: Manifest): DaemonMetadataType {
 
 function getDaemonContent(
     manifest: Manifest,
-    queries: DaemonMetadataContentQueryManifest[],
+    queries: MyDaemonMetadataContentQuery[],
     wasmModule?: string
 ): DaemonMetadataContent {
     if (manifest.type === 'wasm') {

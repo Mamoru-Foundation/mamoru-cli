@@ -77,7 +77,8 @@ export default async function launch(program: Command, options: LaunchOptions) {
     const result = await vcService.registerDaemon(
         metadataId,
         finalChain,
-        finalParameterValues
+        finalParameterValues,
+        options.gas
     )
 
     logger.log(
