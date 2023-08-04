@@ -1,8 +1,7 @@
 -   name: "{{name}}"
-    creator: "{{creator}}"
     on:
-        - daemonId: "daemon1"
-    levels: [SEVERITY_WARNING, SEVERITY_ERROR]
+    - daemonId: "daemon1"
+      levels: [SEVERITY_WARNING, SEVERITY_ERROR]
     tasks:
         steps:
             run:
@@ -12,8 +11,8 @@
                   run: "evm-call@1"
                   name: "Step 1"
                   params:
-                - name: "param1"
-                  value: "value1"
-                - name: "param2"
-                  value: "value2"
+                    - name: "param1"
+                      value: "value1"
+                    - name: "param2"
+                      value: "value2"
 

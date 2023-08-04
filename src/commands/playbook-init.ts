@@ -8,8 +8,9 @@ import colors from 'colors'
 import { deburr } from 'lodash'
 
 import { PLAYBOOK_FILES, PLAYBOOK_TEMPLATES } from '../services/constants'
+import { checkFolderEmptiness } from '../services/utils'
 
-async function createPlaybook(
+async function initPlaybook(
     program: Command,
     projectPath: string,
     options: PlaybookOptions
@@ -49,16 +50,7 @@ async function createPlaybook(
     `)
 }
 
-function checkFolderEmptiness(program: Command, paths: string[]): void {
-    paths.forEach((p) => {
-        if (fs.existsSync(p)) {
-            throw new Error(
-                `Directory already contains a file named "${p}", stopping...`
-            )
-        }
-    })
-}
-
+//
 async function getAugmentedInitOptions(
     options: PlaybookOptions,
     projectPath: string
@@ -115,5 +107,5 @@ export interface AugmentedPlaybookOptions extends PlaybookOptions {
 }
 
 export default {
-    createPlaybook,
+    initPlaybook,
 }
