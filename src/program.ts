@@ -7,7 +7,9 @@ import compileCommand from './commands/build'
 import publishCommand, { PublishOptions } from './commands/publish'
 import launch from './commands/launch'
 import { getAvailableChains } from './services/utils'
-
+import createPlaybookCommand, {
+    PlaybookOptions,
+} from './commands/create_playbook'
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {
         return '.'
@@ -191,6 +193,20 @@ program
     )
     .action((options: any) => {
         launch(program, options)
+    })
+
+program
+    .command('createPlaybook')
+    .argument(
+        '<path>',
+        'path to folder with Mamoru project',
+        parseOrCreateDirectoryPath,
+        ''
+    )
+    .description('create playbook')
+    .addOption(new Option('-n, --name <name>', 'Name of the playbook'))
+    .action((path: string, options: PlaybookOptions) => {
+        createPlaybookCommand.createPlaybook(program, path, options)
     })
 
 program.version(

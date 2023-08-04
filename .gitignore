@@ -2,3 +2,5 @@ dist
 node_modules
 .idea
 package-lock.json
+.yarnrc.yml
+.yarn

@@ -33,8 +33,8 @@
         "update-deps": "yarn add @mamoru-ai/validation-chain-ts-client @mamoru-ai/mamoru-aptos-sdk-as @mamoru-ai/mamoru-evm-sdk-as @mamoru-ai/mamoru-sdk-as @mamoru-ai/mamoru-sui-sdk-as"
     },
     "bin": {
-        "mamoru-cli": "dist/index.js",
         "mamoru": "dist/index.js",
+        "mamoru-cli": "dist/index.js",
         "mamoru-cli-dev": "ts-node ./src/index.ts"
     },
     "devDependencies": {
