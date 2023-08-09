@@ -1,18 +1,57 @@
--   name: "{{name}}"
-    on:
-    - daemonId: "daemon1"
-      levels: [SEVERITY_WARNING, SEVERITY_ERROR]
-    tasks:
-        steps:
-            run:
+name:  "{{name}}"
+on:
+  - daemonId: daemon-id-1
+    levels: [SEVERITY_INFO, SEVERITY_WARNING, SEVERITY_ERROR, SEVERITY_ALERT]
+tasks:
+    steps:
+      name: Steps Block
+      condition:
+        condition: some-condition
+      run:
+        - single:
+              name: Single Step 1
+              condition: previous-step-status
+              run: evm-call@1
+              params:
+                - name: param1
+                  value: value1
+                - name: param2
+                  value: value2
+        - steps:
+              name: Nested Steps Block
+              condition:
+                condition: some-other-condition
+              run:
                 - single:
-                  id: "step-1"
-                  condition: "previous-step-status"
-                  run: "evm-call@1"
-                  name: "Step 1"
-                  params:
-                    - name: "param1"
-                      value: "value1"
-                    - name: "param2"
-                      value: "value2"
-
+                      name: Step 2
+                      condition: previous-step-status
+                      run: evm-call@2
+                      params: []
+                - single:
+                      name: Step 3
+                      condition: previous-step-status
+                      run: evm-call@3
+                      params: []
+        - parallel:
+              name: Parallel Steps Block
+              condition:
+                condition: some-other-condition
+              run:
+                - single:
+                    name: Step 4
+                    condition: previous-step-status
+                    run: evm-call@1
+                    params:
+                      - name: param1
+                        value: value1
+                      - name: param2
+                        value: value2
+                - single:
+                    name: Step 5
+                    condition: previous-step-status
+                    run: evm-call@1
+                    params:
+                      - name: param1
+                        value: value1
+                      - name: param2
+                        value: value2

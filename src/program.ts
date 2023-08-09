@@ -8,6 +8,9 @@ import publishCommand, { PublishOptions } from './commands/publish'
 import launch from './commands/launch'
 import { getAvailableChains } from './services/utils'
 import initPlaybook, { PlaybookOptions } from './commands/playbook-init'
+import publishPlaybook, {
+    PlaybookPublishOptions,
+} from './commands/playbook-publish'
 
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {
@@ -196,7 +199,13 @@ program
     })
 
 program
-    .command('playbook init <path>')
+    .command('playbook_init')
+    .argument(
+        '<path>',
+        'path to folder with Mamoru project',
+        parseOrCreateDirectoryPath,
+        '.'
+    )
     .description('initialize playbook in a folder')
     .addOption(new Option('-n, --name <name>', 'Name of the playbook'))
     .action((path: string, options: PlaybookOptions) => {
@@ -204,7 +213,13 @@ program
     })
 
 program
-    .command('playbook publish <path>')
+    .command('playbook_publish')
+    .argument(
+        '<path>',
+        'path to folder with Mamoru project',
+        parseOrSetCurrentDirectoryPath,
+        '.'
+    )
     .description('publish playbook')
     .option('--rpc <rpcUrl>', 'rpc url of the chain')
     .addOption(
@@ -217,11 +232,14 @@ program
             .makeOptionMandatory()
             .env('MAMORU_PRIVATE_KEY')
     )
-    .action((path: string, options: PublishOptions) => {
-        // Call the appropriate function to publish playbook
-        // You may need to create this function in your code
-        // For example:
-        // publishPlaybook(program, path, options);
+    .addOption(
+        new Option(
+            '--id <playbookId>',
+            'Id of the playbook, for update playbook'
+        )
+    )
+    .action((path: string, options: PlaybookPublishOptions) => {
+        publishPlaybook.PlaybookPublish(program, path, options)
     })
 
 program.version(

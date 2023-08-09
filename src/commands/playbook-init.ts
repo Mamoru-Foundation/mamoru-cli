@@ -17,14 +17,14 @@ async function initPlaybook(
 ) {
     const verbosity = program.opts().verbose
     const logger = new Logger(verbosity)
-    logger.verbose('Run init')
+    logger.verbose('Run playbook init')
     logger.verbose('options', options)
+    logger.verbose('projectPath', projectPath)
 
     const augOps = await getAugmentedInitOptions(options, projectPath)
     const files = getFilesToCreate(projectPath)
 
     checkFolderEmptiness(program, Object.values(files))
-
     logger.ok('Creating Mamoru project files')
     createFile(
         logger,
@@ -108,4 +108,7 @@ export interface AugmentedPlaybookOptions extends PlaybookOptions {
 
 export default {
     initPlaybook,
+    getAugmentedInitOptions,
+    getFilesToCreate,
+    createFile,
 }
