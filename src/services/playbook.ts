@@ -14,7 +14,7 @@ const playbookSchema = joi.object({
     tasks: joi.object().required(),
 })
 
-export const ValidateAndReadPlaybook = (
+export const isValidPlaybookManifest = (
     logger: Logger,
     program: Command,
     playbook: any

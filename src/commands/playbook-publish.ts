@@ -6,7 +6,7 @@ import ValidationChainService from '../services/validation-chain'
 import { PlaybookDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/playbooks_dto'
 import fs from 'fs'
 import yaml from 'yaml'
-import { ValidateAndReadPlaybook } from '../services/playbook'
+import { isValidPlaybookManifest } from '../services/playbook'
 import colors from 'colors'
 
 export interface PlaybookPublishOptions {
@@ -45,7 +45,7 @@ async function PlaybookPublish(
         'utf8'
     )
     const playbookData = yaml.parse(yamlData) as any // Use 'as any' for now
-    if (!ValidateAndReadPlaybook(logger, program, playbookData)) {
+    if (!isValidPlaybookManifest(logger, program, playbookData)) {
         logger.error('Playbook validation failed')
         process.exit(1)
     }

@@ -199,7 +199,7 @@ program
     })
 
 program
-    .command('playbook_init')
+    .command('playbook-init')
     .argument(
         '<path>',
         'path to folder with Mamoru project',
@@ -213,7 +213,7 @@ program
     })
 
 program
-    .command('playbook_publish')
+    .command('playbook-publish')
     .argument(
         '<path>',
         'path to folder with Mamoru project',
@@ -235,7 +235,7 @@ program
     .addOption(
         new Option(
             '-id, --playbookId <playbookId>',
-            'Id of the playbook, for update playbook'
+            'Id of the playbook, it is required if you want to update a playbook'
         )
     )
     .action((path: string, options: PlaybookPublishOptions) => {
