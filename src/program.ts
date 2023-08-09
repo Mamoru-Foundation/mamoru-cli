@@ -234,7 +234,7 @@ program
     )
     .addOption(
         new Option(
-            '--id <playbookId>',
+            '-id, --playbookId <playbookId>',
             'Id of the playbook, for update playbook'
         )
     )

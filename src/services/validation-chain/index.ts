@@ -344,7 +344,7 @@ class ValidationChainService {
         this.logger.verbose('Payload result', result)
 
         this.throwOnError('MsgCreatePlaybook', result)
-
+        this.logger.verbose('Transaction Hash', result.transactionHash)
         const data = await this.getTxDataOnlyResponse(result.transactionHash)
         const decodedArr = this.decodeTxMessages(data)
         return decodedArr[0] as MsgCreatePlaybookResponse
@@ -373,7 +373,7 @@ class ValidationChainService {
         this.logger.verbose('Payload result', result)
 
         this.throwOnError('MsgUpdatePlaybook', result)
-
+        this.logger.verbose('Transaction Hash', result.transactionHash)
         const data = await this.getTxDataOnlyResponse(result.transactionHash)
         const decodedArr = this.decodeTxMessages(data)
         return decodedArr[0] as MsgUpdatePlaybookResponse
@@ -480,7 +480,15 @@ class ValidationChainService {
         message MsgRegisterDaemonResponse {
             string daemonId = 1;
         }
-
+        
+        message MsgCreatePlaybookResponse {
+            string playbookId = 1;
+        }  
+        
+        message MsgUpdatePlaybookResponse {
+            string playbookId = 1;
+        }
+        
         message TxMsgData {
             repeated Any msg_responses = 2;
         }

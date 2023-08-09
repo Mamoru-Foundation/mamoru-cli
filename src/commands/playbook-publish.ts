@@ -1,13 +1,13 @@
 import { Command } from 'commander'
 import { Logger } from '../services/console'
 import path from 'path'
-import { PLAYBOOK_FILES } from '../services/constants'
+import { MAMORU_EXPLORER_URL, PLAYBOOK_FILES } from '../services/constants'
 import ValidationChainService from '../services/validation-chain'
 import { PlaybookDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/playbooks_dto'
 import fs from 'fs'
 import yaml from 'yaml'
 import { ValidateAndReadPlaybook } from '../services/playbook'
-import { PlaybookTasksDTO } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/playbooks_dto'
+import colors from 'colors'
 
 export interface PlaybookPublishOptions {
     rpc?: string
@@ -49,27 +49,34 @@ async function PlaybookPublish(
         logger.error('Playbook validation failed')
         process.exit(1)
     }
-    // Convert parsedYaml to JSON
-    //const jsonContent = JSON.stringify(playbookData);
+
     // Convert the YAML data to a PlaybookDTO instance
     const playbook: PlaybookDTO = PlaybookDTO.fromJSON(playbookData)
 
     logger.verbose(`Playbook: ${JSON.stringify(playbook, null, 2)}`)
 
-    let responsePlaybookId: string
+    let responsePlaybookId = ''
     if (options.playbookId) {
         playbook.id = options.playbookId
         const response = await vcService.updatePlaybook(playbook, options.gas)
-        logger.ok('response', response)
+        logger.verbose('response', response)
         responsePlaybookId = response.playbookId
     } else {
         const response = await vcService.createPlaybook(playbook, options.gas)
-        logger.ok('response', response)
+        logger.verbose('response', response)
         responsePlaybookId = response.playbookId
     }
 
     logger.ok('Publishing to Validation chain')
-
+    logger.log(
+        `Playbook created successfully 🎉
+        ℹ️  Playbook Hash(ID):
+            ${colors.magenta(responsePlaybookId)}
+        ℹ️  Explorer Url (it may take a few seconds to become available):
+            ${colors.underline.blue(
+                `${MAMORU_EXPLORER_URL}/explorer/playbook/${responsePlaybookId}`
+            )}`
+    )
     return {
         responsePlaybookId,
     }
