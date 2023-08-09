@@ -197,9 +197,9 @@ program
     .action((options: any) => {
         launch(program, options)
     })
-
-program
-    .command('playbook-init')
+const playbook = program.command('playbook')
+playbook
+    .command('init')
     .argument(
         '<path>',
         'path to folder with Mamoru project',
@@ -212,8 +212,8 @@ program
         initPlaybook.initPlaybook(program, path, options)
     })
 
-program
-    .command('playbook-publish')
+playbook
+    .command('publish')
     .argument(
         '<path>',
         'path to folder with Mamoru project',
