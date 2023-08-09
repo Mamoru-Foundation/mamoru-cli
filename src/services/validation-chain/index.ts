@@ -359,11 +359,19 @@ class ValidationChainService {
         const queryClient = await this.getQueryClient()
         const address = await this.getAddress()
 
-        const found = await queryClient.queryPlaybook(playbookId)
-        if (!found.data.playbook || found.data.playbook.creator !== address) {
-            throw new Error(
-                `Playbook with id ${playbookId} not found or not owned by ${address}`
-            )
+        try {
+            const found = await queryClient.queryPlaybook(playbookId)
+            if (
+                !found.data.playbook ||
+                found.data.playbook.creator !== address
+            ) {
+                throw new Error(
+                    `Playbook with id ${playbookId} not found or not owned by ${address}`
+                )
+            }
+        } catch (error) {
+            this.logger.error('An error occurred:', error.message)
+            process.exit(1)
         }
 
         paybook.id = playbookId
