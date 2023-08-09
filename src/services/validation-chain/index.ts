@@ -333,7 +333,6 @@ class ValidationChainService {
             creator: address,
             playbook: paybook,
         }
-
         const result = await txClient.sendMsgCreatePlaybook({
             value,
             fee: {
@@ -352,17 +351,27 @@ class ValidationChainService {
 
     // Playbook update
     public async updatePlaybook(
+        playbookId: string,
         paybook: PlaybookDTO,
         gas?: string
     ): Promise<MsgUpdatePlaybookResponse> {
         const txClient = await this.getTxClient()
+        const queryClient = await this.getQueryClient()
         const address = await this.getAddress()
+
+        const found = await queryClient.queryPlaybook(playbookId)
+        if (!found.data.playbook || found.data.playbook.creator !== address) {
+            throw new Error(
+                `Playbook with id ${playbookId} not found or not owned by ${address}`
+            )
+        }
+
+        paybook.id = playbookId
 
         const value: MsgUpdatePlaybook = {
             creator: address,
             playbook: paybook,
         }
-
         const result = await txClient.sendMsgUpdatePlaybook({
             value,
             fee: {

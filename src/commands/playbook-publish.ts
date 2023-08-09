@@ -57,8 +57,11 @@ async function PlaybookPublish(
 
     let responsePlaybookId = ''
     if (options.playbookId) {
-        playbook.id = options.playbookId
-        const response = await vcService.updatePlaybook(playbook, options.gas)
+        const response = await vcService.updatePlaybook(
+            options.playbookId,
+            playbook,
+            options.gas
+        )
         logger.verbose('response', response)
         responsePlaybookId = response.playbookId
     } else {
