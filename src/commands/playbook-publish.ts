@@ -16,7 +16,7 @@ export interface PlaybookPublishOptions {
     playbookId?: string
 }
 
-async function PlaybookPublish(
+async function playbookPublish(
     program: Command,
     projectPath: string,
     options: PlaybookPublishOptions
@@ -26,7 +26,12 @@ async function PlaybookPublish(
     logger.verbose('Run playbook publish')
     logger.verbose('options', options)
     logger.verbose('projectPath', projectPath)
-    if (!fs.existsSync(projectPath)) {
+
+    const playbookYamlPath = path.join(
+        projectPath,
+        PLAYBOOK_FILES.PLAYBOOK_YAML
+    )
+    if (!fs.existsSync(playbookYamlPath)) {
         program.error(
             'The project path does not exist. Please specify a valid path to your project.'
         )
@@ -40,10 +45,7 @@ async function PlaybookPublish(
     )
 
     // Read and parse the YAML file
-    const yamlData = fs.readFileSync(
-        path.join(projectPath, PLAYBOOK_FILES.PLAYBOOK_YAML),
-        'utf8'
-    )
+    const yamlData = fs.readFileSync(playbookYamlPath, 'utf8')
     const playbookData = yaml.parse(yamlData) as any // Use 'as any' for now
     if (!isValidPlaybookManifest(logger, program, playbookData)) {
         logger.error('Playbook validation failed')
@@ -86,5 +88,5 @@ async function PlaybookPublish(
 }
 
 export default {
-    PlaybookPublish,
+    playbookPublish,
 }

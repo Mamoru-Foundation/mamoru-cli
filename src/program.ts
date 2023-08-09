@@ -239,7 +239,7 @@ playbook
         )
     )
     .action((path: string, options: PlaybookPublishOptions) => {
-        publishPlaybook.PlaybookPublish(program, path, options)
+        publishPlaybook.playbookPublish(program, path, options)
     })
 
 program.version(

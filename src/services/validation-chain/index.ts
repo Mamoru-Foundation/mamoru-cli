@@ -323,7 +323,7 @@ class ValidationChainService {
 
     // Playbook creation
     public async createPlaybook(
-        paybook: PlaybookDTO,
+        playbook: PlaybookDTO,
         gas?: string
     ): Promise<MsgCreatePlaybookResponse> {
         const txClient = await this.getTxClient()
@@ -331,7 +331,7 @@ class ValidationChainService {
 
         const value: MsgCreatePlaybook = {
             creator: address,
-            playbook: paybook,
+            playbook: playbook,
         }
         const result = await txClient.sendMsgCreatePlaybook({
             value,

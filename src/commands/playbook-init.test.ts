@@ -1,5 +1,26 @@
 import init from './playbook-init' // Update this import path
 import { describe, expect, it } from '@jest/globals'
+import { getProgramMock, getTempFolder } from '../utils/test-utils'
+import initPlaybook from './playbook-init'
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import fs from 'fs'
+
+const programMock = getProgramMock()
+
+describe('playbook init', () => {
+    it('OK - playbook init', async () => {
+        const dir = getTempFolder()
+
+        await initPlaybook.initPlaybook(programMock, dir, {
+            name: 'Test Playbook',
+        })
+        const files = initPlaybook.getFilesToCreate(dir)
+        Object.values(files).forEach((p) => {
+            expect(fs.existsSync(p)).toBeTruthy()
+        })
+    }, 20000)
+})
 
 describe('getAugmentedInitOptions', () => {
     it('should return augmented options', async () => {
@@ -16,8 +37,6 @@ describe('getAugmentedInitOptions', () => {
             kebabName: 'test-playbook',
         })
     })
-
-    // Add more test cases for different scenarios
 })
 
 describe('getFilesToCreate', () => {
@@ -31,6 +50,4 @@ describe('getFilesToCreate', () => {
             GITIGNORE: '/path/to/project/.gitignore',
         })
     })
-
-    // Add more test cases for different scenarios
 })
