@@ -38,16 +38,6 @@ describe('playbookPublish', () => {
         ).rejects.toThrow()
     }, 20000)
 
-    it('should fail if playbook YAML file does not exist', async () => {
-        // Mock fs.existsSync to return false
-        (fs.existsSync as jest.Mock).mockReturnValue(false)
-
-        // Call the function and expect it to exit with an error
-        await expect(
-            publishPlaybook.playbookPublish(programMock, projectPath, options)
-        ).rejects.toThrow()
-    }, 20000)
-
     it('FAIL - playbook not exist', async () => {
         const dir = getTempFolder()
 
