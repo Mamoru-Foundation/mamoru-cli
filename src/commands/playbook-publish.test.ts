@@ -36,9 +36,6 @@ describe('playbookPublish', () => {
             name: 'TEST Playbook',
         })
         const { privkey } = await generateFoundedUser()
-        // const createPlaybookMock = jest.fn().mockResolvedValue({ playbookId: 'new-playbook-id' });
-
-        // vc.fn().mockImplementation(createPlaybookMock)
 
         await expect(
             publishPlaybook.playbookPublish(programMock, dir, {
