@@ -55,6 +55,7 @@ describe('playbookPublish', () => {
     it('should fail if playbook YAML is invalid', async () => {
         // Mock fs.readFileSync to return invalid YAML content
         (fs.readFileSync as jest.Mock).mockReturnValue(playbookYamlContent)
+
         ;(MockedIsValidPlaybookManifest as jest.Mock).mockReturnValue(false)
 
         // Mock the logger
