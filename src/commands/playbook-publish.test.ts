@@ -19,27 +19,6 @@ jest.mock('../services/validation-chain')
 const programMock = getProgramMock()
 
 describe('playbookPublish', () => {
-    const playbookYamlContent = `
-        name:  "Test Playbook"
-        on:
-          - daemonId: daemon-id-1
-            levels: [SEVERITY_INFO, SEVERITY_WARNING, SEVERITY_ERROR, SEVERITY_ALERT]
-        tasks:
-            steps:
-              name: Steps Block
-              condition:
-                condition: some-condition
-              run:
-                - single:
-                      name: Single Step 1
-                      condition: previous-step-status
-                      run: evm-call@1
-                      params:
-                        - name: param1
-                          value: value1
-                        - name: param2
-                          value: value2
-    `
     const projectPath = '/path/to/project'
     const options: PlaybookPublishOptions = {
         rpc: 'rpc-url',
@@ -54,13 +33,7 @@ describe('playbookPublish', () => {
 
     it('should fail if playbook YAML is invalid', async () => {
         // Mock fs.readFileSync to return invalid YAML content
-        (fs.readFileSync as jest.Mock).mockReturnValue(playbookYamlContent)
-
-        ;(MockedIsValidPlaybookManifest as jest.Mock).mockReturnValue(false)
-
-        // Mock the logger
-        const logger = new MockedLogger(0)
-        ;(Logger as jest.Mock).mockReturnValue(logger)
+        (fs.readFileSync as jest.Mock).mockReturnValue('playbookYamlContent')
 
         // Call the function and expect it to exit with an error
         await expect(
@@ -71,10 +44,6 @@ describe('playbookPublish', () => {
     it('should fail if playbook YAML file does not exist', async () => {
         // Mock fs.existsSync to return false
         (fs.existsSync as jest.Mock).mockReturnValue(false)
-
-        // Mock the logger
-        const logger = new MockedLogger(1)
-        ;(Logger as jest.Mock).mockReturnValue(logger)
 
         // Call the function and expect it to exit with an error
         await expect(
