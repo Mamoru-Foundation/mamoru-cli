@@ -5,9 +5,6 @@ import publishPlaybook, { PlaybookPublishOptions } from './playbook-publish'
 // @ts-ignore
 import assert from 'node:assert'
 import fs from 'fs'
-import { Logger } from '../services/console'
-import { Logger as MockedLogger } from '../services/console'
-import { isValidPlaybookManifest as MockedIsValidPlaybookManifest } from '../services/playbook'
 import { beforeEach } from 'node:test'
 
 // Mock dependencies and functions
