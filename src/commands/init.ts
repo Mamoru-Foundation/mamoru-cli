@@ -9,7 +9,7 @@ import colors from 'colors'
 import { sdkVersions } from '../sdk-dependency-versions'
 import { deburr } from 'lodash'
 import { checkbox } from '@inquirer/prompts'
-import { getAvailableChains } from '../services/utils'
+import { checkFolderEmptiness, getAvailableChains } from '../services/utils'
 
 async function init(
     program: Command,
@@ -72,17 +72,6 @@ async function init(
         )}
     `)
     }
-}
-
-function checkFolderEmptiness(program: Command, paths: string[]): void {
-    paths.forEach((p) => {
-        if (fs.existsSync(p)) {
-            const fileName = path.basename(p)
-            throw Error(
-                `Directory already contains  a file named "${p}", stopping...`
-            )
-        }
-    })
 }
 
 async function getAugmentedInitOptions(

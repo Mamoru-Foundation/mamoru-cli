@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
+    DaemonMetadataContentQuery as MyDaemonMetadataContentQuery,
     DaemonParameterMap,
     Manifest,
-    DaemonMetadataContentQuery as MyDaemonMetadataContentQuery,
 } from '../../types'
 /* @ts-ignore */
 import { Client } from '@mamoru-ai/validation-chain-ts-client'
@@ -18,7 +18,6 @@ import { CreateDaemonMetadataCommandRequestDTO } from '@mamoru-ai/validation-cha
 
 import {
     DaemonMetadataContent,
-    DaemonMetadataContentQuery,
     DaemonMetadataContentType,
     DaemonMetadataParemeter,
     DaemonMetadataParemeter_DaemonParemeterType,
@@ -29,9 +28,13 @@ import { DaemonRegisterCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-
 import {
     MsgCreateDaemonMetadata,
     MsgCreateDaemonMetadataResponse,
+    MsgCreatePlaybook,
+    MsgCreatePlaybookResponse,
     MsgRegisterDaemonResponse,
     MsgRegisterSniffer,
     MsgRegisterSnifferResponse,
+    MsgUpdatePlaybook,
+    MsgUpdatePlaybookResponse,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/tx'
 import protobuf from 'protobufjs'
 import {
@@ -51,6 +54,7 @@ import {
     getDaemonParametersFromDaemonParameterMap,
     getMetadataParametersFromManifest,
 } from './utils'
+import { PlaybookDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/playbooks_dto'
 
 type TxMsgData = {
     msgResponses: AnyMsg[]
@@ -87,6 +91,8 @@ export type ValidationChainMsgs =
     | MsgCreateDaemonMetadata
     | MsgCreateDaemonMetadataResponse
     | MsgRegisterDaemonResponse
+    | MsgCreatePlaybookResponse
+    | MsgUpdatePlaybookResponse
 
 const ADDRESS_PREFIX = 'mamoru'
 
@@ -315,6 +321,81 @@ class ValidationChainService {
         return decodedArr[0] as MsgRegisterDaemonResponse
     }
 
+    // Playbook creation
+    public async createPlaybook(
+        playbook: PlaybookDTO,
+        gas?: string
+    ): Promise<MsgCreatePlaybookResponse> {
+        const txClient = await this.getTxClient()
+        const address = await this.getAddress()
+
+        const value: MsgCreatePlaybook = {
+            creator: address,
+            playbook: playbook,
+        }
+        const result = await txClient.sendMsgCreatePlaybook({
+            value,
+            fee: {
+                amount: [],
+                gas: gas || '200000',
+            },
+        })
+        this.logger.verbose('Payload result', result)
+
+        this.throwOnError('MsgCreatePlaybook', result)
+        this.logger.verbose('Transaction Hash', result.transactionHash)
+        const data = await this.getTxDataOnlyResponse(result.transactionHash)
+        const decodedArr = this.decodeTxMessages(data)
+        return decodedArr[0] as MsgCreatePlaybookResponse
+    }
+
+    // Playbook update
+    public async updatePlaybook(
+        playbookId: string,
+        paybook: PlaybookDTO,
+        gas?: string
+    ): Promise<MsgUpdatePlaybookResponse> {
+        const txClient = await this.getTxClient()
+        const queryClient = await this.getQueryClient()
+        const address = await this.getAddress()
+
+        try {
+            const found = await queryClient.queryPlaybook(playbookId)
+            if (
+                !found.data.playbook ||
+                found.data.playbook.creator !== address
+            ) {
+                throw new Error(
+                    `Playbook with id ${playbookId} not found or not owned by ${address}`
+                )
+            }
+        } catch (error) {
+            this.logger.error('An error occurred:', error.message)
+            process.exit(1)
+        }
+
+        paybook.id = playbookId
+
+        const value: MsgUpdatePlaybook = {
+            creator: address,
+            playbook: paybook,
+        }
+        const result = await txClient.sendMsgUpdatePlaybook({
+            value,
+            fee: {
+                amount: [],
+                gas: gas || '200000',
+            },
+        })
+        this.logger.verbose('Payload result', result)
+
+        this.throwOnError('MsgUpdatePlaybook', result)
+        this.logger.verbose('Transaction Hash', result.transactionHash)
+        const data = await this.getTxDataOnlyResponse(result.transactionHash)
+        const decodedArr = this.decodeTxMessages(data)
+        return decodedArr[0] as MsgUpdatePlaybookResponse
+    }
+
     // private methods
 
     private async getWallet() {
@@ -346,7 +427,6 @@ class ValidationChainService {
         this.throwOnError('MsgRegisterSniffer', result)
 
         const data = await this.getTxDataOnlyResponse(result.transactionHash)
-        const decodedArr = this.decodeTxMessages(data)
 
         const decodeTxMessages = this.decodeTxMessages(data)
         return decodeTxMessages[0] as MsgRegisterSnifferResponse
@@ -417,7 +497,15 @@ class ValidationChainService {
         message MsgRegisterDaemonResponse {
             string daemonId = 1;
         }
-
+        
+        message MsgCreatePlaybookResponse {
+            string playbookId = 1;
+        }  
+        
+        message MsgUpdatePlaybookResponse {
+            string playbookId = 1;
+        }
+        
         message TxMsgData {
             repeated Any msg_responses = 2;
         }

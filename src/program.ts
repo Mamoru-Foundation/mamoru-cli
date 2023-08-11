@@ -7,6 +7,10 @@ import compileCommand from './commands/build'
 import publishCommand, { PublishOptions } from './commands/publish'
 import launch from './commands/launch'
 import { getAvailableChains } from './services/utils'
+import initPlaybook, { PlaybookOptions } from './commands/playbook-init'
+import publishPlaybook, {
+    PlaybookPublishOptions,
+} from './commands/playbook-publish'
 
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {
@@ -99,6 +103,7 @@ program
             'If the project is subscribable, or standalone'
         ).default(false)
     )
+    .description('initialize demon project in a folder')
     .action((path: string, options: InitOptions) => {
         initCommand.init(program, path, options)
     })
@@ -111,7 +116,7 @@ program
         parseOrSetCurrentDirectoryPath,
         '.'
     )
-    .description('compile project')
+    .description('compile daemon project')
     .action((path: string) => {
         compileCommand.build(program, path)
     })
@@ -150,7 +155,7 @@ program
             'JSON stringified parameter map ie: {"key": "value"}'
         )
     )
-    .description('publish project')
+    .description('publish daemon project')
     .action((path: string, options: PublishOptions) => {
         publishCommand.publish(program, path, options)
     })
@@ -191,6 +196,50 @@ program
     )
     .action((options: any) => {
         launch(program, options)
+    })
+const playbook = program.command('playbook')
+playbook
+    .command('init')
+    .argument(
+        '<path>',
+        'path to folder with Mamoru project',
+        parseOrCreateDirectoryPath,
+        '.'
+    )
+    .description('initialize playbook in a folder')
+    .addOption(new Option('-n, --name <name>', 'Name of the playbook'))
+    .action((path: string, options: PlaybookOptions) => {
+        initPlaybook.initPlaybook(program, path, options)
+    })
+
+playbook
+    .command('publish')
+    .argument(
+        '<path>',
+        'path to folder with Mamoru project',
+        parseOrSetCurrentDirectoryPath,
+        '.'
+    )
+    .description('publish playbook')
+    .option('--rpc <rpcUrl>', 'rpc url of the chain')
+    .addOption(
+        new Option('--gas <gas>', 'gas fee of the transaction').default(
+            '200000'
+        )
+    )
+    .addOption(
+        new Option('-k, --private-key <key>', 'Private key')
+            .makeOptionMandatory()
+            .env('MAMORU_PRIVATE_KEY')
+    )
+    .addOption(
+        new Option(
+            '-id, --playbookId <playbookId>',
+            'Id of the playbook, it is required if you want to update a playbook'
+        )
+    )
+    .action((path: string, options: PlaybookPublishOptions) => {
+        publishPlaybook.playbookPublish(program, path, options)
     })
 
 program.version(
