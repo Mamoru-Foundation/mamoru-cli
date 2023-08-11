@@ -58,7 +58,7 @@ describe('playbookPublish', () => {
         ;(MockedIsValidPlaybookManifest as jest.Mock).mockReturnValue(false)
 
         // Mock the logger
-        const logger = new MockedLogger(1)
+        const logger = new MockedLogger(0)
         ;(Logger as jest.Mock).mockReturnValue(logger)
 
         // Call the function and expect it to exit with an error
