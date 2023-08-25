@@ -11,7 +11,7 @@ import initPlaybook, { PlaybookOptions } from './commands/playbook-init'
 import publishPlaybook, {
     PlaybookPublishOptions,
 } from './commands/playbook-publish'
-import remove from './commands/daemon-remove'
+import removeDaemon from './commands/daemon-remove'
 
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {
@@ -215,7 +215,7 @@ program
             .env('MAMORU_PRIVATE_KEY')
     )
     .action((id: string, options: any) => {
-        remove(program, id, options)
+        removeDaemon(program, id, options)
     })
 
 const playbook = program

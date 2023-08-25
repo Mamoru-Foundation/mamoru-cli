@@ -2,17 +2,18 @@ import { Command } from 'commander'
 import { Logger } from '../services/console'
 import ValidationChainService from '../services/validation-chain'
 import colors from 'colors'
+import { MsgUnregisterDaemonResponse } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/tx'
 
 export interface removeDaemonOptions {
     rpc?: string
     privateKey: string
 }
 
-export default async function remove(
+export default async function removeDaemon(
     program: Command,
     id: string,
     options: removeDaemonOptions
-) {
+): Promise<MsgUnregisterDaemonResponse> {
     const { rpc, privateKey } = options
 
     const verbosity = program.opts().verbose
