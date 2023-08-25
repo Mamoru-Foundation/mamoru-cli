@@ -11,6 +11,7 @@ import initPlaybook, { PlaybookOptions } from './commands/playbook-init'
 import publishPlaybook, {
     PlaybookPublishOptions,
 } from './commands/playbook-publish'
+import remove from './commands/daemon-remove'
 
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {
@@ -51,6 +52,8 @@ function parseOrCreateDirectoryPath(path: string) {
 function increaseVerbosity(dummyValue: string, previous: number) {
     return previous + 1
 }
+
+program.name('mamoru-cli')
 
 program.option(
     '-v, --verbose',
@@ -197,7 +200,27 @@ program
     .action((options: any) => {
         launch(program, options)
     })
-const playbook = program.command('playbook')
+
+program
+    .command('remove')
+    .description('remove daemon from validation chain')
+    .argument('<id>', 'Id of the daemon')
+    .option('--rpc <rpcUrl>', 'rpc url of the chain')
+    .addOption(
+        new Option(
+            '-k, --private-key <key>',
+            'Private key of the account that will be used to publish the project'
+        )
+            .makeOptionMandatory()
+            .env('MAMORU_PRIVATE_KEY')
+    )
+    .action((id: string, options: any) => {
+        remove(program, id, options)
+    })
+
+const playbook = program
+    .command('playbook')
+    .description('Playbook related commands')
 playbook
     .command('init')
     .argument(
@@ -215,7 +238,7 @@ playbook
 playbook
     .command('publish')
     .argument(
-        '<path>',
+        '[path]',
         'path to folder with Mamoru project',
         parseOrSetCurrentDirectoryPath,
         '.'

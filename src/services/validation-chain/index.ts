@@ -33,6 +33,8 @@ import {
     MsgRegisterDaemonResponse,
     MsgRegisterSniffer,
     MsgRegisterSnifferResponse,
+    MsgUnregisterDaemon,
+    MsgUnregisterDaemonResponse,
     MsgUpdatePlaybook,
     MsgUpdatePlaybookResponse,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/tx'
@@ -226,6 +228,35 @@ class ValidationChainService {
         }
     }
 
+    public async unRegisterDaemon(
+        id: string
+    ): Promise<MsgUnregisterDaemonResponse> {
+        this.logger.verbose('Unregistering daemon')
+        const txClient = await this.getTxClient()
+        const address = await this.getAddress()
+
+        const value: MsgUnregisterDaemon = {
+            creator: address,
+            daemon: {
+                daemonId: id,
+            },
+        }
+
+        const result = await txClient.sendMsgUnregisterDaemon({
+            value,
+            fee: {
+                amount: [],
+                gas: '200000',
+            },
+        })
+
+        this.throwOnError('MsgUnregisterDaemon', result)
+        const data = await this.getTxDataOnlyResponse(result.transactionHash)
+        const decodedArr = this.decodeTxMessages(data)
+
+        return decodedArr[0] as MsgRegisterDaemonResponse
+    }
+
     public async registerDaemonFromManifest(
         manifest: Manifest,
         daemonMetadataId: string,
@@ -321,7 +352,6 @@ class ValidationChainService {
         return decodedArr[0] as MsgRegisterDaemonResponse
     }
 
-    // Playbook creation
     public async createPlaybook(
         playbook: PlaybookDTO,
         gas?: string
@@ -349,10 +379,9 @@ class ValidationChainService {
         return decodedArr[0] as MsgCreatePlaybookResponse
     }
 
-    // Playbook update
     public async updatePlaybook(
         playbookId: string,
-        paybook: PlaybookDTO,
+        playbook: PlaybookDTO,
         gas?: string
     ): Promise<MsgUpdatePlaybookResponse> {
         const txClient = await this.getTxClient()
@@ -374,11 +403,11 @@ class ValidationChainService {
             process.exit(1)
         }
 
-        paybook.id = playbookId
+        playbook.id = playbookId
 
         const value: MsgUpdatePlaybook = {
             creator: address,
-            playbook: paybook,
+            playbook: playbook,
         }
         const result = await txClient.sendMsgUpdatePlaybook({
             value,
@@ -396,6 +425,16 @@ class ValidationChainService {
         return decodedArr[0] as MsgUpdatePlaybookResponse
     }
 
+    /**
+     * Get the chain type from the manifest.
+     * Exported just for testing purposes
+     */
+    public getChainTypes(manifest: Manifest): Chain_ChainType[] {
+        const chains = manifest.chains
+        if (!chains) throw new Error('Chain type not defined in manifest')
+
+        return chains.map((chain) => chain_ChainTypeFromJSON(chain))
+    }
     // private methods
 
     private async getWallet() {
@@ -505,6 +544,10 @@ class ValidationChainService {
         message MsgUpdatePlaybookResponse {
             string playbookId = 1;
         }
+
+        message MsgUnregisterDaemonResponse {
+            string daemonId = 1;
+        }
         
         message TxMsgData {
             repeated Any msg_responses = 2;
@@ -541,17 +584,6 @@ class ValidationChainService {
             throw new Error(this.formatError(MsgType, response))
         }
         return response
-    }
-
-    /**
-     * Get the chain type from the manifest.
-     * Exported just for testing purposes
-     */
-    public getChainTypes(manifest: Manifest): Chain_ChainType[] {
-        const chains = manifest.chains
-        if (!chains) throw new Error('Chain type not defined in manifest')
-
-        return chains.map((chain) => chain_ChainTypeFromJSON(chain))
     }
 
     /**
