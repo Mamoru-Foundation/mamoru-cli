@@ -9,7 +9,13 @@
     },
     "cSpell.words": [
         "aptos",
+        "assemblyscript",
+        "cosmjs",
+        "deburr",
         "mamoru",
-        "deburr"
+        "privkey",
+        "protobuf",
+        "Secp",
+        "Validationchain"
     ]
 }
