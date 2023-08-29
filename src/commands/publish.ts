@@ -17,7 +17,6 @@ import colors from 'colors'
 import {
     getSdkVersions,
     queryDaemonParameters,
-    sdkVersionsFromMap,
     validateAndParseParameterFlag,
 } from '../utils/utils'
 
@@ -123,7 +122,7 @@ async function publish(
             ${colors.magenta(r.daemonId)}
         ℹ️  Explorer Url (it may take a few seconds to become available):
             ${colors.underline.blue(
-                `${MAMORU_EXPLORER_URL}/explorer/daemons/${daemonMetadataId}`
+                `${MAMORU_EXPLORER_URL}/agents/${daemonMetadataId}`
             )}`
         )
         return {
@@ -141,7 +140,7 @@ async function publish(
     ℹ️  Explorer Url (it may take a few seconds to become available):
 
         ${colors.underline.blue(
-            `${MAMORU_EXPLORER_URL}/explorer/daemons/${daemonMetadataId}`
+            `${MAMORU_EXPLORER_URL}/agents/${daemonMetadataId}`
         )}`
         )
     }

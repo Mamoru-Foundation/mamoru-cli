@@ -79,7 +79,7 @@ async function playbookPublish(
             ${colors.magenta(responsePlaybookId)}
         ℹ️  Explorer Url (it may take a few seconds to become available):
             ${colors.underline.blue(
-                `${MAMORU_EXPLORER_URL}/explorer/playbook/${responsePlaybookId}`
+                `${MAMORU_EXPLORER_URL}/playbooks/${responsePlaybookId}`
             )}`
     )
     return {

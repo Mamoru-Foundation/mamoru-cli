@@ -44,9 +44,7 @@ async function initPlaybook(
     
     ℹ️ To know more about how to create your own playbook, visit:
         
-        ${colors.underline.blue(
-            'https://mamoru-foundation.github.io/guides/using-the-mamoru-cli.html'
-        )}
+        ${colors.underline.blue('mamoru-foundation.github.io')}
     `)
 }
 
