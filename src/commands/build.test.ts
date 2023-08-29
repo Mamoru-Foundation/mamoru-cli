@@ -30,7 +30,7 @@ describe(colors.yellow('build'), () => {
             .catch((err) => {
                 assert.strictEqual(
                     err.message,
-                    'Oops, nothing to build for SQL based daemons'
+                    'Oops, nothing to build for SQL based Agents'
                 )
             })
     })
