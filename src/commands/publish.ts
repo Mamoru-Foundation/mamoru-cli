@@ -45,7 +45,11 @@ async function publish(
 
     logger.ok('Publishing to Validation chain')
 
-    if (manifest.chains.length > 1 && !options.chain) {
+    if (
+        manifest.chains.length > 1 &&
+        !options.chain &&
+        !manifest.subscribable
+    ) {
         throw new Error(
             `This Agent Metadata supports multiple chains, please specify a chain with the --chain flag`
         )
@@ -122,8 +126,9 @@ async function publish(
             ${colors.magenta(r.daemonId)}
         ℹ️  Explorer Url (it may take a few seconds to become available):
             ${colors.underline.blue(
-                `${MAMORU_EXPLORER_URL}/agents/${daemonMetadataId}`
-            )}`
+                `${MAMORU_EXPLORER_URL}/agents/${r.daemonId}`
+            )}
+        `
         )
         return {
             daemonMetadataId,
@@ -136,12 +141,7 @@ async function publish(
     ℹ️  Agent Metadata (template) Hash(ID): 
 
         ${colors.magenta(daemonMetadataId)}
-
-    ℹ️  Explorer Url (it may take a few seconds to become available):
-
-        ${colors.underline.blue(
-            `${MAMORU_EXPLORER_URL}/agents/${daemonMetadataId}`
-        )}`
+        `
         )
     }
     logger.ok('Published successfully')

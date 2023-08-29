@@ -73,8 +73,9 @@ async function playbookPublish(
     }
 
     logger.ok('Publishing to Validation chain')
+    const action = options.playbookId ? 'updated' : 'created'
     logger.log(
-        `Playbook created successfully 🎉
+        `Playbook ${action} successfully 🎉
         ℹ️  Playbook Hash(ID):
             ${colors.magenta(responsePlaybookId)}
         ℹ️  Explorer Url (it may take a few seconds to become available):
