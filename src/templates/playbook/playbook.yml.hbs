@@ -1,6 +1,6 @@
 name:  "{{name}}"
 on:
-  - daemonId: daemon-id-1
+  - daemonId: "daemon-id-1"
     levels: [SEVERITY_INFO, SEVERITY_WARNING, SEVERITY_ERROR, SEVERITY_ALERT]
 tasks:
     steps:
@@ -11,12 +11,10 @@ tasks:
         - single:
               name: Single Step 1
               condition: previous-step-status
-              run: evm-call@1
+              run: dummy@1
               params:
-                - name: param1
+                - name: foo
                   value: value1
-                - name: param2
-                  value: value2
         - steps:
               name: Nested Steps Block
               condition:
@@ -25,13 +23,17 @@ tasks:
                 - single:
                       name: Step 2
                       condition: previous-step-status
-                      run: evm-call@2
-                      params: []
+                      run: dummy@1
+                      params:
+                        - name: foo
+                          value: value1
                 - single:
                       name: Step 3
                       condition: previous-step-status
-                      run: evm-call@3
-                      params: []
+                      run: dummy@1
+                      params:
+                        - name: foo
+                          value: value1
         - parallel:
               name: Parallel Steps Block
               condition:
@@ -40,18 +42,14 @@ tasks:
                 - single:
                     name: Step 4
                     condition: previous-step-status
-                    run: evm-call@1
+                    run: dummy@1
                     params:
-                      - name: param1
+                      - name: foo
                         value: value1
-                      - name: param2
-                        value: value2
                 - single:
                     name: Step 5
                     condition: previous-step-status
-                    run: evm-call@1
+                    run: dummy@1
                     params:
-                      - name: param1
+                      - name: foo
                         value: value1
-                      - name: param2
-                        value: value2
