@@ -78,7 +78,7 @@ program
     .addOption(
         new Option(
             '-c, --chain <chain...>',
-            'Chain where the daemon runs'
+            'Chain where the Agent runs'
         ).choices(getAvailableChains() as unknown as string[])
     )
     .addOption(new Option('-n, --name <name>', 'Name of the project'))
@@ -86,19 +86,19 @@ program
         new Option(
             '-d, --description <description>',
             'Description of the project'
-        ).default('Mamoru Daemon')
+        ).default('Mamoru Agent')
     )
     .addOption(
         new Option(
             '-t, --tags <tags>',
             'Tags of the project, comma separated'
-        ).default('mamoru,daemon')
+        ).default('mamoru,agent')
     )
     .addOption(
         new Option(
             '-l, --logo <logo>',
             'Logo of the project, should be an url'
-        ).default('https://mamoru.ai/default-daemon-logo.png')
+        ).default('https://mamoru.ai/default-agent-logo.png')
     )
     .addOption(
         new Option(
@@ -119,7 +119,7 @@ program
         parseOrSetCurrentDirectoryPath,
         '.'
     )
-    .description('compile daemon project')
+    .description('compile agent project')
     .action((path: string) => {
         compileCommand.build(program, path)
     })
@@ -136,7 +136,7 @@ program
     .addOption(
         new Option(
             '--gas <gas>',
-            'gas fee of the transaction  (if daemon is sole, it will be used as limit for both metadata and daemon creation)'
+            'gas fee of the transaction  (if agent is sole, it will be used as limit for both metadata and agent creation)'
         ).default('200000')
     )
     .addOption(
@@ -158,18 +158,18 @@ program
             'JSON stringified parameter map ie: {"key": "value"}'
         )
     )
-    .description('publish daemon project')
+    .description('publish agent project')
     .action((path: string, options: PublishOptions) => {
         publishCommand.publish(program, path, options)
     })
 
 program
     .command('launch')
-    .description('launch daemon from subscribable metadata')
+    .description('launch agent from subscribable metadata')
     .addOption(
         new Option(
             '-m, --metadataId <metadataId>',
-            'Daemon MetadataId'
+            'Agent MetadataId'
         ).makeOptionMandatory()
     )
     .option('--rpc <rpcUrl>', 'rpc url of the chain')
@@ -203,8 +203,8 @@ program
 
 program
     .command('remove')
-    .description('remove daemon from validation chain')
-    .argument('<id>', 'Id of the daemon')
+    .description('remove agent from validation chain')
+    .argument('<id>', 'Id of the agent')
     .option('--rpc <rpcUrl>', 'rpc url of the chain')
     .addOption(
         new Option(

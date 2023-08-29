@@ -47,12 +47,12 @@ async function publish(
 
     if (manifest.chains.length > 1 && !options.chain) {
         throw new Error(
-            `This DaemonMetadata supports multiple chains, please specify a chain with the --chain flag`
+            `This Agent Metadata supports multiple chains, please specify a chain with the --chain flag`
         )
     }
     if (options.chain && !manifest.chains.includes(options.chain)) {
         throw new Error(
-            `This DaemonMetadata does not support the chain ${options.chain}`
+            `This Agent Metadata does not support the chain ${options.chain}`
         )
     }
 
@@ -115,10 +115,10 @@ async function publish(
             options.gas
         )
         logger.log(
-            `Daemon registered successfully 🎉
+            `Agent registered successfully 🎉
         ℹ️  Metadata Hash(ID):
             ${colors.magenta(daemonMetadataId)}
-        ℹ️  Daemon Hash(ID):
+        ℹ️  Agent Hash(ID):
             ${colors.magenta(r.daemonId)}
         ℹ️  Explorer Url (it may take a few seconds to become available):
             ${colors.underline.blue(
@@ -131,9 +131,9 @@ async function publish(
         }
     } else {
         logger.log(
-            `DaemonMetadata registered successfully 🎉
+            `Agent Metadata registered successfully 🎉
 
-    ℹ️  DaemonMetadata (template) Hash(ID): 
+    ℹ️  Agent Metadata (template) Hash(ID): 
 
         ${colors.magenta(daemonMetadataId)}
 

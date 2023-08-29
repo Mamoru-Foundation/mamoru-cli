@@ -44,7 +44,7 @@ function prepareBuildPath(logger: Logger, projectPath: string): string {
 
 function validateIsWasmProject(program: Command, manifest: Manifest): void {
     if (manifest.type !== 'wasm') {
-        program.error('Oops, nothing to build for SQL based daemons')
+        program.error('Oops, nothing to build for SQL based Agents')
     }
 }
 

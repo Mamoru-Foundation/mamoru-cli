@@ -122,7 +122,7 @@ class ValidationChainService {
         gas?: string,
         sdkVersions?: SdkVersion[]
     ): Promise<MsgCreateDaemonMetadataResponse> {
-        this.logger.verbose('Registering daemon metadata')
+        this.logger.verbose('Registering Agent Metadata')
         const txClient = await this.getTxClient()
         const address = await this.getAddress()
         // @ts-ignore
@@ -231,7 +231,7 @@ class ValidationChainService {
     public async unRegisterDaemon(
         id: string
     ): Promise<MsgUnregisterDaemonResponse> {
-        this.logger.verbose('Unregistering daemon')
+        this.logger.verbose('Unregister Agent')
         const txClient = await this.getTxClient()
         const address = await this.getAddress()
 
@@ -264,7 +264,7 @@ class ValidationChainService {
         parameterValues: DaemonParameterMap,
         gas?: string
     ): Promise<MsgRegisterDaemonResponse> {
-        this.logger.verbose('Registering daemon')
+        this.logger.verbose('Registering Agent')
         const txClient = await this.getTxClient()
         const address = await this.getAddress()
 
@@ -311,7 +311,7 @@ class ValidationChainService {
         parameterValues: DaemonParameterMap,
         gas?: string
     ): Promise<MsgRegisterDaemonResponse> {
-        this.logger.verbose('Registering daemon')
+        this.logger.verbose('Registering Agent')
         const txClient = await this.getTxClient()
         const address = await this.getAddress()
 
