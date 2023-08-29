@@ -38,9 +38,9 @@ async function initPlaybook(
     logger.ok('Mamoru project files created!')
 
     logger.log(`
-    ℹ️ To start working on your project, run:
+    ℹ️ To publish your playbook to the Validation Chain, run:
         
-        ${colors.grey(`cd ${projectPath}`)}
+        ${colors.grey(`mamoru-cli playbook  playbook [options] [command]`)}
     
     ℹ️ To know more about how to create your own playbook, visit:
         
