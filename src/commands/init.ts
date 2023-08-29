@@ -48,15 +48,13 @@ async function init(
         ${colors.grey(`cd ${projectPath}`)}
         ${colors.grey(`npm install`)}
     
-    ℹ️ To start the project locally, run:
+    ℹ️ To build the daemon, run:
         
-        ${colors.grey(`npm run start`)}
+        ${colors.grey(`mamoru-cli build`)}
     
     ℹ️ To know more about how to create your own daemons, visit:
         
-        ${colors.underline.blue(
-            'https://mamoru-foundation.github.io/guides/using-the-mamoru-cli.html'
-        )}
+        ${colors.underline.blue('https://www.mamoru.ai/docs')}
     `)
     }
     if (options.type === 'sql') {
@@ -67,9 +65,7 @@ async function init(
     
     ℹ️ To know more about how to create your own daemons, visit:
         
-        ${colors.underline.blue(
-            'https://mamoru-foundation.github.io/guides/using-the-mamoru-cli.html'
-        )}
+        ${colors.underline.blue('https://www.mamoru.ai/docs')}
     `)
     }
 }

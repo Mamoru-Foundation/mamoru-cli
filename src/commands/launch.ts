@@ -90,9 +90,7 @@ export default async function launch(program: Command, options: LaunchOptions) {
 
     ℹ️  Explorer Url for parent DaemonMetadata:
 
-        ${colors.underline.blue(
-            `${MAMORU_EXPLORER_URL}/explorer/daemons/${metadataId}`
-        )}`
+        ${colors.underline.blue(`${MAMORU_EXPLORER_URL}/agents/${metadataId}`)}`
     )
     return result
 }
