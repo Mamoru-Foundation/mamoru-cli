@@ -39,8 +39,8 @@ async function initPlaybook(
 
     logger.log(`
     ℹ️ To publish your playbook to the Validation Chain, run:
-        
-        ${colors.grey(`mamoru-cli playbook  playbook [options] [command]`)}
+        ${colors.grey(`cd ${projectPath}`)}
+        ${colors.grey(`mamoru-cli playbook publish`)}
     
     ℹ️ To know more about how to create your own playbook, visit:
         
