@@ -4,11 +4,9 @@ import {
     getProgramMock,
     getTempFolder,
     isTruthyStr,
-} from '../utils/test-utils'
+} from '../../utils/test-utils'
 import publishPlaybook from './playbook-publish'
 import initPlaybook from './playbook-init'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import assert from 'node:assert'
 
 const programMock = getProgramMock()

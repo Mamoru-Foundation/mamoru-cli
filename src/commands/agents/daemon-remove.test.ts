@@ -4,9 +4,8 @@ import {
     generateInitOptions,
     getProgramMock,
     getTempFolder,
-} from '../utils/test-utils'
+} from '../../utils/test-utils'
 import init from './init'
-import { Command } from 'commander'
 import publish from './publish'
 import removeDaemon from './daemon-remove'
 

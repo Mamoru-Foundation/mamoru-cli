@@ -1,6 +1,6 @@
 import { Command } from 'commander'
-import { Logger } from '../services/console'
-import ValidationChainService from '../services/validation-chain'
+import { Logger } from '../../services/console'
+import ValidationChainService from '../../services/validation-chain'
 import colors from 'colors'
 import { MsgUnregisterDaemonResponse } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/tx'
 

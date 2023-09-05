@@ -2,14 +2,18 @@ import * as fs from 'fs'
 import path from 'path'
 import { Command } from 'commander'
 import Handlebars from 'handlebars'
-import { Logger } from '../services/console'
+import { Logger } from '../../services/console'
 import dashify from 'dashify'
-import { DEFAULT_MAMORU_VERSION, FILES, TEMPLATES } from '../services/constants'
+import {
+    DEFAULT_MAMORU_VERSION,
+    FILES,
+    TEMPLATES,
+} from '../../services/constants'
 import colors from 'colors'
-import { sdkVersions } from '../sdk-dependency-versions'
+import { sdkVersions } from '../../sdk-dependency-versions'
 import { deburr } from 'lodash'
 import { checkbox } from '@inquirer/prompts'
-import { checkFolderEmptiness, getAvailableChains } from '../services/utils'
+import { checkFolderEmptiness, getAvailableChains } from '../../services/utils'
 
 async function init(
     program: Command,

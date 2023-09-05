@@ -6,11 +6,11 @@ import type { Command } from 'commander'
 import {
     serializeAndSaveManifest,
     validateAndReadManifest,
-} from '../services/manifest'
-import { Logger } from '../services/console'
-import { OUT_DIR } from '../services/constants'
-import { Manifest } from '../types'
-import { runCommand } from '../utils/utils'
+} from '../../services/manifest'
+import { Logger } from '../../services/console'
+import { OUT_DIR } from '../../services/constants'
+import { Manifest } from '../../types'
+import { runCommand } from '../../utils/utils'
 
 async function build(program: Command, projectPath: string) {
     const verbosity = program.opts().verbose
