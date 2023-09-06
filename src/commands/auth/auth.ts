@@ -10,7 +10,7 @@ import { Logger } from '../../services/console'
 import { Command } from 'commander'
 import colors from 'colors'
 
-export async function AuthCommand(program: Command) {
+export async function loginCommand(program: Command) {
     const verbosity = program.opts().verbose
     const logger = new Logger(verbosity)
     // if user is already logged in, ask if they want to log in again

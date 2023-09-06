@@ -1,5 +1,6 @@
-import { program, InvalidArgumentError, Option, Command } from 'commander'
-import { AuthCommand } from './auth'
+import { Command } from 'commander'
+import { loginCommand } from './auth'
+import { logoutCommand } from './logout'
 
 export const initializeAuthCommands = (program: Command) => {
     const authSubCommand = program
@@ -9,7 +10,10 @@ export const initializeAuthCommands = (program: Command) => {
     authSubCommand
         .command('login')
         .description('Login to Mamoru')
-        .action(() => {
-            AuthCommand(program)
-        })
+        .action(() => loginCommand(program))
+
+    authSubCommand
+        .command('logout')
+        .description('Logout from Mamoru')
+        .action(() => logoutCommand(program))
 }
