@@ -15,6 +15,7 @@ import publishPlaybook, {
     PlaybookPublishOptions,
 } from './commands/playbooks/playbook-publish'
 import removeDaemon from './commands/agents/daemon-remove'
+import { initializeAuthCommands } from './commands/auth'
 
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {
@@ -64,6 +65,8 @@ program.option(
     increaseVerbosity,
     0
 )
+
+initializeAuthCommands(program)
 
 program
     .command('init')
@@ -288,4 +291,5 @@ program.configureOutput({
     outputError: (str: string, write: (str: string) => void) =>
         write(colors.red(str)),
 })
+
 export default program

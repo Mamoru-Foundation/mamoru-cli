@@ -19,19 +19,17 @@ function getRcConfigPath(): string {
 }
 
 export function readRcConfig() {
-    const rcConfig: RcConfig = {}
     const rcPath = getRcConfigPath()
     if (fs.existsSync(rcPath)) {
         const rcConfigString = fs.readFileSync(rcPath, 'utf-8')
         try {
             const rcConfigJson = JSON.parse(rcConfigString)
-            rcConfig.telemetry = rcConfigJson.telemetry
+            return rcConfigJson
         } catch (err) {
             // eslint-disable-next-line no-console
             console.error('Error parsing rc config file', err)
         }
     }
-    return rcConfig
 }
 
 export function writeRcConfig(rcConfig: RcConfig) {
