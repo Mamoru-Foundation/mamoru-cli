@@ -100,6 +100,7 @@ export const generateInitOptions = (
         description: 'TEST_DESCRIPTION',
         chain: ['SUI_TESTNET'],
         logo: 'https://mamoru.ai/default-mamoru-logo.png',
+        skipTelemetry: true,
         subscribable: false,
         ...obj,
     }

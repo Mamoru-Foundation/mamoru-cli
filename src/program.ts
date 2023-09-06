@@ -7,6 +7,7 @@ import compileCommand from './commands/agents/build'
 import publishCommand, { PublishOptions } from './commands/agents/publish'
 import launch from './commands/agents/launch'
 import { getAvailableChains } from './services/utils'
+import { askForTelemetry } from './commands/ask-for-telemetry'
 import initPlaybook, {
     PlaybookOptions,
 } from './commands/playbooks/playbook-init'
@@ -108,9 +109,16 @@ program
             'If the project is subscribable, or standalone'
         ).default(false)
     )
-    .description('initialize demon project in a folder')
-    .action((path: string, options: InitOptions) => {
-        initCommand.init(program, path, options)
+    .addOption(
+        new Option(
+            '--skipTelemetry',
+            'Skip telemetry question, useful for CI/CD'
+        )
+    )
+    .description('initialize a new Agent project in a folder')
+    .action(async (path: string, options: InitOptions) => {
+        await askForTelemetry(options)
+        await initCommand.init(program, path, options)
     })
 
 program

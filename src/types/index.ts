@@ -38,6 +38,10 @@ export type DaemonMetadataContentQuery = {
         | 'SEVERITY_ERROR'
 }
 
+export type RcConfig = {
+    telemetry?: boolean
+}
+
 export type DaemonMetadataContentQueryManifest = {
     version?: string
     queries: DaemonMetadataContentQuery[]
