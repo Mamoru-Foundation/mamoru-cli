@@ -33,8 +33,8 @@
         "update-deps": "yarn add @mamoru-ai/validation-chain-ts-client @mamoru-ai/mamoru-aptos-sdk-as @mamoru-ai/mamoru-evm-sdk-as @mamoru-ai/mamoru-sdk-as @mamoru-ai/mamoru-sui-sdk-as"
     },
     "bin": {
-        "mamoru-cli": "dist/index.js",
         "mamoru": "dist/index.js",
+        "mamoru-cli": "dist/index.js",
         "mamoru-cli-dev": "ts-node ./src/index.ts"
     },
     "devDependencies": {
@@ -75,8 +75,8 @@
         "@cosmjs/proto-signing": "^0.30.1",
         "@cosmjs/tendermint-rpc": "^0.30.1",
         "@inquirer/prompts": "^2.2.0",
-        "@mamoru-ai/validation-chain-ts-client": "^0.24.2",
         "@sentry/node": "^7.58.1",
+        "@mamoru-ai/validation-chain-ts-client": "^0.26.0",
         "assemblyscript": "^0.27.1",
         "axios": "^0.27.2",
         "colors": "^1.4.0",

@@ -1,25 +1,24 @@
 import type { Command } from 'commander'
 import path from 'path'
 import fs from 'fs'
-import { Logger } from '../services/console'
-import { validateAndReadManifest } from '../services/manifest'
+import { Logger } from '../../services/console'
+import { validateAndReadManifest } from '../../services/manifest'
 import {
     MAMORU_EXPLORER_URL,
     MAMORU_VERSION_KEY,
     OUT_DIR,
     WASM_INDEX,
-} from '../services/constants'
-import queryManifest from '../services/query-manifest'
-import ValidationChainService from '../services/validation-chain'
-import { prepareBinaryFile } from '../services/assemblyscript'
-import { Manifest } from '../types'
+} from '../../services/constants'
+import queryManifest from '../../services/query-manifest'
+import ValidationChainService from '../../services/validation-chain'
+import { prepareBinaryFile } from '../../services/assemblyscript'
+import { Manifest } from '../../types'
 import colors from 'colors'
 import {
     getSdkVersions,
     queryDaemonParameters,
-    sdkVersionsFromMap,
     validateAndParseParameterFlag,
-} from '../utils/utils'
+} from '../../utils/utils'
 
 export interface PublishOptions {
     rpc?: string
@@ -46,14 +45,18 @@ async function publish(
 
     logger.ok('Publishing to Validation chain')
 
-    if (manifest.chains.length > 1 && !options.chain) {
+    if (
+        manifest.chains.length > 1 &&
+        !options.chain &&
+        !manifest.subscribable
+    ) {
         throw new Error(
-            `This DaemonMetadata supports multiple chains, please specify a chain with the --chain flag`
+            `This Agent Metadata supports multiple chains, please specify a chain with the --chain flag`
         )
     }
     if (options.chain && !manifest.chains.includes(options.chain)) {
         throw new Error(
-            `This DaemonMetadata does not support the chain ${options.chain}`
+            `This Agent Metadata does not support the chain ${options.chain}`
         )
     }
 
@@ -116,15 +119,16 @@ async function publish(
             options.gas
         )
         logger.log(
-            `Daemon registered successfully 🎉
+            `Agent registered successfully 🎉
         ℹ️  Metadata Hash(ID):
             ${colors.magenta(daemonMetadataId)}
-        ℹ️  Daemon Hash(ID):
+        ℹ️  Agent Hash(ID):
             ${colors.magenta(r.daemonId)}
         ℹ️  Explorer Url (it may take a few seconds to become available):
             ${colors.underline.blue(
-                `${MAMORU_EXPLORER_URL}/explorer/daemons/${daemonMetadataId}`
-            )}`
+                `${MAMORU_EXPLORER_URL}/agents/${r.daemonId}`
+            )}
+        `
         )
         return {
             daemonMetadataId,
@@ -132,17 +136,12 @@ async function publish(
         }
     } else {
         logger.log(
-            `DaemonMetadata registered successfully 🎉
+            `Agent Metadata registered successfully 🎉
 
-    ℹ️  DaemonMetadata (template) Hash(ID): 
+    ℹ️  Agent Metadata (template) Hash(ID): 
 
         ${colors.magenta(daemonMetadataId)}
-
-    ℹ️  Explorer Url (it may take a few seconds to become available):
-
-        ${colors.underline.blue(
-            `${MAMORU_EXPLORER_URL}/explorer/daemons/${daemonMetadataId}`
-        )}`
+        `
         )
     }
     logger.ok('Published successfully')

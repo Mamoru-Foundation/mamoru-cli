@@ -2,12 +2,19 @@
 import colors from 'colors'
 import * as fs from 'fs'
 import { program, InvalidArgumentError, Option } from 'commander'
-import initCommand, { InitOptions } from './commands/init'
-import compileCommand from './commands/build'
-import publishCommand, { PublishOptions } from './commands/publish'
-import launch from './commands/launch'
+import initCommand, { InitOptions } from './commands/agents/init'
+import compileCommand from './commands/agents/build'
+import publishCommand, { PublishOptions } from './commands/agents/publish'
+import launch from './commands/agents/launch'
 import { getAvailableChains } from './services/utils'
 import { askForTelemetry } from './commands/ask-for-telemetry'
+import initPlaybook, {
+    PlaybookOptions,
+} from './commands/playbooks/playbook-init'
+import publishPlaybook, {
+    PlaybookPublishOptions,
+} from './commands/playbooks/playbook-publish'
+import removeDaemon from './commands/agents/daemon-remove'
 
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {
@@ -49,6 +56,8 @@ function increaseVerbosity(dummyValue: string, previous: number) {
     return previous + 1
 }
 
+program.name('mamoru-cli')
+
 program.option(
     '-v, --verbose',
     'define verbosity to show execution logs',
@@ -72,7 +81,7 @@ program
     .addOption(
         new Option(
             '-c, --chain <chain...>',
-            'Chain where the daemon runs'
+            'Chain where the Agent runs'
         ).choices(getAvailableChains() as unknown as string[])
     )
     .addOption(new Option('-n, --name <name>', 'Name of the project'))
@@ -80,19 +89,19 @@ program
         new Option(
             '-d, --description <description>',
             'Description of the project'
-        ).default('Mamoru Daemon')
+        ).default('Mamoru Agent')
     )
     .addOption(
         new Option(
             '-t, --tags <tags>',
             'Tags of the project, comma separated'
-        ).default('mamoru,daemon')
+        ).default('mamoru,agent')
     )
     .addOption(
         new Option(
             '-l, --logo <logo>',
             'Logo of the project, should be an url'
-        ).default('https://mamoru.ai/default-daemon-logo.png')
+        ).default('https://mamoru.ai/default-agent-logo.png')
     )
     .addOption(
         new Option(
@@ -106,6 +115,7 @@ program
             'Skip telemetry question, useful for CI/CD'
         )
     )
+    .description('initialize a new Agent project in a folder')
     .action(async (path: string, options: InitOptions) => {
         await askForTelemetry(options)
         await initCommand.init(program, path, options)
@@ -119,7 +129,7 @@ program
         parseOrSetCurrentDirectoryPath,
         '.'
     )
-    .description('compile project')
+    .description('compile agent project')
     .action((path: string) => {
         compileCommand.build(program, path)
     })
@@ -136,7 +146,7 @@ program
     .addOption(
         new Option(
             '--gas <gas>',
-            'gas fee of the transaction  (if daemon is sole, it will be used as limit for both metadata and daemon creation)'
+            'gas fee of the transaction  (if agent is sole, it will be used as limit for both metadata and agent creation)'
         ).default('200000')
     )
     .addOption(
@@ -158,18 +168,18 @@ program
             'JSON stringified parameter map ie: {"key": "value"}'
         )
     )
-    .description('publish project')
+    .description('publish agent project')
     .action((path: string, options: PublishOptions) => {
         publishCommand.publish(program, path, options)
     })
 
 program
     .command('launch')
-    .description('launch daemon from subscribable metadata')
+    .description('launch agent from subscribable metadata')
     .addOption(
         new Option(
             '-m, --metadataId <metadataId>',
-            'Daemon MetadataId'
+            'Agent MetadataId'
         ).makeOptionMandatory()
     )
     .option('--rpc <rpcUrl>', 'rpc url of the chain')
@@ -199,6 +209,70 @@ program
     )
     .action((options: any) => {
         launch(program, options)
+    })
+
+program
+    .command('remove')
+    .description('remove agent from validation chain')
+    .argument('<id>', 'Id of the agent')
+    .option('--rpc <rpcUrl>', 'rpc url of the chain')
+    .addOption(
+        new Option(
+            '-k, --private-key <key>',
+            'Private key of the account that will be used to publish the project'
+        )
+            .makeOptionMandatory()
+            .env('MAMORU_PRIVATE_KEY')
+    )
+    .action((id: string, options: any) => {
+        removeDaemon(program, id, options)
+    })
+
+const playbook = program
+    .command('playbook')
+    .description('Playbook related commands')
+playbook
+    .command('init')
+    .argument(
+        '<path>',
+        'path to folder with Mamoru project',
+        parseOrCreateDirectoryPath,
+        '.'
+    )
+    .description('initialize playbook in a folder')
+    .addOption(new Option('-n, --name <name>', 'Name of the playbook'))
+    .action((path: string, options: PlaybookOptions) => {
+        initPlaybook.initPlaybook(program, path, options)
+    })
+
+playbook
+    .command('publish')
+    .argument(
+        '[path]',
+        'path to folder with Mamoru project',
+        parseOrSetCurrentDirectoryPath,
+        '.'
+    )
+    .description('publish playbook')
+    .option('--rpc <rpcUrl>', 'rpc url of the chain')
+    .addOption(
+        new Option('--gas <gas>', 'gas fee of the transaction').default(
+            '200000'
+        )
+    )
+    .addOption(
+        new Option('-k, --private-key <key>', 'Private key')
+            .makeOptionMandatory()
+            .env('MAMORU_PRIVATE_KEY')
+    )
+    .addOption(
+        new Option(
+            '-id, --playbookId <playbookId>',
+            'Id of the playbook, it is required if you want to update a playbook'
+        )
+    )
+    .action((path: string, options: PlaybookPublishOptions) => {
+        publishPlaybook.playbookPublish(program, path, options)
     })
 
 program.version(

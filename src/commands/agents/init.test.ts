@@ -6,10 +6,10 @@ import path from 'node:path'
 import fs from 'node:fs'
 import colors from 'colors'
 import yaml from 'yaml'
-import { getProgramMock, getTempFolder } from '../utils/test-utils'
+import { getProgramMock, getTempFolder } from '../../utils/test-utils'
 import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
-import { sdkVersions } from '../sdk-dependency-versions'
-import { DEFAULT_MAMORU_VERSION } from '../services/constants'
+import { sdkVersions } from '../../sdk-dependency-versions'
+import { DEFAULT_MAMORU_VERSION } from '../../services/constants'
 
 const programMock = getProgramMock()
 

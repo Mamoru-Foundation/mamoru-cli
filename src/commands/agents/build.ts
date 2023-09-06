@@ -6,11 +6,11 @@ import type { Command } from 'commander'
 import {
     serializeAndSaveManifest,
     validateAndReadManifest,
-} from '../services/manifest'
-import { Logger } from '../services/console'
-import { OUT_DIR } from '../services/constants'
-import { Manifest } from '../types'
-import { runCommand } from '../utils/utils'
+} from '../../services/manifest'
+import { Logger } from '../../services/console'
+import { OUT_DIR } from '../../services/constants'
+import { Manifest } from '../../types'
+import { runCommand } from '../../utils/utils'
 
 async function build(program: Command, projectPath: string) {
     const verbosity = program.opts().verbose
@@ -44,7 +44,7 @@ function prepareBuildPath(logger: Logger, projectPath: string): string {
 
 function validateIsWasmProject(program: Command, manifest: Manifest): void {
     if (manifest.type !== 'wasm') {
-        program.error('Oops, nothing to build for SQL based daemons')
+        program.error('Oops, nothing to build for SQL based Agents')
     }
 }
 

@@ -25,7 +25,20 @@ export const FILES: typeof TEMPLATES = {
 
 export const ONLY_ALPHA_NUMERIC = /^[a-zA-Z0-9]+$/
 
-export const MAMORU_EXPLORER_URL = 'https://mamoru.ai'
+export const MAMORU_EXPLORER_URL =
+    process.env.MAMORU_EXPLORER_URL || 'https://app.mamoru.foundation'
 
 export const DEFAULT_MAMORU_VERSION = '0.1.0'
 export const MAMORU_VERSION_KEY = 'mamoru'
+
+export const PLAYBOOK_TEMPLATES = {
+    PLAYBOOK_YAML: BASE_DIR + 'templates/playbook/playbook.yml.hbs',
+    README: BASE_DIR + 'templates/playbook/readme.md.hbs',
+    GITIGNORE: BASE_DIR + 'templates/playbook/gitignore.hbs',
+}
+
+export const PLAYBOOK_FILES: typeof PLAYBOOK_TEMPLATES = {
+    PLAYBOOK_YAML: 'playbook.yml',
+    README: 'readme.md',
+    GITIGNORE: '.gitignore',
+}

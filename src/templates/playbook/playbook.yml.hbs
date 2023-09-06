@@ -1,0 +1,55 @@
+name:  "{{name}}"
+on:
+  - daemonId: "daemon-id-1"
+    levels: [SEVERITY_INFO, SEVERITY_WARNING, SEVERITY_ERROR, SEVERITY_ALERT]
+tasks:
+    steps:
+      name: Steps Block
+      condition:
+        condition: some-condition
+      run:
+        - single:
+              name: Single Step 1
+              condition: previous-step-status
+              run: dummy@1
+              params:
+                - name: foo
+                  value: value1
+        - steps:
+              name: Nested Steps Block
+              condition:
+                condition: some-other-condition
+              run:
+                - single:
+                      name: Step 2
+                      condition: previous-step-status
+                      run: dummy@1
+                      params:
+                        - name: foo
+                          value: value1
+                - single:
+                      name: Step 3
+                      condition: previous-step-status
+                      run: dummy@1
+                      params:
+                        - name: foo
+                          value: value1
+        - parallel:
+              name: Parallel Steps Block
+              condition:
+                condition: some-other-condition
+              run:
+                - single:
+                    name: Step 4
+                    condition: previous-step-status
+                    run: dummy@1
+                    params:
+                      - name: foo
+                        value: value1
+                - single:
+                    name: Step 5
+                    condition: previous-step-status
+                    run: dummy@1
+                    params:
+                      - name: foo
+                        value: value1

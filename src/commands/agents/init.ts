@@ -2,14 +2,18 @@ import * as fs from 'fs'
 import path from 'path'
 import { Command } from 'commander'
 import Handlebars from 'handlebars'
-import { Logger } from '../services/console'
+import { Logger } from '../../services/console'
 import dashify from 'dashify'
-import { DEFAULT_MAMORU_VERSION, FILES, TEMPLATES } from '../services/constants'
+import {
+    DEFAULT_MAMORU_VERSION,
+    FILES,
+    TEMPLATES,
+} from '../../services/constants'
 import colors from 'colors'
-import { sdkVersions } from '../sdk-dependency-versions'
+import { sdkVersions } from '../../sdk-dependency-versions'
 import { deburr } from 'lodash'
 import { checkbox } from '@inquirer/prompts'
-import { getAvailableChains } from '../services/utils'
+import { checkFolderEmptiness, getAvailableChains } from '../../services/utils'
 
 async function init(
     program: Command,
@@ -48,15 +52,13 @@ async function init(
         ${colors.grey(`cd ${projectPath}`)}
         ${colors.grey(`npm install`)}
     
-    ℹ️ To start the project locally, run:
+    ℹ️ To build the daemon, run:
         
-        ${colors.grey(`npm run start`)}
+        ${colors.grey(`mamoru-cli build`)}
     
     ℹ️ To know more about how to create your own daemons, visit:
         
-        ${colors.underline.blue(
-            'https://mamoru-foundation.github.io/guides/using-the-mamoru-cli.html'
-        )}
+        ${colors.underline.blue('https://www.mamoru.ai/docs')}
     `)
     }
     if (options.type === 'sql') {
@@ -67,22 +69,9 @@ async function init(
     
     ℹ️ To know more about how to create your own daemons, visit:
         
-        ${colors.underline.blue(
-            'https://mamoru-foundation.github.io/guides/using-the-mamoru-cli.html'
-        )}
+        ${colors.underline.blue('https://www.mamoru.ai/docs')}
     `)
     }
-}
-
-function checkFolderEmptiness(program: Command, paths: string[]): void {
-    paths.forEach((p) => {
-        if (fs.existsSync(p)) {
-            const fileName = path.basename(p)
-            throw Error(
-                `Directory already contains  a file named "${p}", stopping...`
-            )
-        }
-    })
 }
 
 async function getAugmentedInitOptions(

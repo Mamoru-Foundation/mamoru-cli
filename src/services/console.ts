@@ -22,4 +22,9 @@ export class Logger {
         if (process.env.NODE_ENV === 'test') return
         console.log(...rest)
     }
+    error(...rest: any[]) {
+        if (process.env.NODE_ENV === 'test') return
+        const args = rest.map((arg) => colors.red(arg))
+        console.error(...args)
+    }
 }

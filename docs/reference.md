@@ -23,12 +23,12 @@ Arguments:
 
 Options:
   -t, --type <type>                Type of project (choices: "sql", "wasm", default: "wasm")
-  -c, --chain <chain>              Chain where the daemon runs (choices: "ethereum", "bsc", "sui")
+  -c, --chain <chain>              Chain where the agent runs (choices: "ethereum", "bsc", "sui")
   -n, --name <name>                Name of the project (default: "Default Name")
-  -d, --description <description>  Description of the project (default: "Mamoru Daemon")
-  -t, --tags <tags>                Tags of the project, comma separated (default: "mamoru,daemon")
+  -d, --description <description>  Description of the project (default: "Mamoru agent")
+  -t, --tags <tags>                Tags of the project, comma separated (default: "mamoru,agent")
   -l, --logo <logo>                Logo of the project, should be an url (default:
-                                   "https://mamoru.ai/default-daemon-logo.png")
+                                   "https://mamoru.ai/default-agent-logo.png")
   --subscribable                   If the project is subscribable, or standalone (default: false)
   -h, --help                       display help for command
 

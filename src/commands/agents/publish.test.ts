@@ -12,9 +12,9 @@ import {
     getProgramMock,
     getTempFolder,
     isTruthyStr,
-} from '../utils/test-utils'
-import { runCommand } from '../utils/utils'
-import { getAvailableChains } from '../services/utils'
+} from '../../utils/test-utils'
+import { runCommand } from '../../utils/utils'
+import { getAvailableChains } from '../../services/utils'
 import axios, { AxiosResponse } from 'axios'
 
 const programMock = getProgramMock()
