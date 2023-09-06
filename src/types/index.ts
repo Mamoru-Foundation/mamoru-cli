@@ -40,6 +40,7 @@ export type DaemonMetadataContentQuery = {
 
 export type RcConfig = {
     telemetry?: boolean
+    authToken?: string
 }
 
 export type DaemonMetadataContentQueryManifest = {
