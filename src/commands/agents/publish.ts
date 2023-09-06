@@ -1,24 +1,24 @@
 import type { Command } from 'commander'
 import path from 'path'
 import fs from 'fs'
-import { Logger } from '../services/console'
-import { validateAndReadManifest } from '../services/manifest'
+import { Logger } from '../../services/console'
+import { validateAndReadManifest } from '../../services/manifest'
 import {
     MAMORU_EXPLORER_URL,
     MAMORU_VERSION_KEY,
     OUT_DIR,
     WASM_INDEX,
-} from '../services/constants'
-import queryManifest from '../services/query-manifest'
-import ValidationChainService from '../services/validation-chain'
-import { prepareBinaryFile } from '../services/assemblyscript'
-import { Manifest } from '../types'
+} from '../../services/constants'
+import queryManifest from '../../services/query-manifest'
+import ValidationChainService from '../../services/validation-chain'
+import { prepareBinaryFile } from '../../services/assemblyscript'
+import { Manifest } from '../../types'
 import colors from 'colors'
 import {
     getSdkVersions,
     queryDaemonParameters,
     validateAndParseParameterFlag,
-} from '../utils/utils'
+} from '../../utils/utils'
 
 export interface PublishOptions {
     rpc?: string

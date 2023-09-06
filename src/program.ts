@@ -2,16 +2,18 @@
 import colors from 'colors'
 import * as fs from 'fs'
 import { program, InvalidArgumentError, Option } from 'commander'
-import initCommand, { InitOptions } from './commands/init'
-import compileCommand from './commands/build'
-import publishCommand, { PublishOptions } from './commands/publish'
-import launch from './commands/launch'
+import initCommand, { InitOptions } from './commands/agents/init'
+import compileCommand from './commands/agents/build'
+import publishCommand, { PublishOptions } from './commands/agents/publish'
+import launch from './commands/agents/launch'
 import { getAvailableChains } from './services/utils'
-import initPlaybook, { PlaybookOptions } from './commands/playbook-init'
+import initPlaybook, {
+    PlaybookOptions,
+} from './commands/playbooks/playbook-init'
 import publishPlaybook, {
     PlaybookPublishOptions,
-} from './commands/playbook-publish'
-import removeDaemon from './commands/daemon-remove'
+} from './commands/playbooks/playbook-publish'
+import removeDaemon from './commands/agents/daemon-remove'
 
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {

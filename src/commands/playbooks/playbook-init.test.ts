@@ -1,9 +1,8 @@
 import init from './playbook-init' // Update this import path
 import { describe, expect, it } from '@jest/globals'
-import { getProgramMock, getTempFolder } from '../utils/test-utils'
+import { getProgramMock, getTempFolder } from '../../utils/test-utils'
 import initPlaybook from './playbook-init'
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import fs from 'fs'
 
 const programMock = getProgramMock()

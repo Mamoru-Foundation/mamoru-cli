@@ -2,13 +2,13 @@ import * as fs from 'fs'
 import path from 'path'
 import { Command } from 'commander'
 import Handlebars from 'handlebars'
-import { Logger } from '../services/console'
+import { Logger } from '../../services/console'
 import dashify from 'dashify'
 import colors from 'colors'
 import { deburr } from 'lodash'
 
-import { PLAYBOOK_FILES, PLAYBOOK_TEMPLATES } from '../services/constants'
-import { checkFolderEmptiness } from '../services/utils'
+import { PLAYBOOK_FILES, PLAYBOOK_TEMPLATES } from '../../services/constants'
+import { checkFolderEmptiness } from '../../services/utils'
 
 async function initPlaybook(
     program: Command,

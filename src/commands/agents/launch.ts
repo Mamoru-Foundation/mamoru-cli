@@ -1,8 +1,8 @@
 import { Command } from 'commander'
-import { Logger } from '../services/console'
-import ValidationChainService from '../services/validation-chain'
+import { Logger } from '../../services/console'
+import ValidationChainService from '../../services/validation-chain'
 import { DaemonMetadataType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata_utils'
-import { select, input } from '@inquirer/prompts'
+import { select } from '@inquirer/prompts'
 
 export interface LaunchOptions {
     metadataId: string
@@ -13,16 +13,12 @@ export interface LaunchOptions {
     parameters?: string
 }
 import colors from 'colors'
-import { MAMORU_EXPLORER_URL } from '../services/constants'
-import { MsgRegisterDaemonResponse } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/tx'
-import {
-    chain_ChainTypeFromJSON,
-    chain_ChainTypeToJSON,
-} from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
+import { MAMORU_EXPLORER_URL } from '../../services/constants'
+import { chain_ChainTypeToJSON } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import {
     queryDaemonParameters,
     validateAndParseParameterFlag,
-} from '../utils/utils'
+} from '../../utils/utils'
 import { DaemonMetadata } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata'
 
 export default async function launch(program: Command, options: LaunchOptions) {

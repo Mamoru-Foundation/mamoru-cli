@@ -1,10 +1,8 @@
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-ignore
 import assert from 'node:assert'
 import { describe, it } from '@jest/globals'
 import publish from './publish'
-// @ts-ignore
 import colors from 'colors'
 import init, { InitOptions } from './init'
 import build from './build'
@@ -14,9 +12,9 @@ import {
     getProgramMock,
     getTempFolder,
     isTruthyStr,
-} from '../utils/test-utils'
-import { runCommand } from '../utils/utils'
-import { getAvailableChains } from '../services/utils'
+} from '../../utils/test-utils'
+import { runCommand } from '../../utils/utils'
+import { getAvailableChains } from '../../services/utils'
 import axios, { AxiosResponse } from 'axios'
 
 const programMock = getProgramMock()

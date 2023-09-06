@@ -2,7 +2,7 @@ import os from 'os'
 import path from 'path'
 import fs from 'fs'
 import { Command } from 'commander'
-import { InitOptions } from '../commands/init'
+import { InitOptions } from '../commands/agents/init'
 import { DirectSecp256k1HdWallet as Wallet } from '@cosmjs/proto-signing'
 import axios from 'axios'
 import {

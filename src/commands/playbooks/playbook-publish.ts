@@ -1,12 +1,12 @@
 import { Command } from 'commander'
-import { Logger } from '../services/console'
+import { Logger } from '../../services/console'
 import path from 'path'
-import { MAMORU_EXPLORER_URL, PLAYBOOK_FILES } from '../services/constants'
-import ValidationChainService from '../services/validation-chain'
+import { MAMORU_EXPLORER_URL, PLAYBOOK_FILES } from '../../services/constants'
+import ValidationChainService from '../../services/validation-chain'
 import { PlaybookDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/playbooks_dto'
 import fs from 'fs'
 import yaml from 'yaml'
-import { isValidPlaybookManifest } from '../services/playbook'
+import { isValidPlaybookManifest } from '../../services/playbook'
 import colors from 'colors'
 
 export interface PlaybookPublishOptions {

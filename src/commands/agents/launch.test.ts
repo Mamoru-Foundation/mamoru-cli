@@ -6,11 +6,11 @@ import {
     generateInitOptions,
     getProgramMock,
     getTempFolder,
-} from '../utils/test-utils'
+} from '../../utils/test-utils'
 import { randomUUID } from 'crypto'
 import init, { InitOptions } from './init'
 import publish from './publish'
-import { getAvailableChains } from '../services/utils'
+import { getAvailableChains } from '../../services/utils'
 const programMock = getProgramMock()
 
 describe(colors.yellow('spawn'), () => {

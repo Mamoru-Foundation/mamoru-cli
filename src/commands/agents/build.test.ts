@@ -6,13 +6,13 @@ import build from './build'
 import path from 'node:path'
 import fs from 'node:fs'
 import colors from 'colors'
-import { OUT_DIR } from '../services/constants'
+import { OUT_DIR } from '../../services/constants'
 import {
     generateInitOptions,
     getProgramMock,
     getTempFolder,
-} from '../utils/test-utils'
-import { runCommand } from '../utils/utils'
+} from '../../utils/test-utils'
+import { runCommand } from '../../utils/utils'
 
 const programMock = getProgramMock()
 
