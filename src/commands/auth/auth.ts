@@ -14,7 +14,7 @@ export async function loginCommand(program: Command) {
     const verbosity = program.opts().verbose
     const logger = new Logger(verbosity)
     // if user is already logged in, ask if they want to log in again
-    const isAuthenticated = isUserAuthenticated()
+    const isAuthenticated = await isUserAuthenticated()
 
     if (isAuthenticated) {
         // ask if they want to log in again
@@ -43,6 +43,8 @@ export async function loginCommand(program: Command) {
     })
 
     if (!next) return process.exit(0)
+
+    logger.log(`Opening browser, if it does not open, please copy this url:`)
 
     await openDeviceActivationUrl(deviceCode.verification_uri)
 

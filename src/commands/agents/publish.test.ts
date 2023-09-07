@@ -16,6 +16,7 @@ import {
 import { runCommand } from '../../utils/utils'
 import { getAvailableChains } from '../../services/utils'
 import axios, { AxiosResponse } from 'axios'
+import nock from 'nock'
 
 const programMock = getProgramMock()
 
@@ -77,6 +78,9 @@ describe('publish', () => {
         it.each(cases)(
             `OK - SOLE %s`,
             async (obj, wasDaemonCreated) => {
+                nock('https://mamoru-be-production.mamoru.foundation')
+                    .post('/graphql')
+                    .reply(200, {})
                 const dir = getTempFolder()
                 const options = generateInitOptions(obj as InitOptions)
                 await init.init(programMock, dir, options)
@@ -170,7 +174,7 @@ describe('publish', () => {
                 .catch((error) => {
                     assert.match(
                         error.message,
-                        /This DaemonMetadata supports multiple chains/
+                        /This Agent Metadata supports multiple chains/
                     )
                 })
         }, 20000)
@@ -198,11 +202,14 @@ describe('publish', () => {
                 .catch((error) => {
                     assert.match(
                         error.message,
-                        /This DaemonMetadata does not support the chain/
+                        /This Agent Metadata does not support the chain/
                     )
                 })
         }, 20000)
         it('OK - multiple chains, chain', async () => {
+            nock('https://mamoru-be-production.mamoru.foundation')
+                .post('/graphql')
+                .reply(200, {})
             const dir = getTempFolder()
             const options = generateInitOptions({
                 type: 'wasm',
@@ -221,6 +228,9 @@ describe('publish', () => {
             })
         }, 20000)
         it('OK - SOLE', async () => {
+            nock('https://mamoru-be-production.mamoru.foundation')
+                .post('/graphql')
+                .reply(200, {})
             const dir = getTempFolder()
             const options = generateInitOptions({ type: 'wasm' })
             await init.init(programMock, dir, options)

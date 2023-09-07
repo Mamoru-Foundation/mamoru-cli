@@ -267,6 +267,7 @@ describe(colors.yellow('init'), () => {
             chain: ['SUI_TESTNET'],
             logo: 'https://test.com/logo.png',
             subscribable: false,
+            skipTelemetry: true,
         }
         await init.init(programMock, dir, options)
 

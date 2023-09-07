@@ -1,10 +1,39 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 import open from 'open'
 import { readRcConfig, writeRcConfig } from '../config'
+import { Logger } from '../console'
+import colors from 'colors'
+import { verify } from 'jsonwebtoken'
+import JwksClient from 'jwks-rsa'
 
 const CLIENT_ID = 'dwauk7iBT36rlvE4XTh3QJ0IxWAv8AGc'
 const DOMAIN = `https://dev-xp12liakgecl7vlc.us.auth0.com`
 const AUDIENCE = 'https://mamoru.ai'
+
+const jwksClient = JwksClient({
+    jwksUri: `${DOMAIN}/.well-known/jwks.json`,
+})
+
+function getKey(header: any, callback: any) {
+    jwksClient.getSigningKey(header.kid, function (err, key) {
+        try {
+            const signingKey = key.getPublicKey()
+            callback(err, signingKey)
+        } catch (err) {
+            callback(err, null)
+        }
+    })
+}
+
+function checkAuth0Token(token: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+        verify(token, getKey, {}, (err, decoded: any) => {
+            if (err) return reject(err)
+
+            return resolve(decoded)
+        })
+    })
+}
 
 export function requestDeviceCode(): Promise<{
     device_code: string
@@ -63,11 +92,13 @@ export function requestTokens(deviceCode: string): Promise<{
 /**
  * Get the user from
  */
-export function isUserAuthenticated() {
+export async function isUserAuthenticated() {
     // read config
     const config = readRcConfig()
     // if no authToken, return false
     if (!config.authToken) return false
+
+    await checkAuth0Token(config.authToken)
 
     // if token check if still valid, if not, remove authToken and return false
 
@@ -89,4 +120,20 @@ export function removeUserToken() {
     delete config.authToken
 
     writeRcConfig(config)
+}
+
+export async function isAuthRequiredGuard() {
+    const logger = new Logger(0)
+    if (!(await isUserAuthenticated())) {
+        logger.error(`You must be logged in to use this command, to solve it, please run
+        
+    ${colors.magenta(`mamoru auth login`)}`)
+        return process.exit(1)
+    }
+}
+
+export function getAuthToken() {
+    const config = readRcConfig()
+
+    return config.authToken
 }

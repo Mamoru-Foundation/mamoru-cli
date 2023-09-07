@@ -30,10 +30,12 @@ describe('AuthService', () => {
     describe('requestTokens', () => {
         it('should null if user havent authorized the device', async () => {
             const r0 = await requestDeviceCode()
-
             const r = await requestTokens(r0.device_code)
-
             expect(r).toBeNull()
         })
+    })
+
+    describe('isUserAuthenticated', () => {
+        it.todo('should return false if user havent authorized the device')
     })
 })

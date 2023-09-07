@@ -20,6 +20,7 @@ import {
     validateAndParseParameterFlag,
 } from '../../utils/utils'
 import { DaemonMetadata } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata'
+import { assignOrganizationToDaemonRepeat } from '../../services/graphql-api/graphql-api.service'
 
 export default async function launch(program: Command, options: LaunchOptions) {
     const { metadataId: metadataId } = options
@@ -75,6 +76,19 @@ export default async function launch(program: Command, options: LaunchOptions) {
         finalChain,
         finalParameterValues,
         options.gas
+    )
+
+    logger.log(`Waiting for daemon to be assigned to organization...`)
+    const gqlres = await assignOrganizationToDaemonRepeat(
+        result.daemonId,
+        logger
+    )
+    logger.verbose(
+        `assignOrganizationToDaemon response: ${JSON.stringify(
+            gqlres,
+            null,
+            2
+        )}`
     )
 
     logger.log(
