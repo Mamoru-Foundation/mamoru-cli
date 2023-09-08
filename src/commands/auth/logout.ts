@@ -14,5 +14,5 @@ export async function logoutCommand(program: Command) {
     }
 
     removeUserToken()
-    logger.ok('You are now logged out!')
+    logger.ok('You are now logged out')
 }
