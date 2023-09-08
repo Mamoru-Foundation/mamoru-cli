@@ -2,7 +2,7 @@ import joi from 'joi'
 import * as fs from 'fs'
 import * as path from 'path'
 import yaml from 'yaml'
-import { formatJoiError } from './utils'
+import { formatJoiError, joiSeverityValidator } from './utils'
 import { FILES } from './constants'
 import { Logger } from './console'
 import { IncidentSeverity } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/incident'
@@ -47,17 +47,7 @@ class QueryManifestService {
         queries: joi.array().items(
             joi.object({
                 query: joi.string().required(),
-                severity: joi
-                    .string()
-                    .valid(
-                        ...Object.values(IncidentSeverity).filter(
-                            (v) =>
-                                typeof v === 'string' &&
-                                v !== '' &&
-                                v !== 'UNRECOGNIZED'
-                        )
-                    )
-                    .required(),
+                severity: joiSeverityValidator,
                 incidentMessage: joi.string().required(),
             })
         ),
