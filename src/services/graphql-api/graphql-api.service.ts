@@ -41,7 +41,7 @@ export async function assignOrganizationToDaemon(
             return res.data
         })
         .catch((e) => {
-            throw e
+            throw e?.response?.data || e
         })
 
     return r
@@ -83,4 +83,46 @@ export async function assignOrganizationToDaemonRepeat(
     throw new Error(
         `Could not assign organization to daemon after ${MAX_ATTEMPTS} attempts`
     )
+}
+
+export async function getDaemonsByIds(
+    daemonIds: string[]
+): Promise<{ id: string }[]> {
+    const query = `#graphql
+    query listDaemons($daemonIds: [String!]!) {
+        listDaemons(pagination:{
+            page: 1,
+            pageSize: 100
+        }, filter:{
+            daemonIds: $daemonIds
+            
+        }){
+            items{
+            id: daemonId
+            }
+        }
+    }
+    `
+
+    const client = getClient()
+
+    const r = await client
+        .post('', {
+            query,
+            variables: { daemonIds },
+        })
+
+        .then((res) => {
+            if (res.data.errors) {
+                throw {
+                    response: res,
+                }
+            }
+            return res
+        })
+        .catch((e) => {
+            throw e?.response?.data || e
+        })
+
+    return r.data.data?.listDaemons?.items
 }

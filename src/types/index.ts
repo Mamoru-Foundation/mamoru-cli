@@ -47,3 +47,9 @@ export type DaemonMetadataContentQueryManifest = {
     version?: string
     queries: DaemonMetadataContentQuery[]
 }
+
+export type Playbook = {
+    on: {
+        daemonId: string
+    }[]
+}

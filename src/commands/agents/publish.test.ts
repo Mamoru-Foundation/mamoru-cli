@@ -105,7 +105,7 @@ describe('publish', () => {
         )
     })
 
-    describe(colors.cyan('WASM'), () => {
+    describe('WASM', () => {
         it('FAIL - no build ', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({ type: 'wasm' })

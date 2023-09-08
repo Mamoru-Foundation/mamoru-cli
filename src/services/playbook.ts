@@ -2,6 +2,7 @@ import joi from 'joi'
 import { Logger } from './console'
 import { Command } from 'commander'
 import { formatJoiError } from './utils'
+import { Playbook } from '../types'
 
 const playbookSchema = joi.object({
     name: joi.string().required(),
@@ -32,4 +33,16 @@ export const isValidPlaybookManifest = (
     }
 
     return true
+}
+
+export const getDaemonIdsFromPlaybook = (playbook: Playbook): string[] => {
+    const daemonIds: string[] = []
+
+    for (const on of playbook.on) {
+        if (on.daemonId) {
+            daemonIds.push(on.daemonId)
+        }
+    }
+
+    return daemonIds
 }
