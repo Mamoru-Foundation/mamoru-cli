@@ -16,6 +16,7 @@ import publishPlaybook, {
 } from './commands/playbooks/playbook-publish'
 import removeDaemon from './commands/agents/daemon-remove'
 import { initializeAuthCommands } from './commands/auth'
+import { isAuthRequiredGuard } from './services/auth'
 
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {
@@ -25,7 +26,7 @@ function parseOrSetCurrentDirectoryPath(path: string) {
         return path
     } else {
         throw new InvalidArgumentError(
-            'Provided path is not exist or not a folder.'
+            'Provided path does not exist or not a folder.'
         )
     }
 }
@@ -49,7 +50,7 @@ function parseOrCreateDirectoryPath(path: string) {
     }
 
     throw new InvalidArgumentError(
-        'Provided path is not exist or not a folder.'
+        'Provided path does not exist or not a folder.'
     )
 }
 
@@ -172,8 +173,9 @@ program
         )
     )
     .description('publish agent project')
-    .action((path: string, options: PublishOptions) => {
-        publishCommand.publish(program, path, options)
+    .action(async (path: string, options: PublishOptions) => {
+        await isAuthRequiredGuard()
+        await publishCommand.publish(program, path, options)
     })
 
 program
@@ -210,8 +212,9 @@ program
             'JSON stringified parameter map ie: {"key": "value"}'
         )
     )
-    .action((options: any) => {
-        launch(program, options)
+    .action(async (options: any) => {
+        await isAuthRequiredGuard()
+        await launch(program, options)
     })
 
 program
@@ -227,8 +230,8 @@ program
             .makeOptionMandatory()
             .env('MAMORU_PRIVATE_KEY')
     )
-    .action((id: string, options: any) => {
-        removeDaemon(program, id, options)
+    .action(async (id: string, options: any) => {
+        await removeDaemon(program, id, options)
     })
 
 const playbook = program
@@ -274,8 +277,9 @@ playbook
             'Id of the playbook, it is required if you want to update a playbook'
         )
     )
-    .action((path: string, options: PlaybookPublishOptions) => {
-        publishPlaybook.playbookPublish(program, path, options)
+    .action(async (path: string, options: PlaybookPublishOptions) => {
+        await isAuthRequiredGuard()
+        await publishPlaybook.playbookPublish(program, path, options)
     })
 
 program.version(

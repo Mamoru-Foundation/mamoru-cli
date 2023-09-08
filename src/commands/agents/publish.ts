@@ -19,6 +19,10 @@ import {
     queryDaemonParameters,
     validateAndParseParameterFlag,
 } from '../../utils/utils'
+import {
+    assignOrganizationToDaemon,
+    assignOrganizationToDaemonRepeat,
+} from '../../services/graphql-api/graphql-api.service'
 
 export interface PublishOptions {
     rpc?: string
@@ -41,6 +45,7 @@ async function publish(
     logger.ok('Validating Query manifest')
 
     const manifest = validateAndReadManifest(logger, program, projectPath)
+    logger.verbose(`manifest: ${JSON.stringify(manifest, null, 2)}`)
     validateBuildPath(program, buildPath, manifest)
 
     logger.ok('Publishing to Validation chain')
@@ -70,7 +75,7 @@ async function publish(
 
     if (manifest.type === 'sql') {
         const queryManifestFile = queryManifest.get(logger, projectPath)
-        const r = await vcService.registerDaemonMetadata(
+        const result = await vcService.registerDaemonMetadata(
             manifest,
             queryManifestFile.queries,
             null,
@@ -82,7 +87,7 @@ async function publish(
                 },
             ]
         )
-        daemonMetadataId = r.daemonMetadataId
+        daemonMetadataId = result.daemonMetadataId
     }
 
     if (manifest.type === 'wasm') {
@@ -97,6 +102,8 @@ async function publish(
         )
         daemonMetadataId = r.daemonMetadataId
     }
+
+    logger.verbose(`daemonMetadataId: ${daemonMetadataId}`)
 
     if (!manifest.subscribable) {
         logger.ok('Registering Daemon to Validation chain')
@@ -118,6 +125,20 @@ async function publish(
             finalParameterValues,
             options.gas
         )
+
+        logger.log(`Waiting for daemon to be assigned to organization...`)
+        const gqlres = await assignOrganizationToDaemonRepeat(
+            r.daemonId,
+            logger
+        )
+        logger.verbose(
+            `assignOrganizationToDaemon response: ${JSON.stringify(
+                gqlres,
+                null,
+                2
+            )}`
+        )
+
         logger.log(
             `Agent registered successfully 🎉
         ℹ️  Metadata Hash(ID):

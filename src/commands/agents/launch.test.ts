@@ -11,9 +11,10 @@ import { randomUUID } from 'crypto'
 import init, { InitOptions } from './init'
 import publish from './publish'
 import { getAvailableChains } from '../../services/utils'
+import nock from 'nock'
 const programMock = getProgramMock()
 
-describe(colors.yellow('spawn'), () => {
+describe('spawn', () => {
     const generateSpawnOptions = (
         override: Partial<LaunchOptions> = {}
     ): LaunchOptions => ({
@@ -35,6 +36,9 @@ describe(colors.yellow('spawn'), () => {
         })
     }, 10000)
     it('FAIL - metadata is not subscribable', async () => {
+        nock('https://mamoru-be-production.mamoru.foundation')
+            .post('/graphql')
+            .reply(200, {})
         const dir = getTempFolder()
         const obj = {
             type: 'sql',
@@ -71,6 +75,9 @@ describe(colors.yellow('spawn'), () => {
         'FAIL - supportedChains have more than 1 element, chain in command options is not supported'
     )
     it('OK - supportedChains have 1 element, no chain in command options', async () => {
+        nock('https://mamoru-be-production.mamoru.foundation')
+            .post('/graphql')
+            .reply(200, {})
         const dir = getTempFolder()
         const obj = {
             type: 'sql',
@@ -88,6 +95,9 @@ describe(colors.yellow('spawn'), () => {
             privateKey: privkey,
             rpc: 'http://0.0.0.0:26657',
         })
+        nock('https://mamoru-be-production.mamoru.foundation')
+            .post('/graphql')
+            .reply(200, {})
 
         const result = await launch(
             programMock,

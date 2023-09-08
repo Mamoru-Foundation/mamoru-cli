@@ -8,6 +8,7 @@ import {
 import publishPlaybook from './playbook-publish'
 import initPlaybook from './playbook-init'
 import assert from 'node:assert'
+import nock from 'nock'
 
 const programMock = getProgramMock()
 
@@ -29,6 +30,15 @@ describe('playbookPublish', () => {
     }, 20000)
 
     it('FAIL - out of gas', async () => {
+        nock('https://mamoru-be-production.mamoru.foundation')
+            .post('/graphql')
+            .reply(200, {
+                data: {
+                    listDaemons: {
+                        items: ['1'],
+                    },
+                },
+            })
         const dir = getTempFolder()
         await initPlaybook.initPlaybook(programMock, dir, {
             name: 'TEST Playbook',
@@ -46,7 +56,16 @@ describe('playbookPublish', () => {
         )
     }, 20000)
 
-    it('OK - Playbook publish', async () => {
+    it('PASS - CREATE/UPDATE daemon does not exists', async () => {
+        nock('https://mamoru-be-production.mamoru.foundation')
+            .post('/graphql')
+            .reply(200, {
+                data: {
+                    listDaemons: {
+                        items: ['1'],
+                    },
+                },
+            })
         const dir = getTempFolder()
         await initPlaybook.initPlaybook(programMock, dir, {
             name: 'TEST Playbook',
@@ -66,7 +85,15 @@ describe('playbookPublish', () => {
         const playbookId = createResult.responsePlaybookId as string
         assert.ok(createResult)
         assert.equal(isTruthyStr(playbookId), true)
-
+        nock('https://mamoru-be-production.mamoru.foundation')
+            .post('/graphql')
+            .reply(200, {
+                data: {
+                    listDaemons: {
+                        items: ['1'],
+                    },
+                },
+            })
         // Update playbook
         const updateResult = await publishPlaybook.playbookPublish(
             programMock,
@@ -83,5 +110,36 @@ describe('playbookPublish', () => {
             isTruthyStr(updateResult.responsePlaybookId as string),
             true
         )
+    }, 20000)
+
+    it('FAIL - CREATE daemon does not exists', async () => {
+        expect.assertions(1)
+        nock('https://mamoru-be-production.mamoru.foundation')
+            .post('/graphql')
+            .reply(200, {
+                data: {
+                    listDaemons: {
+                        items: [],
+                    },
+                },
+            })
+        const dir = getTempFolder()
+        await initPlaybook.initPlaybook(programMock, dir, {
+            name: 'TEST Playbook',
+        })
+        const { privkey } = await generateFoundedUser()
+
+        // Create playbook
+        const createResult = await publishPlaybook
+            .playbookPublish(programMock, dir, {
+                privateKey: privkey,
+                rpc: 'http://0.0.0.0:26657',
+                gas: (100000).toString(),
+            })
+            .catch((e) => {
+                expect(e.message).toMatch(
+                    /ome of the Agents specified in the playbook do not exist/
+                )
+            })
     }, 20000)
 })

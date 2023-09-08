@@ -6,7 +6,7 @@ export async function logoutCommand(program: Command) {
     const verbosity = program.opts().verbose
     const logger = new Logger(verbosity)
     // if user is already logged in, ask if they want to log in again
-    const isAuthenticated = isUserAuthenticated()
+    const isAuthenticated = await isUserAuthenticated()
 
     if (!isAuthenticated) {
         logger.log('You are not logged in.')
@@ -14,5 +14,5 @@ export async function logoutCommand(program: Command) {
     }
 
     removeUserToken()
-    logger.ok('You are now logged out!')
+    logger.ok('You are now logged out')
 }

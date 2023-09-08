@@ -60,32 +60,6 @@ async function buildAssemblyScript(
         program.error(`Input File "${inFile}" not found`)
 
     await runCommand(`npm run build --prefix "${projectPath}"`)
-
-    // const result = await asc
-    //     .main([
-    //         inFile,
-    //         '--exportRuntime',
-    //         // Stub runtime, does not implement garbage collection
-    //         '--runtime',
-    //         'stub',
-    //         '--lib',
-    //         '--outFile',
-    //         outFile,
-    //         '--optimize',
-    //         '--noAssert',
-    //         '--sourceMap',
-    //         '--path',
-    //         `"${path.join(projectPath, 'node_modules')}"`,
-    //     ])
-    //     .then((result) => {
-    //         logger.verbose('Compilation finished')
-    //         return 0
-    //     })
-    //     .catch((error) => {
-    //         logger.verbose('Compilation failed with error')
-    //         console.error(error)
-    //         program.error('Compilation failed')
-    //     })
 }
 
 async function checkAssemblyScriptBuild(

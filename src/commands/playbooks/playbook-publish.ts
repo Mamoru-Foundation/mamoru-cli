@@ -6,8 +6,12 @@ import ValidationChainService from '../../services/validation-chain'
 import { PlaybookDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/playbooks_dto'
 import fs from 'fs'
 import yaml from 'yaml'
-import { isValidPlaybookManifest } from '../../services/playbook'
+import {
+    getDaemonIdsFromPlaybook,
+    isValidPlaybookManifest,
+} from '../../services/playbook'
 import colors from 'colors'
+import { getDaemonsByIds } from '../../services/graphql-api/graphql-api.service'
 
 export interface PlaybookPublishOptions {
     rpc?: string
@@ -56,6 +60,21 @@ async function playbookPublish(
     const playbook: PlaybookDTO = PlaybookDTO.fromJSON(playbookData)
 
     logger.verbose(`Playbook: ${JSON.stringify(playbook, null, 2)}`)
+
+    const daemonIds = getDaemonIdsFromPlaybook(playbook)
+    const existingDaemons = await getDaemonsByIds(daemonIds)
+
+    logger.verbose('existingDaemons', existingDaemons)
+    logger.verbose('playbookDaemonIds', daemonIds)
+
+    if (existingDaemons.length < daemonIds.length) {
+        throw new Error(
+            `Some of the Agents specified in the playbook do not exist. Please check the daemon IDs and try again, 
+                
+                Daemons found: ${existingDaemons.map((d) => d.id).join(', ')}
+                `
+        )
+    }
 
     let responsePlaybookId = ''
     if (options.playbookId) {
