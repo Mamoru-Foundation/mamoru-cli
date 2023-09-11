@@ -98,8 +98,11 @@ export async function isUserAuthenticated() {
     // if no authToken, return false
     if (!config.authToken) return false
 
-    await checkAuth0Token(config.authToken)
-
+    try {
+        await checkAuth0Token(config.authToken)
+    } catch (err) {
+        return false
+    }
     // if token check if still valid, if not, remove authToken and return false
 
     // if valid, return true
