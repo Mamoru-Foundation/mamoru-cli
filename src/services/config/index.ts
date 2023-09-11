@@ -24,12 +24,14 @@ export function readRcConfig() {
         const rcConfigString = fs.readFileSync(rcPath, 'utf-8')
         try {
             const rcConfigJson = JSON.parse(rcConfigString)
-            return rcConfigJson
+            return rcConfigJson || {}
         } catch (err) {
             // eslint-disable-next-line no-console
             console.error('Error parsing rc config file', err)
+            return {}
         }
     }
+    return {}
 }
 
 export function writeRcConfig(rcConfig: RcConfig) {
