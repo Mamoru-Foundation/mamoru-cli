@@ -2,6 +2,7 @@ import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/vali
 import joi from 'joi'
 import { Command } from 'commander'
 import fs from 'fs'
+import { IncidentSeverity } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/incident'
 
 export function formatJoiError(error: joi.ValidationError): string {
     const formattedExplanation = error.details
@@ -34,3 +35,12 @@ export function checkFolderEmptiness(program: Command, paths: string[]): void {
         }
     })
 }
+
+export const joiSeverityValidator = joi
+    .string()
+    .valid(
+        ...Object.values(IncidentSeverity).filter(
+            (v) => typeof v === 'string' && v !== '' && v !== 'UNRECOGNIZED'
+        )
+    )
+    .required()

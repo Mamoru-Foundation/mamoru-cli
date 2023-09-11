@@ -51,7 +51,7 @@ async function playbookPublish(
     // Read and parse the YAML file
     const yamlData = fs.readFileSync(playbookYamlPath, 'utf8')
     const playbookData = yaml.parse(yamlData) as any // Use 'as any' for now
-    if (!isValidPlaybookManifest(logger, program, playbookData)) {
+    if (!isValidPlaybookManifest(logger, playbookData)) {
         logger.error('Playbook validation failed')
         process.exit(1)
     }
