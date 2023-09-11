@@ -92,7 +92,7 @@ export function requestTokens(deviceCode: string): Promise<{
 /**
  * Get the user from
  */
-export async function isUserAuthenticated() {
+export async function isUserAuthenticated(): Promise<boolean> {
     // read config
     const config = readRcConfig()
     // if no authToken, return false
@@ -109,7 +109,7 @@ export async function isUserAuthenticated() {
     return true
 }
 
-export function storeUserToken(authToken: string) {
+export function storeUserToken(authToken: string): void {
     const config = readRcConfig()
 
     config.authToken = authToken
@@ -117,7 +117,7 @@ export function storeUserToken(authToken: string) {
     writeRcConfig(config)
 }
 
-export function removeUserToken() {
+export function removeUserToken(): void {
     const config = readRcConfig()
 
     delete config.authToken
@@ -125,7 +125,7 @@ export function removeUserToken() {
     writeRcConfig(config)
 }
 
-export async function isAuthRequiredGuard() {
+export async function isAuthRequiredGuard(): Promise<void> {
     const logger = new Logger(0)
     if (!(await isUserAuthenticated())) {
         logger.error(`You must be logged in to use this command, to solve it, please run
