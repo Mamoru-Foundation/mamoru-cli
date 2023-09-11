@@ -44,7 +44,11 @@ export async function loginCommand(program: Command) {
 
     if (!next) return process.exit(0)
 
-    logger.log(`Opening browser, if it does not open, please copy this url:`)
+    logger.log(
+        `Opening browser, if it does not open, please copy this url: ${colors.underline(
+            colors.blue(deviceCode.verification_uri)
+        )}`
+    )
 
     await openDeviceActivationUrl(deviceCode.verification_uri)
 
