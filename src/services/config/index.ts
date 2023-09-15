@@ -18,7 +18,7 @@ function getRcConfigPath(): string {
     return path.join(getHomeDirectory(), '.mamorurc', 'config.json')
 }
 
-export function readRcConfig() {
+export function readRcConfig(): RcConfig {
     const rcPath = getRcConfigPath()
     if (fs.existsSync(rcPath)) {
         const rcConfigString = fs.readFileSync(rcPath, 'utf-8')
