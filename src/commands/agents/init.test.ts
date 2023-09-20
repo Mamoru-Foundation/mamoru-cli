@@ -123,7 +123,7 @@ describe(colors.yellow('init'), () => {
                         query: query,
 
                         incidentMessage:
-                            'This is an example Daemon Incident Message',
+                            'This is an example Agent Incident Message',
                         severity: 'SEVERITY_ERROR',
                     },
                 ],
