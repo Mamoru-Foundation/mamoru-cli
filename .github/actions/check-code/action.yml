@@ -8,8 +8,8 @@ runs:
           uses: actions/setup-node@v3
           with:
               node-version: ${{ matrix.node-version }}
-              cache: 'npm'
-        - run: yarn install --frozen-lockfile
+              cache: 'yarn'
+        - run: yarn install --immutable --immutable-cache --check-cache
           shell: bash
         - run: yarn format:ci
           shell: bash
