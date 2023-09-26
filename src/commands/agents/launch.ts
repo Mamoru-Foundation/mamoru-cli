@@ -22,6 +22,8 @@ import {
 import { DaemonMetadata } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata'
 import { assignOrganizationToDaemonRepeat } from '../../services/graphql-api/graphql-api.service'
 
+const env = process.env.NODE_ENV
+
 export default async function launch(program: Command, options: LaunchOptions) {
     const { metadataId: metadataId } = options
     const verbosity = program.opts().verbose
@@ -79,17 +81,19 @@ export default async function launch(program: Command, options: LaunchOptions) {
     )
 
     logger.log(`Waiting for daemon to be assigned to organization...`)
-    const gqlres = await assignOrganizationToDaemonRepeat(
-        result.daemonId,
-        logger
-    )
-    logger.verbose(
-        `assignOrganizationToDaemon response: ${JSON.stringify(
-            gqlres,
-            null,
-            2
-        )}`
-    )
+    if (env == undefined) {
+        const gqlres = await assignOrganizationToDaemonRepeat(
+            result.daemonId,
+            logger
+        )
+        logger.verbose(
+            `assignOrganizationToDaemon response: ${JSON.stringify(
+                gqlres,
+                null,
+                2
+            )}`
+        )
+    }
 
     logger.log(
         `Daemon registered successfully 🎉

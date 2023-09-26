@@ -32,6 +32,8 @@ export interface PublishOptions {
     chain?: string
 }
 
+const env = process.env.NODE_ENV
+
 async function publish(
     program: Command,
     projectPath: string,
@@ -126,6 +128,7 @@ async function publish(
             options.gas
         )
 
+        //if (env == undefined) {
         logger.log(`Waiting for daemon to be assigned to organization...`)
         const gqlres = await assignOrganizationToDaemonRepeat(
             r.daemonId,
@@ -138,6 +141,7 @@ async function publish(
                 2
             )}`
         )
+        //  }
 
         logger.log(
             `Agent registered successfully 🎉

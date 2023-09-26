@@ -19,7 +19,7 @@ runs:
           with:
               node-version: 'lts/*'
         - name: Install dependencies
-          run: yarn install --frozen-lockfile
+          run: yarn install --immutable --immutable-cache --check-cache
           shell: bash
         - name: Build
           run: yarn build

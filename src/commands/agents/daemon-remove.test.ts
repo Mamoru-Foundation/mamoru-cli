@@ -8,6 +8,7 @@ import {
 import init from './init'
 import publish from './publish'
 import removeDaemon from './daemon-remove'
+import nock from 'nock'
 
 const programMock = getProgramMock()
 
@@ -17,7 +18,16 @@ describe('removeDaemon', () => {
         const { privkey } = await generateFoundedUser()
         const options = generateInitOptions()
         await init.init(programMock, dir, options)
-
+        expect.assertions(1)
+        nock('https://mamoru-be-production.mamoru.foundation')
+            .post('/graphql')
+            .reply(200, {
+                data: {
+                    listDaemons: {
+                        items: ['1'],
+                    },
+                },
+            })
         const r = await publish.publish(programMock, dir, {
             privateKey: privkey,
             rpc: 'http://0.0.0.0:26657',

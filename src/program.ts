@@ -146,12 +146,12 @@ program
         parseOrSetCurrentDirectoryPath,
         '.'
     )
-    .option('--rpc <rpcUrl>', 'rpc url of the chain')
+    .option('--rpc <rpcUrl>', 'rpc url of the chain', 'http://localhost:26657')
     .addOption(
         new Option(
             '--gas <gas>',
             'gas fee of the transaction  (if agent is sole, it will be used as limit for both metadata and agent creation)'
-        ).default('200000')
+        ).default('2000000')
     )
     .addOption(
         new Option(
@@ -187,10 +187,10 @@ program
             'Agent MetadataId'
         ).makeOptionMandatory()
     )
-    .option('--rpc <rpcUrl>', 'rpc url of the chain')
+    .option('--rpc <rpcUrl>', 'rpc url of the chain', 'http://localhost:26657')
     .addOption(
         new Option('--gas <gas>', 'gas fee of the transaction').default(
-            '200000'
+            '2000000'
         )
     )
     .addOption(
@@ -221,7 +221,7 @@ program
     .command('remove')
     .description('remove agent from validation chain')
     .argument('<id>', 'Id of the agent')
-    .option('--rpc <rpcUrl>', 'rpc url of the chain')
+    .option('--rpc <rpcUrl>', 'rpc url of the chain', 'http://localhost:26657')
     .addOption(
         new Option(
             '-k, --private-key <key>',
@@ -260,10 +260,10 @@ playbook
         '.'
     )
     .description('publish playbook')
-    .option('--rpc <rpcUrl>', 'rpc url of the chain')
+    .option('--rpc <rpcUrl>', 'rpc url of the chain', 'http://localhost:26657')
     .addOption(
         new Option('--gas <gas>', 'gas fee of the transaction').default(
-            '200000'
+            '2000000'
         )
     )
     .addOption(

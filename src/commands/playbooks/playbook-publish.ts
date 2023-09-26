@@ -20,6 +20,8 @@ export interface PlaybookPublishOptions {
     playbookId?: string
 }
 
+const env = process.env.NODE_ENV
+
 async function playbookPublish(
     program: Command,
     projectPath: string,
@@ -61,34 +63,52 @@ async function playbookPublish(
 
     logger.verbose(`Playbook: ${JSON.stringify(playbook, null, 2)}`)
 
-    const daemonIds = getDaemonIdsFromPlaybook(playbook)
-    const existingDaemons = await getDaemonsByIds(daemonIds)
+    if (env == undefined) {
+        const daemonIds = getDaemonIdsFromPlaybook(playbook)
+        try {
+            const existingDaemons = await getDaemonsByIds(daemonIds)
+            logger.verbose('existingDaemons', existingDaemons)
+            logger.verbose('playbookDaemonIds', daemonIds)
 
-    logger.verbose('existingDaemons', existingDaemons)
-    logger.verbose('playbookDaemonIds', daemonIds)
-
-    if (existingDaemons.length < daemonIds.length) {
-        throw new Error(
-            `Some of the Agents specified in the playbook do not exist. Please check the daemon IDs and try again, 
-                
-                Daemons found: ${existingDaemons.map((d) => d.id).join(', ')}
-                `
-        )
+            if (existingDaemons.length < daemonIds.length) {
+                throw new Error(
+                    `Some of the Agents specified in the playbook do not exist. Please check the daemon IDs and try again, 
+                    
+                    Daemons found: ${existingDaemons
+                        .map((d) => d.id)
+                        .join(', ')}
+                    `
+                )
+            }
+        } catch (error) {
+            handleError(error)
+        }
     }
 
     let responsePlaybookId = ''
     if (options.playbookId) {
-        const response = await vcService.updatePlaybook(
-            options.playbookId,
-            playbook,
-            options.gas
-        )
-        logger.verbose('response', response)
-        responsePlaybookId = response.playbookId
+        try {
+            const response = await vcService.updatePlaybook(
+                options.playbookId,
+                playbook,
+                options.gas
+            )
+            logger.verbose('response', response)
+            responsePlaybookId = response.playbookId
+        } catch (error) {
+            handleError(error)
+        }
     } else {
-        const response = await vcService.createPlaybook(playbook, options.gas)
-        logger.verbose('response', response)
-        responsePlaybookId = response.playbookId
+        try {
+            const response = await vcService.createPlaybook(
+                playbook,
+                options.gas
+            )
+            logger.verbose('response', response)
+            responsePlaybookId = response.playbookId
+        } catch (error) {
+            handleError(error)
+        }
     }
 
     logger.ok('Publishing to Validation chain')
@@ -105,6 +125,19 @@ async function playbookPublish(
     return {
         responsePlaybookId,
     }
+}
+
+function handleError(error: any) {
+    let message = ''
+    if (error.errors) {
+        for (const err of error.errors) {
+            message += err.message + '\n'
+        }
+    } else {
+        message = error
+    }
+
+    throw new Error(message)
 }
 
 export default {

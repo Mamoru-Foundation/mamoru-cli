@@ -6,6 +6,7 @@ import { Playbook } from '../types'
 
 const playbookSchema = joi.object({
     name: joi.string().required(),
+    description: joi.string().optional(),
     on: joi.array().items(
         joi.object({
             daemonId: joi.string(),

@@ -23,8 +23,10 @@ describe('spawn', () => {
         ...override,
     })
     it('FAIL - metadataId - metadata not found', async () => {
-        expect.assertions(1)
         const { privkey } = await generateFoundedUser()
+        nock('https://mamoru-be-production.mamoru.foundation')
+            .post('/graphql')
+            .reply(200, {})
         await launch(
             programMock,
             generateSpawnOptions({
