@@ -6,9 +6,10 @@ import colors from 'colors'
 import { verify } from 'jsonwebtoken'
 import JwksClient from 'jwks-rsa'
 
-const CLIENT_ID = 'dwauk7iBT36rlvE4XTh3QJ0IxWAv8AGc'
-const DOMAIN = `https://dev-xp12liakgecl7vlc.us.auth0.com`
-const AUDIENCE = 'https://mamoru.ai'
+const CLIENT_ID =
+    process.env.MAMORU_CLI_AUTH0_CLIENT_ID ?? 'DKVTdw1UnneGumqOAPrEJs8RqdGTDd2e'
+const DOMAIN = process.env.MAMORU_CLI_AUTH0_DOMAIN ?? `mamoru.us.auth0.com`
+const AUDIENCE = process.env.MAMORU_CLI_AUTH0_AUDIENCE ?? 'https://mamoru.ai'
 
 const jwksClient = JwksClient({
     jwksUri: `${DOMAIN}/.well-known/jwks.json`,
