@@ -8,7 +8,7 @@ import JwksClient from 'jwks-rsa'
 
 const CLIENT_ID =
     process.env.MAMORU_CLI_AUTH0_CLIENT_ID ?? 'DKVTdw1UnneGumqOAPrEJs8RqdGTDd2e'
-const DOMAIN = process.env.MAMORU_CLI_AUTH0_DOMAIN ?? `mamoru.us.auth0.com`
+const DOMAIN = process.env.MAMORU_CLI_AUTH0_DOMAIN ?? `https://mamoru.us.auth0.com`
 const AUDIENCE = process.env.MAMORU_CLI_AUTH0_AUDIENCE ?? 'https://mamoru.ai'
 
 const jwksClient = JwksClient({
