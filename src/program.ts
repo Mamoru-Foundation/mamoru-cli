@@ -9,7 +9,7 @@ import launch from './commands/agents/launch'
 import { getAvailableChains } from './services/utils'
 import { askForTelemetry } from './commands/ask-for-telemetry'
 import initPlaybook, {
-    PlaybookOptions,
+    InitPlaybookOptions,
 } from './commands/playbooks/playbook-init'
 import publishPlaybook, {
     PlaybookPublishOptions,
@@ -60,12 +60,22 @@ function increaseVerbosity(dummyValue: string, previous: number) {
 
 program.name('mamoru-cli')
 
-program.option(
-    '-v, --verbose',
-    'define verbosity to show execution logs',
-    increaseVerbosity,
-    0
-)
+program
+    .option(
+        '-v, --verbose',
+        'define verbosity to show execution logs',
+        increaseVerbosity,
+        0
+    )
+    .addOption(
+        new Option(
+            '--skipTelemetry',
+            'Skip telemetry question, useful for CI/CD'
+        )
+    )
+    .configureHelp({
+        showGlobalOptions: true,
+    })
 
 initializeAuthCommands(program)
 
@@ -113,12 +123,7 @@ program
             'If the project is subscribable, or standalone'
         ).default(false)
     )
-    .addOption(
-        new Option(
-            '--skipTelemetry',
-            'Skip telemetry question, useful for CI/CD'
-        )
-    )
+
     .description('initialize a new Agent project in a folder')
     .action(async (path: string, options: InitOptions) => {
         await askForTelemetry(options)
@@ -134,7 +139,8 @@ program
         '.'
     )
     .description('compile agent project')
-    .action((path: string) => {
+    .action(async (path: string, options: any) => {
+        await askForTelemetry(options)
         compileCommand.build(program, path)
     })
 
@@ -175,6 +181,7 @@ program
     .description('publish agent project')
     .action(async (path: string, options: PublishOptions) => {
         await isAuthRequiredGuard()
+        await askForTelemetry(options)
         await publishCommand.publish(program, path, options)
     })
 
@@ -214,6 +221,7 @@ program
     )
     .action(async (options: any) => {
         await isAuthRequiredGuard()
+        await askForTelemetry(options)
         await launch(program, options)
     })
 
@@ -231,6 +239,7 @@ program
             .env('MAMORU_PRIVATE_KEY')
     )
     .action(async (id: string, options: any) => {
+        await askForTelemetry(options)
         await removeDaemon(program, id, options)
     })
 
@@ -247,7 +256,8 @@ playbook
     )
     .description('initialize playbook in a folder')
     .addOption(new Option('-n, --name <name>', 'Name of the playbook'))
-    .action((path: string, options: PlaybookOptions) => {
+    .action(async (path: string, options: InitPlaybookOptions) => {
+        await askForTelemetry(options)
         initPlaybook.initPlaybook(program, path, options)
     })
 
@@ -278,6 +288,7 @@ playbook
         )
     )
     .action(async (path: string, options: PlaybookPublishOptions) => {
+        await askForTelemetry(options)
         await isAuthRequiredGuard()
         await publishPlaybook.playbookPublish(program, path, options)
     })

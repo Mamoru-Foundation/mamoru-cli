@@ -13,7 +13,7 @@ import { checkFolderEmptiness } from '../../services/utils'
 async function initPlaybook(
     program: Command,
     projectPath: string,
-    options: PlaybookOptions
+    options: InitPlaybookOptions
 ) {
     const verbosity = program.opts().verbose
     const logger = new Logger(verbosity)
@@ -50,7 +50,7 @@ async function initPlaybook(
 
 //
 async function getAugmentedInitOptions(
-    options: PlaybookOptions,
+    options: InitPlaybookOptions,
     projectPath: string
 ): Promise<AugmentedPlaybookOptions> {
     let name
@@ -96,11 +96,12 @@ function createFile(
     fs.writeFileSync(targetPath, result)
 }
 
-export interface PlaybookOptions {
+export interface InitPlaybookOptions {
     name: string
+    skipTelemetry: true
 }
 
-export interface AugmentedPlaybookOptions extends PlaybookOptions {
+export interface AugmentedPlaybookOptions extends InitPlaybookOptions {
     kebabName: string
 }
 

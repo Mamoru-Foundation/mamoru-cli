@@ -30,6 +30,7 @@ export interface PublishOptions {
     gas?: string
     parameters?: string
     chain?: string
+    skipTelemetry?: boolean
 }
 
 const env = process.env.NODE_ENV

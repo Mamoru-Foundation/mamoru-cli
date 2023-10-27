@@ -18,6 +18,7 @@ export interface PlaybookPublishOptions {
     privateKey: string
     gas?: string
     playbookId?: string
+    skipTelemetry?: boolean
 }
 
 const env = process.env.NODE_ENV
