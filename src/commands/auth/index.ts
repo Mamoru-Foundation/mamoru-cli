@@ -1,6 +1,7 @@
 import { Command } from 'commander'
 import { loginCommand } from './auth'
 import { logoutCommand } from './logout'
+import { askForTelemetry } from '../ask-for-telemetry'
 
 export const initializeAuthCommands = (program: Command) => {
     const authSubCommand = program
@@ -10,10 +11,16 @@ export const initializeAuthCommands = (program: Command) => {
     authSubCommand
         .command('login')
         .description('Login to Mamoru')
-        .action(() => loginCommand(program))
+        .action(async (options: any) => {
+            await askForTelemetry(options)
+            await loginCommand(program)
+        })
 
     authSubCommand
         .command('logout')
         .description('Logout from Mamoru')
-        .action(() => logoutCommand(program))
+        .action(async (options: any) => {
+            await askForTelemetry(options)
+            logoutCommand(program)
+        })
 }
