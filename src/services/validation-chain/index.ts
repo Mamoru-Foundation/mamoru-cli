@@ -151,7 +151,7 @@ class ValidationChainService {
             value: message,
             fee: {
                 amount: [],
-                gas: gas || '200000',
+                gas: gas || 'auto',
             },
         })
 
@@ -246,7 +246,7 @@ class ValidationChainService {
             value,
             fee: {
                 amount: [],
-                gas: '200000',
+                gas: 'auto',
             },
         })
 
@@ -294,7 +294,7 @@ class ValidationChainService {
             value,
             fee: {
                 amount: [],
-                gas: gas || '200000',
+                gas: gas || 'auto',
             },
         })
         this.throwOnError('MsgRegisterDaemon', result)
@@ -341,7 +341,7 @@ class ValidationChainService {
             value,
             fee: {
                 amount: [],
-                gas: gas || '200000',
+                gas: gas || 'auto',
             },
         })
         this.throwOnError('MsgRegisterDaemon', result)
@@ -367,7 +367,7 @@ class ValidationChainService {
             value,
             fee: {
                 amount: [],
-                gas: gas || '200000',
+                gas: gas || 'auto',
             },
         })
         this.logger.verbose('Payload result', result)
@@ -409,11 +409,12 @@ class ValidationChainService {
             creator: address,
             playbook: playbook,
         }
+
         const result = await txClient.sendMsgUpdatePlaybook({
             value,
             fee: {
                 amount: [],
-                gas: gas || '200000',
+                gas: 'auto',
             },
         })
         this.logger.verbose('Payload result', result)

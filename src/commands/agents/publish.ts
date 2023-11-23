@@ -19,10 +19,7 @@ import {
     queryDaemonParameters,
     validateAndParseParameterFlag,
 } from '../../utils/utils'
-import {
-    assignOrganizationToDaemon,
-    assignOrganizationToDaemonRepeat,
-} from '../../services/graphql-api/graphql-api.service'
+import { assignOrganizationToDaemonRepeat } from '../../services/graphql-api/graphql-api.service'
 
 export interface PublishOptions {
     rpc?: string
