@@ -39,10 +39,6 @@ import {
     MsgUpdatePlaybookResponse,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/tx'
 import protobuf from 'protobufjs'
-import {
-    Chain_ChainType,
-    chain_ChainTypeFromJSON,
-} from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import { SnifferRegisterCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/sniffer_register_command_request_dto'
 import { DaemonMetadata } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata'
 import {
@@ -132,8 +128,8 @@ class ValidationChainService {
             title: manifest.name,
             description: manifest.description,
             tags: manifest.tags,
-            supportedChains: this.getChainTypes(manifest).map((chain) => ({
-                chainType: chain,
+            supportedChains: manifest.chains.map((chainName) => ({
+                name: chainName,
             })),
             parameters: getMetadataParametersFromManifest(manifest),
             content: getDaemonContent(manifest, queries, wasmModule),
@@ -196,7 +192,7 @@ class ValidationChainService {
             tags: metadata.tags || [],
             supportedChains:
                 metadata.supportedChains?.map((el) => ({
-                    chainType: Chain_ChainType[el.chain_type],
+                    name: el.name,
                 })) || [],
             parameters:
                 metadata.parameters?.map(
@@ -260,7 +256,7 @@ class ValidationChainService {
     public async registerDaemonFromManifest(
         manifest: Manifest,
         daemonMetadataId: string,
-        chain: string,
+        chainName: string,
         parameterValues: DaemonParameterMap,
         gas?: string
     ): Promise<MsgRegisterDaemonResponse> {
@@ -270,7 +266,7 @@ class ValidationChainService {
 
         const payload: DaemonRegisterCommandRequestDTO = {
             chain: {
-                chainType: chain_ChainTypeFromJSON(chain),
+                name: chainName,
             },
             daemonMetadataId,
             parameters:
@@ -307,7 +303,7 @@ class ValidationChainService {
 
     public async registerDaemon(
         daemonMetadataId: string,
-        chainType: string,
+        chainName: string,
         parameterValues: DaemonParameterMap,
         gas?: string
     ): Promise<MsgRegisterDaemonResponse> {
@@ -317,7 +313,7 @@ class ValidationChainService {
 
         const payload: DaemonRegisterCommandRequestDTO = {
             chain: {
-                chainType: chain_ChainTypeFromJSON(chainType),
+                name: chainName,
             },
             daemonMetadataId,
             parameters:
@@ -424,17 +420,6 @@ class ValidationChainService {
         const decodedArr = this.decodeTxMessages(data)
         return decodedArr[0] as MsgUpdatePlaybookResponse
     }
-
-    /**
-     * Get the chain type from the manifest.
-     * Exported just for testing purposes
-     */
-    public getChainTypes(manifest: Manifest): Chain_ChainType[] {
-        const chains = manifest.chains
-        if (!chains) throw new Error('Chain type not defined in manifest')
-
-        return chains.map((chain) => chain_ChainTypeFromJSON(chain))
-    }
     // private methods
 
     private async getWallet() {
@@ -444,31 +429,6 @@ class ValidationChainService {
 
         this.wallet = wallet
         return wallet
-    }
-
-    private async registerSniffer(address: string, chain: Chain_ChainType) {
-        const txClient = await this.getTxClient()
-
-        const payload: SnifferRegisterCommandRequestDTO = {
-            chains: [{ chainType: chain }],
-            sniffer: address,
-        }
-
-        const message: MsgRegisterSniffer = {
-            creator: address,
-            sniffer: payload,
-        }
-
-        const result = await txClient.sendMsgRegisterSniffer({
-            value: message,
-        })
-
-        this.throwOnError('MsgRegisterSniffer', result)
-
-        const data = await this.getTxDataOnlyResponse(result.transactionHash)
-
-        const decodeTxMessages = this.decodeTxMessages(data)
-        return decodeTxMessages[0] as MsgRegisterSnifferResponse
     }
 
     private async getVcClient(): Promise<any> {

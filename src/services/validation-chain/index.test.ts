@@ -11,18 +11,6 @@ import {
 import { getMetadataParametersFromManifest } from './utils'
 
 describe('ValidationChain', () => {
-    describe('getChainType', () => {
-        it('should return the correct chain type', () => {
-            const vc = new ValidationChainService('', '', new Logger(2))
-
-            expect(
-                vc.getChainTypes({
-                    chains: ['SUI_TESTNET'],
-                } as unknown as Manifest)
-            ).toEqual([1])
-        })
-    })
-
     describe('getDaemonMetadataById', () => {
         it('Should throw an error if the daemon is not found', async () => {
             const { privkey } = await generateFoundedUser()
@@ -143,12 +131,12 @@ describe('utils', () => {
                     defaultValue: 'default',
                     requiredFor: [
                         {
-                            chainType: 1,
+                            name: 'SUI_TESTNET',
                         },
                     ],
                     hiddenFor: [
                         {
-                            chainType: 1,
+                            name: 'SUI_TESTNET',
                         },
                     ],
                 },

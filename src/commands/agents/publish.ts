@@ -129,20 +129,20 @@ async function publish(
             options.gas
         )
 
-        //if (env == undefined) {
-        logger.log(`Waiting for daemon to be assigned to organization...`)
-        const gqlres = await assignOrganizationToDaemonRepeat(
-            r.daemonId,
-            logger
-        )
-        logger.verbose(
-            `assignOrganizationToDaemon response: ${JSON.stringify(
-                gqlres,
-                null,
-                2
-            )}`
-        )
-        //  }
+        if (env != 'test') {
+            logger.log(`Waiting for daemon to be assigned to organization...`)
+            const gqlres = await assignOrganizationToDaemonRepeat(
+                r.daemonId,
+                logger
+            )
+            logger.verbose(
+                `assignOrganizationToDaemon response: ${JSON.stringify(
+                    gqlres,
+                    null,
+                    2
+                )}`
+            )
+        }
 
         logger.log(
             `Agent registered successfully 🎉

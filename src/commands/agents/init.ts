@@ -102,11 +102,11 @@ async function getAugmentedInitOptions(
 
 async function queryChains(options: InitOptions): Promise<string[]> {
     if (options.chain) return options.chain
-
+    const choices = (await getAvailableChains()).map((c) => ({
+        value: c,
+    }))
     const chain = await checkbox({
-        choices: getAvailableChains().map((c) => ({
-            value: c,
-        })),
+        choices,
         message: 'Select the chain you want to use',
     })
 
