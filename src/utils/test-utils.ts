@@ -5,10 +5,6 @@ import { Command } from 'commander'
 import { InitOptions } from '../commands/agents/init'
 import { DirectSecp256k1HdWallet as Wallet } from '@cosmjs/proto-signing'
 import axios from 'axios'
-import {
-    Chain_ChainType,
-    chain_ChainTypeToJSON,
-} from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import { Manifest, ManifestParameter } from '../types'
 
 /**
@@ -110,7 +106,7 @@ export const generateManifest = (obj: Partial<Manifest> = {}): Manifest => ({
     version: '0.0.1',
     type: 'wasm',
     name: 'test',
-    chains: [chain_ChainTypeToJSON(Chain_ChainType.SUI_TESTNET)],
+    chains: ['SUI_TESTNET'],
     description: 'test_description',
     parameters: [],
     logoUrl: 'https://test.com/hello.png',
@@ -135,7 +131,7 @@ export const generateParameter = (
     key: 'test',
     description: 'test',
     defaultValue: 'default',
-    requiredFor: [chain_ChainTypeToJSON(Chain_ChainType.SUI_TESTNET)],
-    hiddenFor: [chain_ChainTypeToJSON(Chain_ChainType.SUI_TESTNET)],
+    requiredFor: ['SUI_TESTNET'],
+    hiddenFor: ['SUI_TESTNET'],
     ...obj,
 })

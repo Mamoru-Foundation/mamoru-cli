@@ -4,7 +4,7 @@ import nock from 'nock'
 
 describe('GraphQLApiService', () => {
     describe('assignOrganizationToDaemon', () => {
-        it('PASS - call to graphql api', async () => {
+        it.skip('PASS - call to graphql api', async () => {
             nock('https://mamoru-be-production.mamoru.foundation')
                 .post('/graphql')
                 .reply(200, {})

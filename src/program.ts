@@ -6,7 +6,6 @@ import initCommand, { InitOptions } from './commands/agents/init'
 import compileCommand from './commands/agents/build'
 import publishCommand, { PublishOptions } from './commands/agents/publish'
 import launch from './commands/agents/launch'
-import { getAvailableChains } from './services/utils'
 import { askForTelemetry } from './commands/ask-for-telemetry'
 import initPlaybook, {
     InitPlaybookOptions,
@@ -93,10 +92,7 @@ program
             .default('wasm')
     )
     .addOption(
-        new Option(
-            '-c, --chain <chain...>',
-            'Chain where the Agent runs'
-        ).choices(getAvailableChains() as unknown as string[])
+        new Option('-c, --chain <chain...>', 'Chain where the Agent runs')
     )
     .addOption(new Option('-n, --name <name>', 'Name of the project'))
     .addOption(
@@ -167,11 +163,7 @@ program
             .makeOptionMandatory()
             .env('MAMORU_PRIVATE_KEY')
     )
-    .addOption(
-        new Option('-c, --chain <chain>', 'Chain to deploy').choices(
-            getAvailableChains() as unknown as string[]
-        )
-    )
+    .addOption(new Option('-c, --chain <chain>', 'Chain to deploy'))
     .addOption(
         new Option(
             '--parameters <parameters>',
@@ -208,11 +200,7 @@ program
             .makeOptionMandatory()
             .env('MAMORU_PRIVATE_KEY')
     )
-    .addOption(
-        new Option('-c, --chain <chain>', 'Chain to deploy').choices(
-            getAvailableChains() as unknown as string[]
-        )
-    )
+    .addOption(new Option('-c, --chain <chain>', 'Chain to deploy'))
     .addOption(
         new Option(
             '--parameters <parameters>',

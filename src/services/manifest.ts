@@ -61,14 +61,8 @@ const manifestParameterSchema = joi.object().keys({
     title: joi.string().required(),
     description: joi.string().optional(),
     defaultValue: joi.string().optional(),
-    requiredFor: joi
-        .array()
-        .items(joi.string().valid(...getAvailableChains()))
-        .optional(),
-    hiddenFor: joi
-        .array()
-        .items(joi.string().valid(...getAvailableChains()))
-        .optional(),
+    requiredFor: joi.array().items(joi.string()).optional(),
+    hiddenFor: joi.array().items(joi.string()).optional(),
 })
 
 /**
@@ -80,10 +74,7 @@ export const manifestSchema = joi.object().keys({
     description: joi.string().optional(),
     subscribable: joi.boolean().optional(),
     name: joi.string().required(),
-    chains: joi
-        .array()
-        .items(joi.string().valid(...getAvailableChains()))
-        .min(1),
+    chains: joi.array().items(joi.string()).min(1),
     tags: joi.array().items(joi.string()).optional(),
     logoUrl: joi
         .string()

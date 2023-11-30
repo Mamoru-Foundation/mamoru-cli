@@ -4,7 +4,6 @@ import {
     DaemonParameterMap,
     Manifest,
 } from '../../types'
-import { chain_ChainTypeFromJSON } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import { DaemonParameter } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/daemon'
 
 export const getMetadataParametersFromManifest = (
@@ -18,10 +17,10 @@ export const getMetadataParametersFromManifest = (
             parameter.type
         ),
         hiddenFor: (parameter.hiddenFor || []).map((chain) => ({
-            chainType: chain_ChainTypeFromJSON(chain),
+            name: chain,
         })),
         requiredFor: (parameter.requiredFor || []).map((chain) => ({
-            chainType: chain_ChainTypeFromJSON(chain),
+            name: chain,
         })),
     }))
 
