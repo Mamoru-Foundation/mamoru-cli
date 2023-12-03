@@ -6,7 +6,6 @@ import initCommand, { InitOptions } from './commands/agents/init'
 import compileCommand from './commands/agents/build'
 import publishCommand, { PublishOptions } from './commands/agents/publish'
 import launch from './commands/agents/launch'
-import { getAvailableChains } from './services/utils'
 import { askForTelemetry } from './commands/ask-for-telemetry'
 import initPlaybook, {
     InitPlaybookOptions,
@@ -17,6 +16,7 @@ import publishPlaybook, {
 import removeDaemon from './commands/agents/daemon-remove'
 import { initializeAuthCommands } from './commands/auth'
 import { isAuthRequiredGuard } from './services/auth'
+import { privateKeyOption, rpcOption } from './utils/program-utils'
 
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {
@@ -93,10 +93,7 @@ program
             .default('wasm')
     )
     .addOption(
-        new Option(
-            '-c, --chain <chain...>',
-            'Chain where the Agent runs'
-        ).choices(getAvailableChains() as unknown as string[])
+        new Option('-c, --chain <chain...>', 'Chain where the Agent runs')
     )
     .addOption(new Option('-n, --name <name>', 'Name of the project'))
     .addOption(
@@ -152,26 +149,15 @@ program
         parseOrSetCurrentDirectoryPath,
         '.'
     )
-    .option('--rpc <rpcUrl>', 'rpc url of the chain', 'http://localhost:26657')
+    .addOption(rpcOption)
     .addOption(
         new Option(
             '--gas <gas>',
             'gas fee of the transaction  (if agent is sole, it will be used as limit for both metadata and agent creation)'
         ).default('2000000')
     )
-    .addOption(
-        new Option(
-            '-k, --private-key <key>',
-            'Private key of the account that will be used to publish the project'
-        )
-            .makeOptionMandatory()
-            .env('MAMORU_PRIVATE_KEY')
-    )
-    .addOption(
-        new Option('-c, --chain <chain>', 'Chain to deploy').choices(
-            getAvailableChains() as unknown as string[]
-        )
-    )
+    .addOption(privateKeyOption)
+    .addOption(new Option('-c, --chain <chain>', 'Chain to deploy'))
     .addOption(
         new Option(
             '--parameters <parameters>',
@@ -194,25 +180,14 @@ program
             'Agent MetadataId'
         ).makeOptionMandatory()
     )
-    .option('--rpc <rpcUrl>', 'rpc url of the chain', 'http://localhost:26657')
+    .addOption(rpcOption)
     .addOption(
         new Option('--gas <gas>', 'gas fee of the transaction').default(
             '2000000'
         )
     )
-    .addOption(
-        new Option(
-            '-k, --private-key <key>',
-            'Private key of the account that will be used to publish the project'
-        )
-            .makeOptionMandatory()
-            .env('MAMORU_PRIVATE_KEY')
-    )
-    .addOption(
-        new Option('-c, --chain <chain>', 'Chain to deploy').choices(
-            getAvailableChains() as unknown as string[]
-        )
-    )
+    .addOption(privateKeyOption)
+    .addOption(new Option('-c, --chain <chain>', 'Chain to deploy'))
     .addOption(
         new Option(
             '--parameters <parameters>',
@@ -229,15 +204,8 @@ program
     .command('remove')
     .description('remove agent from validation chain')
     .argument('<id>', 'Id of the agent')
-    .option('--rpc <rpcUrl>', 'rpc url of the chain', 'http://localhost:26657')
-    .addOption(
-        new Option(
-            '-k, --private-key <key>',
-            'Private key of the account that will be used to publish the project'
-        )
-            .makeOptionMandatory()
-            .env('MAMORU_PRIVATE_KEY')
-    )
+    .addOption(rpcOption)
+    .addOption(privateKeyOption)
     .action(async (id: string, options: any) => {
         await askForTelemetry(options)
         await removeDaemon(program, id, options)
@@ -270,14 +238,14 @@ playbook
         '.'
     )
     .description('publish playbook')
-    .option('--rpc <rpcUrl>', 'rpc url of the chain', 'http://localhost:26657')
+    .addOption(rpcOption)
     .addOption(
         new Option('--gas <gas>', 'gas fee of the transaction').default(
             '2000000'
         )
     )
     .addOption(
-        new Option('-k, --private-key <key>', 'Private key')
+        new Option('rpcOption', 'Private key')
             .makeOptionMandatory()
             .env('MAMORU_PRIVATE_KEY')
     )

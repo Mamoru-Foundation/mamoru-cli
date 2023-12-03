@@ -14,7 +14,6 @@ export interface LaunchOptions {
 }
 import colors from 'colors'
 import { MAMORU_EXPLORER_URL } from '../../services/constants'
-import { chain_ChainTypeToJSON } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import {
     queryDaemonParameters,
     validateAndParseParameterFlag,
@@ -115,12 +114,12 @@ async function queryChain(
 ): Promise<string> {
     if (options.chain) return options.chain
     if (metadata.supportedChains.length === 1)
-        return chain_ChainTypeToJSON(metadata.supportedChains[0].chainType)
+        return metadata.supportedChains[0].name
 
     const chain = await select({
         message: 'To what chain do you want to register the daemon?',
         choices: metadata.supportedChains.map((chain) => ({
-            value: chain_ChainTypeToJSON(chain.chainType),
+            value: chain.name,
         })),
     })
 

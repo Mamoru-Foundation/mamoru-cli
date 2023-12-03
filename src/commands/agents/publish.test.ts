@@ -14,7 +14,6 @@ import {
     isTruthyStr,
 } from '../../utils/test-utils'
 import { runCommand } from '../../utils/utils'
-import { getAvailableChains } from '../../services/utils'
 import axios, { AxiosResponse } from 'axios'
 import nock from 'nock'
 
@@ -56,16 +55,17 @@ describe('publish', () => {
         }
     }, 20000)
     describe('SQL', () => {
+        const weelKnownChains = ['SUI_TESTNET', 'SUI_MAINNET']
         // @ts-ignore
         const cases: [Partial<InitOptions>, boolean] = [
-            ...getAvailableChains().map((chain) => [
+            ...weelKnownChains.map((chain) => [
                 {
                     type: 'sql',
                     chain,
                 },
                 true,
             ]),
-            ...getAvailableChains().map((chain) => [
+            ...weelKnownChains.map((chain) => [
                 {
                     type: 'sql',
                     subscribable: true,
@@ -223,7 +223,7 @@ describe('publish', () => {
             const r = await publish.publish(programMock, dir, {
                 privateKey: privkey,
                 rpc: 'http://0.0.0.0:26657',
-                gas: '100000',
+                gas: '110000',
                 chain: 'SUI_TESTNET',
             })
         }, 20000)

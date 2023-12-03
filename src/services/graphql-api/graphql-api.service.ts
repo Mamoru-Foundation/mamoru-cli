@@ -55,7 +55,6 @@ export async function assignOrganizationToDaemonRepeat(
     const MAX_ATTEMPTS = 100
 
     let attempts = 0
-
     while (attempts < MAX_ATTEMPTS) {
         try {
             const res = await assignOrganizationToDaemon(daemonId)
@@ -125,4 +124,46 @@ export async function getDaemonsByIds(
         })
 
     return r.data.data?.listDaemons?.items
+}
+
+export async function getSupportedNetworks() {
+    const query = `#graphql
+    query listNetworks {
+	listNetworks{
+        items{
+        enumKey
+        enumValue
+        name
+        enabled
+        explorerTxUrl
+        explorerAccUrl
+        explorerBlockUrl
+        logoUrl24x24
+        logoUrl48x48
+        }
+    }
+    }
+
+    `
+
+    const client = getClient()
+
+    const r = await client
+        .post('', {
+            query,
+        })
+
+        .then((res) => {
+            if (res.data.errors) {
+                throw {
+                    response: res,
+                }
+            }
+            return res
+        })
+        .catch((e) => {
+            throw e?.response?.data || e
+        })
+
+    return r.data.data?.listNetworks?.items || []
 }

@@ -7,7 +7,6 @@ import fs from 'node:fs'
 import colors from 'colors'
 import yaml from 'yaml'
 import { getProgramMock, getTempFolder } from '../../utils/test-utils'
-import { Chain_ChainType } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/chain'
 import { sdkVersions } from '../../sdk-dependency-versions'
 import { DEFAULT_MAMORU_VERSION } from '../../services/constants'
 
@@ -16,39 +15,39 @@ const programMock = getProgramMock()
 describe(colors.yellow('init'), () => {
     const sqlCases = [
         [
-            'SUI_MAINNET' as keyof Chain_ChainType,
+            'SUI_MAINNET',
             "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
         ],
         [
-            'SUI_TESTNET' as keyof Chain_ChainType,
+            'SUI_TESTNET',
             "SELECT 1 FROM transactions t WHERE starts_with(t.digest, '0x1_this_is_an_example_query')",
         ],
         [
-            'BSC_TESTNET' as keyof Chain_ChainType,
+            'BSC_TESTNET',
             "SELECT 1 FROM transactions t WHERE starts_with(t.tx_hash, '0x1_this_is_an_example_query')",
         ],
         [
-            'BSC_MAINNET' as keyof Chain_ChainType,
+            'BSC_MAINNET',
             "SELECT 1 FROM transactions t WHERE starts_with(t.tx_hash, '0x1_this_is_an_example_query')",
         ],
         [
-            'ETH_TESTNET' as keyof Chain_ChainType,
+            'ETH_TESTNET',
             "SELECT 1 FROM transactions t WHERE starts_with(t.tx_hash, '0x1_this_is_an_example_query')",
         ],
         [
-            'ETH_MAINNET' as keyof Chain_ChainType,
+            'ETH_MAINNET',
             "SELECT 1 FROM transactions t WHERE starts_with(t.tx_hash, '0x1_this_is_an_example_query')",
         ],
         [
-            'APTOS_TESTNET' as keyof Chain_ChainType,
+            'APTOS_TESTNET',
             "SELECT 1 FROM transactions t WHERE starts_with(t.hash, '0x1_this_is_an_example_query')",
         ],
         [
-            'APTOS_MAINNET' as keyof Chain_ChainType,
+            'APTOS_MAINNET',
             "SELECT 1 FROM transactions t WHERE starts_with(t.hash, '0x1_this_is_an_example_query')",
         ],
-        ['UNRECOGNIZED' as keyof Chain_ChainType, 'SELECT 1 FROM transactions'],
-        ['SUI_DEVNET' as keyof Chain_ChainType, 'SELECT 1 FROM transactions'],
+        ['UNRECOGNIZED', 'SELECT 1 FROM transactions'],
+        ['SUI_DEVNET', 'SELECT 1 FROM transactions'],
     ]
     it.each(sqlCases)(
         'OK - Should create Files - type=sql, %s',
@@ -133,43 +132,43 @@ describe(colors.yellow('init'), () => {
 
     const wasmCases = [
         [
-            'SUI_MAINNET' as keyof Chain_ChainType,
+            'SUI_MAINNET',
             '@mamoru-ai/mamoru-sui-sdk-as',
             sdkVersions.sui,
             'import { SuiCtx } from "@mamoru-ai/mamoru-sui-sdk-as/assembly"',
         ],
         [
-            'SUI_TESTNET' as keyof Chain_ChainType,
+            'SUI_TESTNET',
             '@mamoru-ai/mamoru-sui-sdk-as',
             sdkVersions.sui,
             'import { SuiCtx } from "@mamoru-ai/mamoru-sui-sdk-as/assembly"',
         ],
         [
-            'BSC_TESTNET' as keyof Chain_ChainType,
+            'BSC_TESTNET',
             '@mamoru-ai/mamoru-evm-sdk-as',
             sdkVersions.evm,
             'import { EvmCtx } from "@mamoru-ai/mamoru-evm-sdk-as/assembly"',
         ],
         [
-            'BSC_MAINNET' as keyof Chain_ChainType,
+            'BSC_MAINNET',
             '@mamoru-ai/mamoru-evm-sdk-as',
             sdkVersions.evm,
             'import { EvmCtx } from "@mamoru-ai/mamoru-evm-sdk-as/assembly"',
         ],
         [
-            'ETH_TESTNET' as keyof Chain_ChainType,
+            'ETH_TESTNET',
             '@mamoru-ai/mamoru-evm-sdk-as',
             sdkVersions.evm,
             'import { EvmCtx } from "@mamoru-ai/mamoru-evm-sdk-as/assembly"',
         ],
         [
-            'APTOS_TESTNET' as keyof Chain_ChainType,
+            'APTOS_TESTNET',
             '@mamoru-ai/mamoru-aptos-sdk-as',
             sdkVersions.aptos,
             'import { AptosCtx } from "@mamoru-ai/mamoru-aptos-sdk-as/assembly"',
         ],
         [
-            'APTOS_MAINNET' as keyof Chain_ChainType,
+            'APTOS_MAINNET',
             '@mamoru-ai/mamoru-aptos-sdk-as',
             sdkVersions.aptos,
             'import { AptosCtx } from "@mamoru-ai/mamoru-aptos-sdk-as/assembly"',
