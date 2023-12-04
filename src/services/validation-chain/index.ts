@@ -64,6 +64,8 @@ type AnyMsg = {
     value: Uint8Array
 }
 
+const TX_CLIENT_FEE = 2
+
 type DeliverTxResponse = {
     code: number
     height: number
@@ -146,7 +148,7 @@ class ValidationChainService {
         const result = await txClient.sendMsgCreateDaemonMetadata({
             value: message,
             // @ts-ignore
-            fee: 'auto',
+            fee: TX_CLIENT_FEE,
         })
 
         this.throwOnError('MsgCreateDaemonMetadata', result)
@@ -239,7 +241,7 @@ class ValidationChainService {
         const result = await txClient.sendMsgUnregisterDaemon({
             value,
             // @ts-ignore
-            fee: 'auto',
+            fee: TX_CLIENT_FEE,
         })
 
         this.throwOnError('MsgUnregisterDaemon', result)
@@ -284,7 +286,7 @@ class ValidationChainService {
         const result = await txClient.sendMsgRegisterDaemon({
             value,
             // @ts-ignore
-            fee: 'auto',
+            fee: TX_CLIENT_FEE,
         })
         this.throwOnError('MsgRegisterDaemon', result)
 
@@ -329,7 +331,7 @@ class ValidationChainService {
         const result = await txClient.sendMsgRegisterDaemon({
             value,
             // @ts-ignore
-            fee: 'auto',
+            fee: TX_CLIENT_FEE,
         })
         this.throwOnError('MsgRegisterDaemon', result)
 
@@ -353,7 +355,7 @@ class ValidationChainService {
         const result = await txClient.sendMsgCreatePlaybook({
             value,
             // @ts-ignore
-            fee: 'auto',
+            fee: TX_CLIENT_FEE,
         })
         this.logger.verbose('Payload result', result)
 
@@ -398,7 +400,7 @@ class ValidationChainService {
         const result = await txClient.sendMsgUpdatePlaybook({
             value,
             // @ts-ignore
-            fee: 'auto',
+            fee: TX_CLIENT_FEE,
         })
         this.logger.verbose('Payload result', result)
 
