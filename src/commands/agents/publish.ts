@@ -24,7 +24,6 @@ import { assignOrganizationToDaemonRepeat } from '../../services/graphql-api/gra
 export interface PublishOptions {
     rpc?: string
     privateKey: string
-    gas?: string
     parameters?: string
     chain?: string
     skipTelemetry?: boolean
@@ -79,7 +78,6 @@ async function publish(
             manifest,
             queryManifestFile.queries,
             null,
-            null,
             [
                 {
                     sdk: MAMORU_VERSION_KEY,
@@ -97,7 +95,6 @@ async function publish(
             manifest,
             [],
             wasm,
-            options.gas,
             sdkVersions
         )
         daemonMetadataId = r.daemonMetadataId
@@ -122,8 +119,7 @@ async function publish(
             manifest,
             daemonMetadataId,
             options.chain || manifest.chains[0],
-            finalParameterValues,
-            options.gas
+            finalParameterValues
         )
 
         if (env != 'test') {

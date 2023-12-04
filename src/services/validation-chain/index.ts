@@ -53,6 +53,7 @@ import {
     getMetadataParametersFromManifest,
 } from './utils'
 import { PlaybookDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/playbooks_dto'
+import { SigningStargateClient } from '@cosmjs/stargate'
 
 type TxMsgData = {
     msgResponses: AnyMsg[]
@@ -115,7 +116,6 @@ class ValidationChainService {
         manifest: Manifest,
         queries: MyDaemonMetadataContentQuery[],
         wasmModule?: string,
-        gas?: string,
         sdkVersions?: SdkVersion[]
     ): Promise<MsgCreateDaemonMetadataResponse> {
         this.logger.verbose('Registering Agent Metadata')
@@ -145,10 +145,8 @@ class ValidationChainService {
 
         const result = await txClient.sendMsgCreateDaemonMetadata({
             value: message,
-            fee: {
-                amount: [],
-                gas: gas || 'auto',
-            },
+            // @ts-ignore
+            fee: 'auto',
         })
 
         this.throwOnError('MsgCreateDaemonMetadata', result)
@@ -240,10 +238,8 @@ class ValidationChainService {
 
         const result = await txClient.sendMsgUnregisterDaemon({
             value,
-            fee: {
-                amount: [],
-                gas: 'auto',
-            },
+            // @ts-ignore
+            fee: 'auto',
         })
 
         this.throwOnError('MsgUnregisterDaemon', result)
@@ -285,13 +281,10 @@ class ValidationChainService {
         }
 
         this.logger.verbose('Payload', payload)
-
         const result = await txClient.sendMsgRegisterDaemon({
             value,
-            fee: {
-                amount: [],
-                gas: gas || 'auto',
-            },
+            // @ts-ignore
+            fee: 'auto',
         })
         this.throwOnError('MsgRegisterDaemon', result)
 
@@ -335,10 +328,8 @@ class ValidationChainService {
 
         const result = await txClient.sendMsgRegisterDaemon({
             value,
-            fee: {
-                amount: [],
-                gas: gas || 'auto',
-            },
+            // @ts-ignore
+            fee: 'auto',
         })
         this.throwOnError('MsgRegisterDaemon', result)
 
@@ -361,10 +352,8 @@ class ValidationChainService {
         }
         const result = await txClient.sendMsgCreatePlaybook({
             value,
-            fee: {
-                amount: [],
-                gas: gas || 'auto',
-            },
+            // @ts-ignore
+            fee: 'auto',
         })
         this.logger.verbose('Payload result', result)
 
@@ -408,10 +397,8 @@ class ValidationChainService {
 
         const result = await txClient.sendMsgUpdatePlaybook({
             value,
-            fee: {
-                amount: [],
-                gas: 'auto',
-            },
+            // @ts-ignore
+            fee: 'auto',
         })
         this.logger.verbose('Payload result', result)
 
@@ -445,6 +432,22 @@ class ValidationChainService {
             },
             wallet
         )
+
+        if (
+            Object.getOwnPropertyDescriptor(
+                SigningStargateClient.prototype,
+                'gasPrice'
+            ) === undefined
+        ) {
+            Object.defineProperty(SigningStargateClient.prototype, 'gasPrice', {
+                get: function gasPrice() {
+                    return '0.0001token'
+                },
+                set: function gasPrice() {
+                    // nothing
+                },
+            })
+        }
 
         return this.client
     }

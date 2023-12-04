@@ -126,31 +126,6 @@ describe('publish', () => {
                     )
                 })
         }, 20000)
-        it('FAIL - SOLE - no enough gas', async () => {
-            const dir = getTempFolder()
-            const options = generateInitOptions({ type: 'wasm' })
-            await init.init(programMock, dir, options)
-            await runCommand('npm install --prefix ' + dir)
-            const { privkey } = await generateFoundedUser()
-
-            await build.build(programMock, dir)
-            const r = await publish
-                .publish(programMock, dir, {
-                    privateKey: privkey,
-                    rpc: 'http://0.0.0.0:26657',
-                    gas: (100).toString(),
-                })
-                .then(() => {
-                    throw new Error('An error should have been thrown')
-                })
-                .catch((error) => {
-                    assert.match(
-                        error.message,
-                        /TxClient:sendMsgCreateDaemonMetadata/
-                    )
-                    assert.match(error.message, /out of gas/)
-                })
-        }, 20000)
         it('FAIL - multiple chains, no chain', async () => {
             const dir = getTempFolder()
             const options = generateInitOptions({
@@ -166,7 +141,6 @@ describe('publish', () => {
                 .publish(programMock, dir, {
                     privateKey: privkey,
                     rpc: 'http://0.0.0.0:26657',
-                    gas: (100).toString(),
                 })
                 .then(() => {
                     throw new Error('An error should have been thrown')
@@ -193,7 +167,6 @@ describe('publish', () => {
                 .publish(programMock, dir, {
                     privateKey: privkey,
                     rpc: 'http://0.0.0.0:26657',
-                    gas: (100).toString(),
                     chain: 'XXX',
                 })
                 .then(() => {
@@ -223,7 +196,6 @@ describe('publish', () => {
             const r = await publish.publish(programMock, dir, {
                 privateKey: privkey,
                 rpc: 'http://0.0.0.0:26657',
-                gas: '110000',
                 chain: 'SUI_TESTNET',
             })
         }, 20000)
@@ -241,7 +213,6 @@ describe('publish', () => {
             const r = await publish.publish(programMock, dir, {
                 privateKey: privkey,
                 rpc: 'http://0.0.0.0:26657',
-                gas: (1000 * 1000 * 100).toString(),
             })
             assert.ok(r)
             assert.equal(isTruthyStr(r.daemonId as string), true)
