@@ -42,6 +42,7 @@ describe('playbookPublish', () => {
         const dir = getTempFolder()
         await initPlaybook.initPlaybook(programMock, dir, {
             name: 'TEST Playbook',
+            skipTelemetry: true,
         })
         const { privkey } = await generateFoundedUser()
 
@@ -52,7 +53,6 @@ describe('playbookPublish', () => {
             {
                 privateKey: privkey,
                 rpc: 'http://0.0.0.0:26657',
-                gas: (100000).toString(),
             }
         )
         const playbookId = createResult.responsePlaybookId as string
@@ -74,7 +74,6 @@ describe('playbookPublish', () => {
             {
                 privateKey: privkey,
                 rpc: 'http://0.0.0.0:26657',
-                gas: (100000).toString(),
                 playbookId: playbookId,
             }
         )
@@ -89,6 +88,7 @@ describe('playbookPublish', () => {
         const dir = getTempFolder()
         await initPlaybook.initPlaybook(programMock, dir, {
             name: 'TEST Playbook',
+            skipTelemetry: true,
         })
         const { privkey } = await generateFoundedUser()
 
@@ -97,7 +97,6 @@ describe('playbookPublish', () => {
             .playbookPublish(programMock, dir, {
                 privateKey: privkey,
                 rpc: 'http://0.0.0.0:26657',
-                gas: (100000).toString(),
             })
             .catch((e) => {
                 expect(e.message).toMatch(

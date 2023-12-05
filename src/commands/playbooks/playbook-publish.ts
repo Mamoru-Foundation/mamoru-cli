@@ -16,7 +16,6 @@ import { getDaemonsByIds } from '../../services/graphql-api/graphql-api.service'
 export interface PlaybookPublishOptions {
     rpc?: string
     privateKey: string
-    gas?: string
     playbookId?: string
     skipTelemetry?: boolean
 }
@@ -91,8 +90,7 @@ async function playbookPublish(
         try {
             const response = await vcService.updatePlaybook(
                 options.playbookId,
-                playbook,
-                options.gas
+                playbook
             )
             logger.verbose('response', response)
             responsePlaybookId = response.playbookId
@@ -101,10 +99,7 @@ async function playbookPublish(
         }
     } else {
         try {
-            const response = await vcService.createPlaybook(
-                playbook,
-                options.gas
-            )
+            const response = await vcService.createPlaybook(playbook)
             logger.verbose('response', response)
             responsePlaybookId = response.playbookId
         } catch (error) {

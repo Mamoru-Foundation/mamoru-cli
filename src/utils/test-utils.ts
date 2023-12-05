@@ -38,7 +38,7 @@ function Uint8ArrayToBase64String(u8a: Uint8Array): string {
 function useFaucet(address: string): Promise<void> {
     return axios.post('http://0.0.0.0:4500', {
         address,
-        coins: ['20token'],
+        coins: ['50token'],
     })
 }
 
