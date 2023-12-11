@@ -16,7 +16,7 @@ import publishPlaybook, {
 import removeDaemon from './commands/agents/daemon-remove'
 import { initializeAuthCommands } from './commands/auth'
 import { isAuthRequiredGuard } from './services/auth'
-import { privateKeyOption, rpcOption } from './utils/program-utils'
+import { gasOption, privateKeyOption, rpcOption } from './utils/program-utils'
 
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {
@@ -151,10 +151,9 @@ program
     )
     .addOption(rpcOption)
     .addOption(
-        new Option(
-            '--gas <gas>',
+        gasOption(
             'gas fee of the transaction  (if agent is sole, it will be used as limit for both metadata and agent creation)'
-        ).default('2000000')
+        )
     )
     .addOption(privateKeyOption)
     .addOption(new Option('-c, --chain <chain>', 'Chain to deploy'))
@@ -181,11 +180,7 @@ program
         ).makeOptionMandatory()
     )
     .addOption(rpcOption)
-    .addOption(
-        new Option('--gas <gas>', 'gas fee of the transaction').default(
-            '2000000'
-        )
-    )
+    .addOption(gasOption())
     .addOption(privateKeyOption)
     .addOption(new Option('-c, --chain <chain>', 'Chain to deploy'))
     .addOption(
@@ -239,16 +234,8 @@ playbook
     )
     .description('publish playbook')
     .addOption(rpcOption)
-    .addOption(
-        new Option('--gas <gas>', 'gas fee of the transaction').default(
-            '2000000'
-        )
-    )
-    .addOption(
-        new Option('rpcOption', 'Private key')
-            .makeOptionMandatory()
-            .env('MAMORU_PRIVATE_KEY')
-    )
+    .addOption(gasOption())
+    .addOption(privateKeyOption)
     .addOption(
         new Option(
             '-id, --playbookId <playbookId>',

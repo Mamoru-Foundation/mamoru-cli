@@ -31,15 +31,12 @@ import {
     MsgCreatePlaybook,
     MsgCreatePlaybookResponse,
     MsgRegisterDaemonResponse,
-    MsgRegisterSniffer,
-    MsgRegisterSnifferResponse,
     MsgUnregisterDaemon,
     MsgUnregisterDaemonResponse,
     MsgUpdatePlaybook,
     MsgUpdatePlaybookResponse,
 } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/tx'
 import protobuf from 'protobufjs'
-import { SnifferRegisterCommandRequestDTO } from '@mamoru-ai/validation-chain-ts-client/dist/validationchain.validationchain/types/validationchain/validationchain/sniffer_register_command_request_dto'
 import { DaemonMetadata } from '@mamoru-ai/validation-chain-ts-client/src/validationchain.validationchain/types/validationchain/validationchain/daemon_metadata'
 import {
     ValidationchainDaemonMetadataContentQuery,
