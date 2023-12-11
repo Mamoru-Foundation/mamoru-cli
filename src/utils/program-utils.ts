@@ -10,3 +10,9 @@ export const privateKeyOption = new Option(
 )
     .makeOptionMandatory()
     .env('MAMORU_PRIVATE_KEY')
+
+export const gasOption = (description?: string) =>
+    new Option(
+        '--gas <gas>',
+        description || 'Gas fee of the transaction'
+    ).default('2000000')
