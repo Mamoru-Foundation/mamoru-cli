@@ -126,6 +126,45 @@ export async function getDaemonsByIds(
     return r.data.data?.listDaemons?.items
 }
 
+export async function getListOfDaemons(): Promise<{ id: string }[]> {
+    const query = `#graphql
+    query listDaemons {
+        listDaemons(pagination:{
+            page: 1,
+            pageSize: 100
+        }){
+            items{
+            id: daemonId
+            metadata: daemonMetadata {
+                title
+            }
+            }
+        }
+    }
+    `
+
+    const client = getClient()
+
+    const r = await client
+        .post('', {
+            query,
+        })
+
+        .then((res) => {
+            if (res.data.errors) {
+                throw {
+                    response: res,
+                }
+            }
+            return res
+        })
+        .catch((e) => {
+            throw e?.response?.data || e
+        })
+
+    return r.data.data?.listDaemons?.items
+}
+
 export async function getSupportedNetworks() {
     const query = `#graphql
     query listNetworks {

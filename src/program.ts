@@ -248,6 +248,14 @@ playbook
         await publishPlaybook.playbookPublish(program, path, options)
     })
 
+const agent = program.command('agent').description('Agent related commands')
+
+agent.command('list').action(async (options: any) => {
+    await askForTelemetry(options)
+    await isAuthRequiredGuard()
+    await import('./commands/agents/list').then((list) => list.default(program))
+})
+
 program.version(
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     `Mamoru CLI ${require('../package.json').version}`,
