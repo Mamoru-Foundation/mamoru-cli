@@ -85,6 +85,10 @@ async function publish(
                 },
             ]
         )
+        /**
+         * Sometimes we need to wait a little bit so the client can get the correct sequence number
+         */
+        await delay(500)
         daemonMetadataId = result.daemonMetadataId
     }
 
@@ -97,6 +101,10 @@ async function publish(
             wasm,
             sdkVersions
         )
+        /**
+         * Sometimes we need to wait a little bit so the client can get the correct sequence number
+         */
+        await delay(500)
         daemonMetadataId = r.daemonMetadataId
     }
 
@@ -180,6 +188,10 @@ function validateBuildPath(
         program.error(
             'Project is not compiled, compile it first, use "mamoru-cli build"'
         )
+}
+
+function delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
 }
 
 export default {
