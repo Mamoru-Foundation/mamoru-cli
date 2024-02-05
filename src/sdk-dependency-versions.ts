@@ -1,1 +1,1 @@
-export const sdkVersions = {"sdk": "^0.7.0", "sui": "^0.3.1", "evm": "^0.4.0", "aptos": "^0.3.1"}
+export const sdkVersions = {"sdk": "^0.8.0", "sui": "^0.4.1", "evm": "^0.5.2", "aptos": "^0.3.3"}
