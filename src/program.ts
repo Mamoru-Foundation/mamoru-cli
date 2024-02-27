@@ -17,6 +17,7 @@ import removeDaemon from './commands/agents/daemon-remove'
 import { initializeAuthCommands } from './commands/auth'
 import { isAuthRequiredGuard } from './services/auth'
 import { gasOption, privateKeyOption, rpcOption } from './utils/program-utils'
+import listPlaybooks from './commands/playbooks/playbook-list'
 
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {
@@ -246,6 +247,15 @@ playbook
         await askForTelemetry(options)
         await isAuthRequiredGuard()
         await publishPlaybook.playbookPublish(program, path, options)
+    })
+
+playbook
+    .command('list')
+    .description('list playbooks')
+    .action(async (options: any) => {
+        await askForTelemetry(options)
+        await isAuthRequiredGuard()
+        await listPlaybooks(program)
     })
 
 const agent = program.command('agent').description('Agent related commands')

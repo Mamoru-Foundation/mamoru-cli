@@ -165,6 +165,44 @@ export async function getListOfDaemons(): Promise<{ id: string }[]> {
     return r.data.data?.listDaemons?.items
 }
 
+export async function getListOfPlaybooks(): Promise<{ id: string }[]> {
+    const query = `#graphql
+    query listPlaybooks {
+        listPlaybooks(pagination:{
+            page: 1,
+            pageSize: 100
+        }){
+            items{
+            id
+            name
+            createdAt
+            }
+        }
+    }
+    `
+
+    const client = getClient()
+
+    const r = await client
+        .post('', {
+            query,
+        })
+
+        .then((res) => {
+            if (res.data.errors) {
+                throw {
+                    response: res,
+                }
+            }
+            return res
+        })
+        .catch((e) => {
+            throw e?.response?.data || e
+        })
+
+    return r.data.data?.listPlaybooks?.items
+}
+
 export async function getSupportedNetworks() {
     const query = `#graphql
     query listNetworks {
