@@ -18,6 +18,7 @@ import { initializeAuthCommands } from './commands/auth'
 import { isAuthRequiredGuard } from './services/auth'
 import { gasOption, privateKeyOption, rpcOption } from './utils/program-utils'
 import listPlaybooks from './commands/playbooks/playbook-list'
+import { removePlaybook } from './commands/playbooks/playbook-remove'
 
 function parseOrSetCurrentDirectoryPath(path: string) {
     if (!path) {
@@ -256,6 +257,18 @@ playbook
         await askForTelemetry(options)
         await isAuthRequiredGuard()
         await listPlaybooks(program)
+    })
+
+playbook
+    .command('remove')
+    .description('remove playbook')
+    .argument('<id>', 'Id of the playbook')
+    .addOption(rpcOption)
+    .addOption(privateKeyOption)
+    .action(async (id: string, options: any) => {
+        await askForTelemetry(options)
+        await isAuthRequiredGuard()
+        await removePlaybook(program, id, options)
     })
 
 const agent = program.command('agent').description('Agent related commands')

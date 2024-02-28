@@ -30,6 +30,8 @@ import {
     MsgCreateDaemonMetadataResponse,
     MsgCreatePlaybook,
     MsgCreatePlaybookResponse,
+    MsgDeletePlaybook,
+    MsgDeletePlaybookResponse,
     MsgRegisterDaemonResponse,
     MsgUnregisterDaemon,
     MsgUnregisterDaemonResponse,
@@ -407,7 +409,54 @@ class ValidationChainService {
         const decodedArr = this.decodeTxMessages(data)
         return decodedArr[0] as MsgUpdatePlaybookResponse
     }
-    // private methods
+
+    public async removePlaybook(
+        playbookId: string
+    ): Promise<MsgDeletePlaybookResponse> {
+        const txClient = await this.getTxClient()
+        const queryClient = await this.getQueryClient()
+        const address = await this.getAddress()
+
+        try {
+            this.logger.verbose(`querying playbook with id ${playbookId}`)
+            const found = await queryClient.queryPlaybook(playbookId)
+            if (
+                !found.data.playbook ||
+                found.data.playbook.creator !== address
+            ) {
+                throw new Error(
+                    `Playbook with id ${playbookId} not found or not owned by ${address}`
+                )
+            }
+        } catch (error) {
+            this.logger.error(
+                'An error occurred:',
+                `Playbook with id ${playbookId} not found`
+            )
+            this.logger.verbose(JSON.stringify(error))
+            process.exit(1)
+        }
+
+        const value: MsgDeletePlaybook = {
+            creator: address,
+            playbookId: playbookId,
+        }
+
+        const result = await txClient.sendMsgDeletePlaybook({
+            value,
+            // @ts-ignore
+            fee: TX_CLIENT_FEE,
+        })
+
+        this.logger.verbose('Payload result', result)
+
+        this.throwOnError('MsgDeletePlaybook', result)
+
+        this.logger.verbose('Transaction Hash', result.transactionHash)
+        const data = await this.getTxDataOnlyResponse(result.transactionHash)
+        const decodedArr = this.decodeTxMessages(data)
+        return decodedArr[0] as MsgDeletePlaybookResponse
+    }
 
     private async getWallet() {
         if (this.wallet) return this.wallet
@@ -515,6 +564,9 @@ class ValidationChainService {
         message TxMsgData {
             repeated Any msg_responses = 2;
         }
+
+        message MsgDeletePlaybookResponse {}
+
         `).root
         return root.lookupType(`.${parsedName}`)
     }
