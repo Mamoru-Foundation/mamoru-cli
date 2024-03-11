@@ -84,10 +84,10 @@ initializeAuthCommands(program)
 program
     .command('init')
     .argument(
-        '<path>',
+        '[path]',
         'path to folder with Mamoru project',
         parseOrCreateDirectoryPath,
-        ''
+        '.'
     )
     .addOption(
         new Option('-t, --type <type>', 'Type of project')
@@ -214,7 +214,7 @@ const playbook = program
 playbook
     .command('init')
     .argument(
-        '<path>',
+        '[path]',
         'path to folder with Mamoru project',
         parseOrCreateDirectoryPath,
         '.'
