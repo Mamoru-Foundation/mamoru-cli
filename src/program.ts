@@ -90,7 +90,7 @@ program
         '.'
     )
     .addOption(
-        new Option('-t, --type <type>', 'Type of project')
+        new Option('-T, --type <type>', 'Type of project')
             .choices(['sql', 'wasm'])
             .default('wasm')
     )
