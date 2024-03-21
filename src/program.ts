@@ -125,6 +125,7 @@ program
 
     .description('initialize a new Agent project in a folder')
     .action(async (path: string, options: InitOptions) => {
+        await isAuthRequiredGuard()
         await askForTelemetry(options)
         await initCommand.init(program, path, options)
     })

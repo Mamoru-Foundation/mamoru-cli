@@ -5,13 +5,17 @@
   "description": "{{ description }}",
   "tags": {{{jsonTags}}},
   "scripts":{
-    "build": "asc src/index.ts --exportRuntime --outFile build/index.wasm -b build/index.wat --sourceMap --optimize --exportRuntime --runtime stub --lib"
+    "build": "asc src/index.ts --exportRuntime --outFile build/index.wasm -b build/index.wat --sourceMap --optimize --exportRuntime --runtime stub --lib",
+    "test": "asp --verbose",
+    "test:ci": "asp --summary"
   },
   "dependencies": {
     "@mamoru-ai/mamoru-sdk-as": "{{{mamoruSdkAsVersion}}}",
     "{{{mamoruCustomSdkPackageName}}}": "{{{mamoruCustomSdkPackageVersion}}}"
   },
   "devDependencies": {
+    "@as-pect/cli": "^8.1.0",
     "assemblyscript": "^0.27.1"
-  }
+  },
+  "type": "module"
 }

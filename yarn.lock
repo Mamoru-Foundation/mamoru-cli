@@ -1889,7 +1889,7 @@
   dependencies:
     call-bind "^1.0.2"
 
-"@mamoru-ai/mamoru-aptos-sdk-as@^0.3.1":
+"@mamoru-ai/mamoru-aptos-sdk-as@^0.3.3":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@mamoru-ai/mamoru-aptos-sdk-as/-/mamoru-aptos-sdk-as-0.3.3.tgz#eac9904a413814b12e3e46a19b92b3605851de19"
   integrity sha512-Hc0nHX1vbiKv0HnJZyRJtMwUbRQpUzYNWhwDqZCQqKu52xBxIlejlak0/yhGYsQBX2n5XS57IQymFk4+7hB7vA==
@@ -1897,24 +1897,14 @@
     "@mamoru-ai/mamoru-sdk-as" "^0.8.0"
     "@wapc/as-msgpack" "^0.1.15"
 
-"@mamoru-ai/mamoru-evm-sdk-as@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@mamoru-ai/mamoru-evm-sdk-as/-/mamoru-evm-sdk-as-0.4.0.tgz#2b37af8d664ff9ad8b3d95fda148573a23a4fc4b"
-  integrity sha512-PRq44BNNv7//Qdo5oCBvg1MryB/+BGUucH1zCYljdueuy9mPNawqNVjqL1ul/4KyTTrJPWwyO7IbxdBRnZwKuA==
+"@mamoru-ai/mamoru-evm-sdk-as@^0.5.2":
+  version "0.5.2"
+  resolved "https://registry.yarnpkg.com/@mamoru-ai/mamoru-evm-sdk-as/-/mamoru-evm-sdk-as-0.5.2.tgz#043bbc31865ad2947a7fb76338fda0323f1d9349"
+  integrity sha512-FZRPTniza2l5tl2i/ewdgndy7cA6oZP/efkDUn44fVEuTO50nMKf8xjNZ/pLTe0nC+gDmdnAz56NvoLfZhDehQ==
   dependencies:
-    "@mamoru-ai/mamoru-sdk-as" "^0.7.0"
+    "@mamoru-ai/mamoru-sdk-as" "^0.8.0"
     "@wapc/as-msgpack" "^0.1.15"
     as-base64 "^0.2.0"
-
-"@mamoru-ai/mamoru-sdk-as@^0.7.0":
-  version "0.7.2"
-  resolved "https://registry.yarnpkg.com/@mamoru-ai/mamoru-sdk-as/-/mamoru-sdk-as-0.7.2.tgz#789ea4dc42cec5885080154a7bae553a199a1051"
-  integrity sha512-j9y6pqGKWOWK8/pwNNfa4po58E/UMgnC+ZLMLZa1OM/8zpA5n5i8TdbkVa0BT/8956p0gSCZJNPjetOuIuGTYw==
-  dependencies:
-    "@wapc/as-msgpack" "^0.1.15"
-    as-base64 "^0.2.0"
-    as-bignum "^0.2.31"
-    assemblyscript-json "^1.1.0"
 
 "@mamoru-ai/mamoru-sdk-as@^0.8.0":
   version "0.8.0"
@@ -1926,12 +1916,12 @@
     as-bignum "^0.2.31"
     assemblyscript-json "^1.1.0"
 
-"@mamoru-ai/mamoru-sui-sdk-as@^0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@mamoru-ai/mamoru-sui-sdk-as/-/mamoru-sui-sdk-as-0.3.1.tgz#6d8893d81bb00b903654be3f39a108d735ed2099"
-  integrity sha512-kvKB5iDCXeRcUqROwXGv5GAQ+fC/0gQKLizW+1fxxsIVIJCQE8Xo4mKr0jumk9vn5e1o1a7dm2/G6BaxG82HQg==
+"@mamoru-ai/mamoru-sui-sdk-as@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@mamoru-ai/mamoru-sui-sdk-as/-/mamoru-sui-sdk-as-0.5.0.tgz#ca2b15f8ef7e0a6260867859552cc0c3859dfaa6"
+  integrity sha512-JNZ1IqLGMszuL5ujNAMpdnkJgkjaHXTQ0KKl8VGElVqZb946ZFgPswtTLYeP+um453kEHYWP7ONAWLZHgloPkw==
   dependencies:
-    "@mamoru-ai/mamoru-sdk-as" "^0.7.0"
+    "@mamoru-ai/mamoru-sdk-as" "^0.8.0"
     "@wapc/as-msgpack" "^0.1.15"
 
 "@mamoru-ai/validation-chain-ts-client@^1.0.0":
