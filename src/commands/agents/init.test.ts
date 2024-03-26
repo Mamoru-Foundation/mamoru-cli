@@ -12,7 +12,7 @@ import { DEFAULT_MAMORU_VERSION } from '../../services/constants'
 
 const programMock = getProgramMock()
 
-describe(colors.yellow('init'), () => {
+describe('init', () => {
     const sqlCases = [
         [
             'SUI_MAINNET',
@@ -81,7 +81,7 @@ describe(colors.yellow('init'), () => {
 
             assert.deepEqual(packageParsed, {
                 dependencies: {
-                    '@mamoru-ai/mamoru-sdk-as': '^0.7.0',
+                    '@mamoru-ai/mamoru-sdk-as': '^0.8.0',
                     ...packageParsed.dependencies,
                 },
                 description: 'TEST_DESCRIPTION',
@@ -227,7 +227,7 @@ describe(colors.yellow('init'), () => {
 
             assert.deepEqual(parsedPackage, {
                 dependencies: {
-                    '@mamoru-ai/mamoru-sdk-as': '^0.7.0',
+                    '@mamoru-ai/mamoru-sdk-as': '^0.8.0',
                     [customSdk]: version,
                 },
                 description: 'TEST_DESCRIPTION',
