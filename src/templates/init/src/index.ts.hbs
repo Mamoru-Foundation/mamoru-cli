@@ -1,7 +1,8 @@
 import { {{{customSdkCtxName}}} } from "{{{mamoruCustomSdkPackageName}}}/assembly"
+import { process } from "./process";
 
 export function main(): void {
   const ctx = {{{customSdkCtxName}}}.load();
   
-  // TODO: write the code
+  process();
 }

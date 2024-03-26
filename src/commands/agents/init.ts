@@ -39,9 +39,15 @@ async function init(
     }
     if (options.type === 'wasm') {
         createFolder(logger, projectPath, 'src')
-        createFolder(logger, projectPath, 'test')
+        createFolder(logger, projectPath + '/src', '__tests__')
         createFile(logger, augOps, TEMPLATES.WASM_INDEX, files.WASM_INDEX)
         createFile(logger, augOps, TEMPLATES.WASM_TEST, files.WASM_TEST)
+        createFile(logger, augOps, TEMPLATES.WASM_PROCESS, files.WASM_PROCESS)
+        createFile(logger, augOps, TEMPLATES.TS_CONFIG, files.TS_CONFIG)
+        createFile(logger, augOps, TEMPLATES.ASPECT_TYPES, files.ASPECT_TYPES)
+        createFile(logger, augOps, TEMPLATES.ASPECT_CONFIG, files.ASPECT_CONFIG)
+        createFile(logger, augOps, TEMPLATES.ASPECT_CONFI2, files.ASPECT_CONFI2)
+        createFile(logger, augOps, TEMPLATES.ASPECT_CONFI3, files.ASPECT_CONFI3)
     }
 
     logger.ok('Mamoru project files created!')
