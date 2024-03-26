@@ -61,6 +61,7 @@ describe(colors.yellow('init'), () => {
                 chain: [chain],
                 logo: 'https://test.com/logo.png',
                 subscribable: false,
+                skipTelemetry: true,
             }
 
             await init.init(programMock, dir, options)
@@ -84,14 +85,20 @@ describe(colors.yellow('init'), () => {
                     ...packageParsed.dependencies,
                 },
                 description: 'TEST_DESCRIPTION',
-                devDependencies: { assemblyscript: '^0.27.1' },
+                devDependencies: {
+                    assemblyscript: '^0.27.1',
+                    '@as-pect/cli': '^8.1.0',
+                },
                 license: 'Apache-2.0',
                 name: 'test-name',
                 scripts: {
                     build: 'asc src/index.ts --exportRuntime --outFile build/index.wasm -b build/index.wat --sourceMap --optimize --exportRuntime --runtime stub --lib',
+                    test: 'asp --verbose',
+                    'test:ci': 'asp --summary',
                 },
                 tags: ['test', 'cli'],
                 version: '0.0.1',
+                type: 'module',
             })
 
             const manifest = fs.readFileSync(
@@ -186,28 +193,31 @@ describe(colors.yellow('init'), () => {
                 chain: [chain],
                 logo: 'https://test.com/logo.png',
                 subscribable: false,
+                skipTelemetry: true,
             }
 
             await init.init(programMock, dir, options)
 
             const files = fs.readdirSync(dir)
-            assert.strictEqual(files.length, 6)
+            assert.strictEqual(files.length, 8)
 
             assert.strictEqual(files.includes('readme.md'), true)
             assert.strictEqual(files.includes('package.json'), true)
             assert.strictEqual(files.includes('manifest.yml'), true)
             assert.strictEqual(files.includes('.gitignore'), true)
             assert.strictEqual(files.includes('src'), true)
-            assert.strictEqual(files.includes('test'), true)
 
             const srcFiles = fs.readdirSync(path.join(dir, 'src'))
-            assert.strictEqual(srcFiles.length, 1)
+            assert.strictEqual(srcFiles.length, 4)
             assert.strictEqual(srcFiles.includes('index.ts'), true)
+            assert.strictEqual(srcFiles.includes('__tests__'), true)
+            assert.strictEqual(srcFiles.includes('process.ts'), true)
+            assert.strictEqual(srcFiles.includes('tsconfig.json'), true)
 
-            const testFiles = fs.readdirSync(path.join(dir, 'test'))
-            assert.strictEqual(testFiles.length, 1)
-            assert.strictEqual(testFiles.includes('index.spec.ts'), true)
-
+            const testFiles = fs.readdirSync(path.join(dir, 'src/__tests__'))
+            assert.strictEqual(testFiles.length, 2)
+            assert.strictEqual(testFiles.includes('process.spec.ts'), true)
+            assert.strictEqual(testFiles.includes('as-pect.d.ts'), true)
             const packageJson = fs.readFileSync(
                 path.join(dir, 'package.json'),
                 'utf-8'
@@ -221,14 +231,20 @@ describe(colors.yellow('init'), () => {
                     [customSdk]: version,
                 },
                 description: 'TEST_DESCRIPTION',
-                devDependencies: { assemblyscript: '^0.27.1' },
+                devDependencies: {
+                    assemblyscript: '^0.27.1',
+                    '@as-pect/cli': '^8.1.0',
+                },
                 license: 'Apache-2.0',
                 name: 'test-name',
                 scripts: {
                     build: 'asc src/index.ts --exportRuntime --outFile build/index.wasm -b build/index.wat --sourceMap --optimize --exportRuntime --runtime stub --lib',
+                    test: 'asp --verbose',
+                    'test:ci': 'asp --summary',
                 },
                 tags: ['test', 'cli'],
                 version: '0.0.1',
+                type: 'module',
             })
 
             const manifest = fs.readFileSync(
@@ -288,6 +304,7 @@ describe('getAugmentedInitOptions', () => {
             chain: ['SUI_TESTNET'],
             logo: 'https://test.com/logo.png',
             subscribable: false,
+            skipTelemetry: true,
         }
         const augmented = await init.getAugmentedInitOptions(options, '.')
         assert.deepEqual(augmented, {
@@ -315,6 +332,7 @@ describe('getAugmentedInitOptions', () => {
             chain: ['SUI_TESTNET'],
             logo: 'https://test.com/logo.png',
             subscribable: false,
+            skipTelemetry: true,
         }
         const augmented = await init.getAugmentedInitOptions(options, '.')
         assert.deepEqual(augmented, {
