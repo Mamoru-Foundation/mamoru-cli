@@ -16,7 +16,7 @@ import { runCommand } from '../../utils/utils'
 
 const programMock = getProgramMock()
 
-describe(colors.yellow('build'), () => {
+describe('build', () => {
     it('FAIL - should ignore type=sql projects', async () => {
         const dir = getTempFolder()
         console.log(colors.green('Temp Folder: ' + dir))
@@ -44,7 +44,7 @@ describe(colors.yellow('build'), () => {
         await build.build(programMock, dir)
 
         const files = fs.readdirSync(dir)
-        assert.strictEqual(files.length, 6 + 3) // +1 for the dist folder
+        assert.strictEqual(files.length, 6 + 5) // +1 for the dist folder
         assert.strictEqual(files.includes('readme.md'), true)
         const srcDir = path.join(dir, 'src')
         assert.strictEqual(fs.existsSync(srcDir), true)
