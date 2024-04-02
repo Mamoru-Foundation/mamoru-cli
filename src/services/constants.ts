@@ -14,7 +14,9 @@ export const TEMPLATES = {
         /* */ BASE_DIR + 'templates/init/src/__tests__/process.spec.ts.hbs',
     TS_CONFIG: /* */ BASE_DIR + 'templates/init/src/tsconfig.json.hbs',
 
-    README: /*    */ BASE_DIR + 'templates/init/readme.md.hbs',
+    README_WASM: /*    */ BASE_DIR + 'templates/init/readme.wasm.md.hbs',
+    README_SQL: /*    */ BASE_DIR + 'templates/init/readme.sql.md.hbs',
+
     GITIGNORE: /* */ BASE_DIR + 'templates/init/gitignore.hbs',
 
     ASPECT_TYPES: BASE_DIR + 'templates/init/src/__tests__/as-pect.d.ts.hbs',
@@ -33,7 +35,8 @@ export const FILES: typeof TEMPLATES = {
     WASM_TEST: 'src/__tests__/process.spec.ts',
     TS_CONFIG: 'src/tsconfig.json',
 
-    README: 'readme.md',
+    README_WASM: 'readme.md',
+    README_SQL: 'readme.md',
     GITIGNORE: '.gitignore',
 
     ASPECT_TYPES: 'src/__tests__/as-pect.d.ts',

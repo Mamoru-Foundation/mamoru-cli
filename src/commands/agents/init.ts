@@ -31,16 +31,18 @@ async function init(
     logger.ok('Creating Mamoru project files')
     createFile(logger, augOps, TEMPLATES.PACKAGE_JSON, files.PACKAGE_JSON)
     createFile(logger, augOps, TEMPLATES.MANIFEST, files.MANIFEST)
-    createFile(logger, augOps, TEMPLATES.README, files.README)
     createFile(logger, augOps, TEMPLATES.GITIGNORE, files.GITIGNORE)
 
     if (options.type === 'sql') {
         createFile(logger, augOps, TEMPLATES.QUERIES, files.QUERIES)
+        createFile(logger, augOps, TEMPLATES.README_SQL, files.README_WASM)
     }
     if (options.type === 'wasm') {
         createFolder(logger, projectPath, 'src')
         createFolder(logger, projectPath + '/src', '__tests__')
         createFile(logger, augOps, TEMPLATES.WASM_INDEX, files.WASM_INDEX)
+        createFile(logger, augOps, TEMPLATES.README_WASM, files.README_WASM)
+
         createFile(logger, augOps, TEMPLATES.WASM_TEST, files.WASM_TEST)
         createFile(logger, augOps, TEMPLATES.WASM_PROCESS, files.WASM_PROCESS)
         createFile(logger, augOps, TEMPLATES.TS_CONFIG, files.TS_CONFIG)
@@ -61,6 +63,10 @@ async function init(
     ℹ️ To build the daemon, run:
         
         ${colors.grey(`mamoru-cli build`)}
+    
+    ℹ️ To run test suite, run:
+    
+        ${colors.grey(`npm test`)}
     
     ℹ️ To know more about how to create your own daemons, visit:
         
