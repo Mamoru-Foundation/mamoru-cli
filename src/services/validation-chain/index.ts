@@ -489,7 +489,7 @@ class ValidationChainService {
         ) {
             Object.defineProperty(SigningStargateClient.prototype, 'gasPrice', {
                 get: function gasPrice() {
-                    return '0.0001token'
+                    return '0.0000token'
                 },
                 set: function gasPrice() {
                     // nothing
