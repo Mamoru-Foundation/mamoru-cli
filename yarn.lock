@@ -1891,7 +1891,7 @@
 
 "@mamoru-ai/mamoru-aptos-sdk-as@^0.3.3":
   version "0.3.3"
-  resolved "https://registry.npmjs.org/@mamoru-ai/mamoru-aptos-sdk-as/-/mamoru-aptos-sdk-as-0.3.3.tgz"
+  resolved "https://registry.yarnpkg.com/@mamoru-ai/mamoru-aptos-sdk-as/-/mamoru-aptos-sdk-as-0.3.3.tgz#eac9904a413814b12e3e46a19b92b3605851de19"
   integrity sha512-Hc0nHX1vbiKv0HnJZyRJtMwUbRQpUzYNWhwDqZCQqKu52xBxIlejlak0/yhGYsQBX2n5XS57IQymFk4+7hB7vA==
   dependencies:
     "@mamoru-ai/mamoru-sdk-as" "^0.8.0"
@@ -1908,7 +1908,7 @@
 
 "@mamoru-ai/mamoru-evm-sdk-as@^0.5.2":
   version "0.5.2"
-  resolved "https://registry.npmjs.org/@mamoru-ai/mamoru-evm-sdk-as/-/mamoru-evm-sdk-as-0.5.2.tgz"
+  resolved "https://registry.yarnpkg.com/@mamoru-ai/mamoru-evm-sdk-as/-/mamoru-evm-sdk-as-0.5.2.tgz#043bbc31865ad2947a7fb76338fda0323f1d9349"
   integrity sha512-FZRPTniza2l5tl2i/ewdgndy7cA6oZP/efkDUn44fVEuTO50nMKf8xjNZ/pLTe0nC+gDmdnAz56NvoLfZhDehQ==
   dependencies:
     "@mamoru-ai/mamoru-sdk-as" "^0.8.0"
@@ -1917,7 +1917,7 @@
 
 "@mamoru-ai/mamoru-sdk-as@^0.8.0":
   version "0.8.0"
-  resolved "https://registry.npmjs.org/@mamoru-ai/mamoru-sdk-as/-/mamoru-sdk-as-0.8.0.tgz"
+  resolved "https://registry.yarnpkg.com/@mamoru-ai/mamoru-sdk-as/-/mamoru-sdk-as-0.8.0.tgz#1ccaca1bc986023211d8688dcd0f6946a6328692"
   integrity sha512-gmmdisO54Ufm8Ih+mtaiqexDPz1PK3gJ22HuF2LPSuKG/ArCnB78TRm2UO3NEww1clwX0RmgM5LBLteHbUbhOA==
   dependencies:
     "@wapc/as-msgpack" "^0.1.15"
@@ -1927,16 +1927,16 @@
 
 "@mamoru-ai/mamoru-sui-sdk-as@^0.5.0":
   version "0.5.0"
-  resolved "https://registry.npmjs.org/@mamoru-ai/mamoru-sui-sdk-as/-/mamoru-sui-sdk-as-0.5.0.tgz"
+  resolved "https://registry.yarnpkg.com/@mamoru-ai/mamoru-sui-sdk-as/-/mamoru-sui-sdk-as-0.5.0.tgz#ca2b15f8ef7e0a6260867859552cc0c3859dfaa6"
   integrity sha512-JNZ1IqLGMszuL5ujNAMpdnkJgkjaHXTQ0KKl8VGElVqZb946ZFgPswtTLYeP+um453kEHYWP7ONAWLZHgloPkw==
   dependencies:
     "@mamoru-ai/mamoru-sdk-as" "^0.8.0"
     "@wapc/as-msgpack" "^0.1.15"
 
-"@mamoru-ai/validation-chain-ts-client@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.npmjs.org/@mamoru-ai/validation-chain-ts-client/-/validation-chain-ts-client-1.0.0.tgz"
-  integrity sha512-HVreY5sU/F4T6hOdPJsLux1WlVrKFF/ggh9S3BeKBfMV4yExbyGubFTBmuz0exMyGovNnjYCdVYp0jEBGFRBeA==
+"@mamoru-ai/validation-chain-ts-client@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@mamoru-ai/validation-chain-ts-client/-/validation-chain-ts-client-1.2.0.tgz#d8d496660510a1f31911efc7789f878aabd898a4"
+  integrity sha512-5Si2eSuVpw7WrWqBKDtgUJWtvIZcNRLg3FFVtwCC7UJmyyXncL8FB/m/Ze+Ycg9Uq8i9NhS1MlVaZpn3OoQzJg==
   dependencies:
     "@cosmjs/launchpad" "^0.27.1"
     "@cosmjs/proto-signing" "^0.30.1"
