@@ -190,9 +190,11 @@ function getCustomSdkPackageVersion(type: string): string {
         case 'APTOS_TESTNET':
         case 'APTOS_MAINNET':
             return sdkVersions.aptos
+
         case 'KAVA_TESTNET':
         case 'KAVA_MAINNET':
             return sdkVersions.cosmos
+
         default:
             return sdkVersions.evm
     }
