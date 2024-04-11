@@ -167,6 +167,10 @@ function getCustomSdkPackage(type: string): string {
         case 'APTOS_MAINNET':
             return `@mamoru-ai/mamoru-aptos-sdk-as`
 
+        case 'KAVA_TESTNET':
+        case 'KAVA_MAINNET':
+            return `@mamoru-ai/mamoru-cosmos-sdk-as`
+
         default:
             return `@mamoru-ai/mamoru-evm-sdk-as`
     }
@@ -186,7 +190,9 @@ function getCustomSdkPackageVersion(type: string): string {
         case 'APTOS_TESTNET':
         case 'APTOS_MAINNET':
             return sdkVersions.aptos
-
+        case 'KAVA_TESTNET':
+        case 'KAVA_MAINNET':
+            return sdkVersions.cosmos
         default:
             return sdkVersions.evm
     }
@@ -205,6 +211,10 @@ function getCustomSdkCtxName(type: string): string {
         case 'APTOS_TESTNET':
         case 'APTOS_MAINNET':
             return `AptosCtx`
+        case 'KAVA_TESTNET':
+        case 'KAVA_MAINNET':
+            return `CosmosCtx`
+
         default:
             return `EvmCtx`
     }

@@ -49,6 +49,7 @@
         "@mamoru-ai/mamoru-evm-sdk-as": "^0.5.2",
         "@mamoru-ai/mamoru-sdk-as": "^0.8.0",
         "@mamoru-ai/mamoru-sui-sdk-as": "^0.5.0",
+        "@mamoru-ai/mamoru-cosmos-sdk-as": "^0.5.3",
         "@types/dashify": "^1.0.1",
         "@types/lodash": "^4.14.198",
         "@types/node": "^18.7.18",
