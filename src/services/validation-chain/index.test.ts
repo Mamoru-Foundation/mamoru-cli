@@ -7,6 +7,7 @@ import {
     generateManifest,
     generateManifestSQL,
     generateParameter,
+    generateWasmContent,
 } from '../../utils/test-utils'
 import { getMetadataParametersFromManifest } from './utils'
 
@@ -68,6 +69,137 @@ describe('ValidationChain', () => {
             )
             expect(metadata).not.toBe(null)
         }, 20000)
+
+        const parameterCases = [
+            {
+                type: 'STRING',
+                title: 'test',
+                key: 'test',
+                description: 'test',
+                defaultValue: 'default',
+                requiredFor: [],
+                hiddenFor: [],
+                maxLen: 10,
+                minLen: 1,
+                symbol: undefined,
+            },
+            {
+                type: 'NUMBER',
+                title: 'test',
+                key: 'test',
+                description: 'test',
+                defaultValue: '2',
+                requiredFor: [],
+                hiddenFor: [],
+                max: 10,
+                min: 1,
+                symbol: undefined,
+            },
+            {
+                type: 'BOOLEAN',
+                title: 'test',
+                key: 'test',
+                description: 'test',
+                defaultValue: 'true',
+                requiredFor: [],
+                hiddenFor: [],
+                symbol: undefined,
+            },
+            {
+                type: 'INT8',
+                title: 'test',
+                key: 'test',
+                description: 'test',
+                defaultValue: '2',
+                requiredFor: [],
+                hiddenFor: [],
+                max: 10,
+                min: 1,
+                symbol: undefined,
+            },
+            {
+                type: 'INT256',
+                title: 'test',
+                key: 'test',
+                description: 'test',
+                defaultValue: '2',
+                requiredFor: [],
+                hiddenFor: [],
+                max: 10,
+                min: 1,
+                symbol: undefined,
+            },
+            {
+                type: 'UINT8',
+                title: 'test',
+                key: 'test',
+                description: 'test',
+                defaultValue: '2',
+                requiredFor: [],
+                hiddenFor: [],
+                max: 10,
+                min: 1,
+                symbol: undefined,
+            },
+            {
+                type: 'UINT256',
+                title: 'test',
+                key: 'test',
+                description: 'test',
+                defaultValue: '2',
+                requiredFor: [],
+                hiddenFor: [],
+                max: 10,
+                min: 1,
+                symbol: undefined,
+            },
+            {
+                type: 'FLOAT',
+                title: 'test',
+                key: 'test',
+                description: 'test',
+                defaultValue: '2',
+                requiredFor: [],
+                hiddenFor: [],
+                max: 10,
+                min: 1,
+                symbol: undefined,
+            },
+        ].map(
+            (param) =>
+                [
+                    'parameters ' + param.type,
+                    generateManifest({
+                        parameters: [param],
+                    }),
+                    generateWasmContent(),
+                ] as [string, Manifest, string]
+        )
+
+        const cases: [string, Manifest, string][] = [
+            ['simple', generateManifest({}), generateWasmContent()],
+            ...parameterCases,
+        ]
+
+        it.each(cases)(
+            'Should register a daemon metadata, %s',
+            async (_, manifest: Manifest, wasm) => {
+                const { privkey } = await generateFoundedUser()
+                const vc = new ValidationChainService(
+                    undefined,
+                    privkey,
+                    new Logger(2)
+                )
+                const daemon = await vc.registerDaemonMetadata(
+                    manifest,
+                    [],
+                    wasm,
+                    []
+                )
+                expect(daemon).not.toBe(null)
+            },
+            20000
+        )
     })
 
     describe('registerDaemon', () => {

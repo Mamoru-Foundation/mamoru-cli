@@ -5,7 +5,7 @@ import { Command } from 'commander'
 import { InitOptions } from '../commands/agents/init'
 import { DirectSecp256k1HdWallet as Wallet } from '@cosmjs/proto-signing'
 import axios from 'axios'
-import { Manifest, ManifestParameter } from '../types'
+import { DeepPartial, Manifest, ManifestParameter } from '../types'
 
 /**
  * Generates a user with a mnemonic, address and private key from wallet
@@ -102,12 +102,16 @@ export const generateInitOptions = (
     }
 }
 
-export const generateManifest = (obj: Partial<Manifest> = {}): Manifest => ({
+export const generateManifest = (
+    obj: DeepPartial<Manifest> = {}
+): Manifest => ({
     version: '0.0.1',
     type: 'wasm',
     name: 'test',
     chains: ['SUI_TESTNET'],
     description: 'test_description',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     parameters: [],
     logoUrl: 'https://test.com/hello.png',
     tags: ['test'],
