@@ -53,6 +53,8 @@ describe('ValidationChain', () => {
                     parameters: [
                         generateParameter({
                             hiddenFor: [],
+                            min: undefined,
+                            max: undefined,
                         }),
                     ],
                 }),
@@ -81,6 +83,8 @@ describe('ValidationChain', () => {
                     parameters: [
                         generateParameter({
                             hiddenFor: [],
+                            min: undefined,
+                            max: undefined,
                         }),
                     ],
                 }),
