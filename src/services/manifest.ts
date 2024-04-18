@@ -5,7 +5,7 @@ import { Logger } from './console'
 import yaml from 'yaml'
 import joi from 'joi'
 import { ONLY_ALPHA_NUMERIC } from './constants'
-import { Manifest } from '../types'
+import { Manifest, ManifestParameter } from '../types'
 import { formatJoiError, getAvailableChains } from './utils'
 
 export const validateAndReadManifest = (
@@ -56,13 +56,34 @@ function getManifest(logger: Logger, program: Command, projectPath: string) {
 }
 
 const manifestParameterSchema = joi.object().keys({
-    type: joi.any().valid('STRING', 'NUMBER', 'BOOLEAN').required(),
+    type: joi
+        .any()
+        .valid(
+            'STRING',
+            'NUMBER',
+            'BOOLEAN',
+            'INT8',
+            'INT256',
+            'UINT8',
+            'UINT256',
+            'FLOAT'
+        )
+        .required(),
     key: joi.string().required().pattern(ONLY_ALPHA_NUMERIC),
     title: joi.string().required(),
     description: joi.string().optional(),
-    defaultValue: joi.string().optional(),
+    defaultValue: joi.alternatives(
+        joi.string().optional(),
+        joi.number().optional(),
+        joi.boolean().optional()
+    ),
     requiredFor: joi.array().items(joi.string()).optional(),
     hiddenFor: joi.array().items(joi.string()).optional(),
+    max: joi.alternatives(joi.string().optional(), joi.number().optional()),
+    min: joi.alternatives(joi.string().optional(), joi.number().optional()),
+    maxLen: joi.number().optional(),
+    minLen: joi.number().optional(),
+    symbol: joi.string().optional(),
 })
 
 /**

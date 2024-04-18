@@ -2,11 +2,22 @@ import { DaemonMetadataParemeter } from '@mamoru-ai/validation-chain-ts-client/d
 
 export type ManifestParameter = Omit<
     DaemonMetadataParemeter,
-    'requiredFor' | 'hiddenFor' | 'type'
+    'requiredFor' | 'hiddenFor' | 'type' | 'defaultValue' | 'min' | 'max'
 > & {
-    type: 'STRING' | 'NUMBER' | 'BOOLEAN'
+    type:
+        | 'STRING'
+        | 'NUMBER'
+        | 'BOOLEAN'
+        | 'INT8'
+        | 'INT256'
+        | 'UINT8'
+        | 'UINT256'
+        | 'FLOAT'
     requiredFor?: string[]
     hiddenFor?: string[]
+    defaultValue: string | number | boolean
+    min: string | number
+    max: string | number
 }
 
 export type DaemonMetadataParameter = DaemonMetadataParemeter

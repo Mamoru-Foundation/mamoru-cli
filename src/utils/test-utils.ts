@@ -133,5 +133,10 @@ export const generateParameter = (
     defaultValue: 'default',
     requiredFor: ['SUI_TESTNET'],
     hiddenFor: ['SUI_TESTNET'],
+    max: '10',
+    min: '1',
+    maxLen: 10,
+    minLen: 1,
+    symbol: '%',
     ...obj,
 })
