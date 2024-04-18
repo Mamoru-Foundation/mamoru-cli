@@ -22,9 +22,9 @@ export const getMetadataParametersFromManifest = (
         requiredFor: (parameter.requiredFor || []).map((chain) => ({
             name: chain,
         })),
-        max: parameter.max.toString(),
-        min: parameter.min.toString(),
-        defaultValue: parameter.defaultValue.toString(),
+        max: parameter.max?.toString(),
+        min: parameter.min?.toString(),
+        defaultValue: parameter.defaultValue?.toString(),
     }))
 
     return parameters
