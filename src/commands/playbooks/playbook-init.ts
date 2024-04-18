@@ -98,7 +98,7 @@ function createFile(
 
 export interface InitPlaybookOptions {
     name: string
-    skipTelemetry: true
+    skipTelemetry: boolean
 }
 
 export interface AugmentedPlaybookOptions extends InitPlaybookOptions {

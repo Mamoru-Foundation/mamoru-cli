@@ -13,6 +13,7 @@ describe('playbook init', () => {
 
         await initPlaybook.initPlaybook(programMock, dir, {
             name: 'Test Playbook',
+            skipTelemetry: true,
         })
         const files = initPlaybook.getFilesToCreate(dir)
         Object.values(files).forEach((p) => {
@@ -23,7 +24,7 @@ describe('playbook init', () => {
 
 describe('getAugmentedInitOptions', () => {
     it('should return augmented options', async () => {
-        const mockOptions = { name: 'Test Playbook' }
+        const mockOptions = { name: 'Test Playbook', skipTelemetry: true }
         const mockProjectPath = '/path/to/project'
 
         const result = await init.getAugmentedInitOptions(
