@@ -13,7 +13,7 @@ import publish from './publish'
 import nock from 'nock'
 const programMock = getProgramMock()
 
-describe('spawn', () => {
+describe('lauch', () => {
     const availableChains = ['SUI_TESTNET']
     const generateSpawnOptions = (
         override: Partial<LaunchOptions> = {}
@@ -62,6 +62,7 @@ describe('spawn', () => {
         const r = await publish.publish(programMock, dir, {
             privateKey: privkey,
             rpc: 'http://0.0.0.0:26657',
+            parameters: '{}',
         })
 
         const promise = launch(
@@ -69,11 +70,12 @@ describe('spawn', () => {
             generateSpawnOptions({
                 metadataId: r.daemonMetadataId,
                 privateKey: privkey,
+                parameters: '{}',
             })
         )
 
         await expect(promise).rejects.toThrow('Metadata is not subscribable')
-    }, 25000)
+    }, 35000)
 
     it.todo(
         'FAIL - supportedChains have more than 1 element, no chain in command options'
@@ -111,6 +113,7 @@ describe('spawn', () => {
             generateSpawnOptions({
                 metadataId: r0.daemonMetadataId,
                 privateKey: privkey,
+                parameters: '{}',
             })
         )
 

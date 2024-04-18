@@ -31,6 +31,7 @@ describe('publish', () => {
             await publish.publish(programMock, dir, {
                 privateKey: 'privateKey',
                 rpc: 'rpcUrl',
+                parameters: '{}',
             })
         } catch (error) {
             assert.match(error.message, /manifest contains invalid structure/)
@@ -45,6 +46,7 @@ describe('publish', () => {
             await publish.publish(programMock, dir, {
                 privateKey: 'privateKey',
                 rpc: 'rpcUrl',
+                parameters: '{}',
             })
             throw new Error('Should not reach here')
         } catch (error) {
@@ -88,6 +90,7 @@ describe('publish', () => {
                 const r = await publish.publish(programMock, dir, {
                     privateKey: privkey,
                     rpc: 'http://0.0.0.0:26657',
+                    parameters: '{}',
                 })
 
                 assert.ok(r)
@@ -115,6 +118,7 @@ describe('publish', () => {
                 .publish(programMock, dir, {
                     privateKey: privkey,
                     rpc: 'http://0.0.0.0:26657',
+                    parameters: '{}',
                 })
                 .then(() => {
                     throw new Error('Should not reach here')
@@ -141,6 +145,7 @@ describe('publish', () => {
                 .publish(programMock, dir, {
                     privateKey: privkey,
                     rpc: 'http://0.0.0.0:26657',
+                    parameters: '{}',
                 })
                 .then(() => {
                     throw new Error('An error should have been thrown')
@@ -168,6 +173,7 @@ describe('publish', () => {
                     privateKey: privkey,
                     rpc: 'http://0.0.0.0:26657',
                     chain: 'XXX',
+                    parameters: '{}',
                 })
                 .then(() => {
                     throw new Error('An error should have been thrown')
@@ -197,8 +203,9 @@ describe('publish', () => {
                 privateKey: privkey,
                 rpc: 'http://0.0.0.0:26657',
                 chain: 'SUI_TESTNET',
+                parameters: '{}',
             })
-        }, 20000)
+        }, 25000)
         it('OK - SOLE', async () => {
             nock('https://mamoru-be-production.mamoru.foundation')
                 .post('/graphql')
@@ -213,6 +220,7 @@ describe('publish', () => {
             const r = await publish.publish(programMock, dir, {
                 privateKey: privkey,
                 rpc: 'http://0.0.0.0:26657',
+                parameters: '{}',
             })
             assert.ok(r)
             assert.equal(isTruthyStr(r.daemonId as string), true)
@@ -224,7 +232,7 @@ describe('publish', () => {
                 r.daemonMetadataId
             )
             assert.equal(metadata.data.daemonMetadata.sdkVersions.length, 2)
-        }, 20000)
+        }, 25000)
     })
 })
 

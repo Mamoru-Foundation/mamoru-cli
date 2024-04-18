@@ -31,6 +31,7 @@ describe('removeDaemon', () => {
         const r = await publish.publish(programMock, dir, {
             privateKey: privkey,
             rpc: 'http://0.0.0.0:26657',
+            parameters: '{}',
         })
 
         // // await delay(2000)
