@@ -111,36 +111,41 @@ describe('ValidationChain', () => {
             expect(daemonMetadata.content?.query[0].severity).toBe(2)
         }, 30000)
     })
-})
 
-describe('utils', () => {
-    describe('getMetadataParametersFromManifest', () => {
-        it('should return the correct parameters', () => {
-            const r = getMetadataParametersFromManifest(
-                generateManifest({
-                    parameters: [generateParameter()],
-                })
-            )
+    describe('utils', () => {
+        describe('getMetadataParametersFromManifest', () => {
+            it('should return the correct parameters', () => {
+                const r = getMetadataParametersFromManifest(
+                    generateManifest({
+                        parameters: [generateParameter()],
+                    })
+                )
 
-            expect(r).toEqual([
-                {
-                    type: 1,
-                    title: 'test',
-                    key: 'test',
-                    description: 'test',
-                    defaultValue: 'default',
-                    requiredFor: [
-                        {
-                            name: 'SUI_TESTNET',
-                        },
-                    ],
-                    hiddenFor: [
-                        {
-                            name: 'SUI_TESTNET',
-                        },
-                    ],
-                },
-            ])
+                expect(r).toEqual([
+                    {
+                        type: 1,
+                        title: 'test',
+                        key: 'test',
+                        description: 'test',
+                        defaultValue: 'default',
+                        max: '10',
+                        maxLen: 10,
+                        min: '1',
+                        minLen: 1,
+                        symbol: '%',
+                        requiredFor: [
+                            {
+                                name: 'SUI_TESTNET',
+                            },
+                        ],
+                        hiddenFor: [
+                            {
+                                name: 'SUI_TESTNET',
+                            },
+                        ],
+                    },
+                ])
+            })
         })
     })
 })
