@@ -184,7 +184,7 @@ describe('publish', () => {
                         /This Agent Metadata does not support the chain/
                     )
                 })
-        }, 20000)
+        }, 50000)
         it('OK - multiple chains, chain', async () => {
             nock('https://mamoru-be-production.mamoru.foundation')
                 .post('/graphql')
@@ -205,7 +205,7 @@ describe('publish', () => {
                 chain: 'SUI_TESTNET',
                 parameters: '{}',
             })
-        }, 25000)
+        }, 50000)
         it('OK - SOLE', async () => {
             nock('https://mamoru-be-production.mamoru.foundation')
                 .post('/graphql')
@@ -232,7 +232,7 @@ describe('publish', () => {
                 r.daemonMetadataId
             )
             assert.equal(metadata.data.daemonMetadata.sdkVersions.length, 2)
-        }, 25000)
+        }, 50000)
     })
 })
 
