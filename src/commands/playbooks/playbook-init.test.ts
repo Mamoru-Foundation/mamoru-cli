@@ -35,6 +35,7 @@ describe('getAugmentedInitOptions', () => {
         expect(result).toEqual({
             name: 'Test Playbook',
             kebabName: 'test-playbook',
+            skipTelemetry: true,
         })
     })
 })
