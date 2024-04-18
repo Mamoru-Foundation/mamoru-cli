@@ -13,6 +13,25 @@ import { DEFAULT_MAMORU_VERSION } from '../../services/constants'
 const programMock = getProgramMock()
 
 describe('init', () => {
+    const initParameters = [
+        {
+            defaultValue: 'exampleDefaultValue',
+            description: 'example description',
+            key: 'exampleParameter',
+            title: 'example Parameter',
+            type: 'STRING',
+        },
+        {
+            defaultValue: 100,
+            description: 'example description',
+            key: 'examplePercentage',
+            max: 100,
+            min: 0,
+            symbol: '%',
+            title: 'example Percentage',
+            type: 'INT8',
+        },
+    ]
     const sqlCases = [
         [
             'SUI_MAINNET',
@@ -115,6 +134,7 @@ describe('init', () => {
                 version: '0.0.1',
                 type: 'sql',
                 subscribable: false,
+                parameters: initParameters,
             })
 
             const queries = fs.readFileSync(
@@ -254,6 +274,7 @@ describe('init', () => {
             const manifestParsed = yaml.parse(manifest)
             assert.deepEqual(manifestParsed, {
                 chains: [chain],
+                parameters: initParameters,
                 description: 'TEST_DESCRIPTION',
                 logoUrl: 'https://test.com/logo.png',
                 name: 'test-name',

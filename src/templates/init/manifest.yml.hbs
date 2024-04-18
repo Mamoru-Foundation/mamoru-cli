@@ -6,3 +6,19 @@ description: {{description}}
 logoUrl: {{logo}}
 chains: [{{chain}}]
 tags: [{{tags}}]
+parameters: 
+  - key: exampleParameter
+    title: example Parameter 
+    type: STRING #STRING, NUMBER, BOOLEAN
+    description: example description
+    defaultValue: "exampleDefaultValue"
+
+  - key: examplePercentage
+    title: example Percentage 
+    type: INT8 #STRING, NUMBER, BOOLEAN
+    description: example description
+    defaultValue: 100
+    min: 0
+    max: 100
+    symbol: "%"
+    

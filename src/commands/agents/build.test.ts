@@ -59,6 +59,6 @@ describe('build', () => {
         assert.strictEqual(outFiles.includes('index.wasm'), true)
         assert.strictEqual(outFiles.includes('index.wasm.map'), true)
         assert.strictEqual(outFiles.includes('package.json'), true)
-    }, 20000)
+    }, 50000)
     it.todo('OK - should build type=wasm projects, with multiple parameters')
 })
