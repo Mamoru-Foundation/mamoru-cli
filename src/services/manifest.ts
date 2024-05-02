@@ -90,7 +90,10 @@ const manifestParameterSchema = joi.object().keys({
  * export for testing
  */
 export const manifestSchema = joi.object().keys({
-    version: joi.any().valid('0.0.1').required(),
+    version: joi
+        .string()
+        .pattern(/^(\d+\.)(\d+\.)(\*|\d+)$/)
+        .required(),
     type: joi.any().valid('wasm', 'sql').required(),
     description: joi.string().optional(),
     subscribable: joi.boolean().optional(),
