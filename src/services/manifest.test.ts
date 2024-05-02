@@ -15,6 +15,41 @@ describe('manifestSchema,', () => {
 
         expect(error).toBeFalsy()
     })
+    it('basic - semver 1.0.0', () => {
+        const manifest: Manifest = generateManifest({
+            version: '1.0.0',
+        })
+        const { error } = manifestSchema.validate(manifest)
+
+        expect(error).toBeFalsy()
+    })
+
+    it('basic - semver 1.0', () => {
+        const manifest: Manifest = generateManifest({
+            version: '1.0',
+        })
+        const { error } = manifestSchema.validate(manifest)
+
+        expect(error).toBeTruthy()
+    })
+
+    it('basic - semver 1', () => {
+        const manifest: Manifest = generateManifest({
+            version: '1',
+        })
+        const { error } = manifestSchema.validate(manifest)
+
+        expect(error).toBeTruthy()
+    })
+
+    it('basic - semver 1.0.0-alpha', () => {
+        const manifest: Manifest = generateManifest({
+            version: '1.0.0-alpha',
+        })
+        const { error } = manifestSchema.validate(manifest)
+
+        expect(error).toBeTruthy()
+    })
     describe('parameters', () => {
         it('empty', () => {
             const manifest: Manifest = generateManifest({
