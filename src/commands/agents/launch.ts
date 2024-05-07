@@ -97,13 +97,10 @@ export default async function launch(program: Command, options: LaunchOptions) {
     logger.log(
         `Daemon registered successfully 🎉
 
-    ℹ️  Daemon Hash(ID): 
-
-        ${colors.magenta(result.daemonId)}
-
-    ℹ️  Explorer Url for parent DaemonMetadata:
-
-        ${colors.underline.blue(`${MAMORU_EXPLORER_URL}/agents/${metadataId}`)}`
+        ℹ️  Explorer Url for agent:
+            ${colors.underline.blue(
+                `${MAMORU_EXPLORER_URL}/agents/${result.daemonId}`
+            )}`
     )
     return result
 }
