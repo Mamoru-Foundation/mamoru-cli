@@ -9,9 +9,18 @@ export type ManifestParameter = Omit<
         | 'NUMBER'
         | 'BOOLEAN'
         | 'INT8'
+        | 'INT16'
+        | 'INT32'
+        | 'INT64'
+        | 'INT128'
         | 'INT256'
         | 'UINT8'
+        | 'UINT16'
+        | 'UINT32'
+        | 'UINT64'
+        | 'UINT128'
         | 'UINT256'
+        | 'ADDRESS'
         | 'FLOAT'
     requiredFor?: string[]
     hiddenFor?: string[]
